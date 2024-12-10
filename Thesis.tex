@@ -1,6 +1,7 @@
 \documentclass{article}
+\usepackage{microtype}
 \usepackage[utf8]{inputenc}
-% \usepackage[ngerman]{babel}
+\usepackage[ngerman]{babel}
 \usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{listings}
@@ -41,8 +42,15 @@
     postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 
+\usepackage{titlesec}
 
-\title{Master Thesis}
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\titleformat*{\paragraph}{\large\bfseries}
+\titleformat*{\subparagraph}{\large\bfseries}
+
+\title{Master Thesis: Useful Words}
 \author{Leonard Paál\\Hochschule Karlsruhe\\Betreuender Professor: Jannik Strötgen}
 \date{Dezember 2024}
 
@@ -52,7 +60,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-\noindent Useful words are nice to have.
+	\noindent Useful words are nice to have.
 \end{abstract}
 
 \clearpage
@@ -60,9 +68,34 @@
 \clearpage
 
 \section{Main useful words}
+\section{Evaluation of Approaches}
+\subsection{Comparison of list similarities}
+In order to compare the results provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
+While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
+A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered descendingly by supposed relevance, and outputs a real number giving either a distance or similarity between the lists.
+
+\paragraph{Considerations of the choice of metric}
+\begin{description}
+    \item  \textbf{Metrics must be able to handle elements which occur in only one of the two lists.}
+        Thus, a metric which solely compares ranks of elements is not viable.
+    \item  \textbf{Changes at the beginning of the lists have a bigger impact on the metric output than changes further down.}
+        The rationale is that two lists which have large differences at the start should be regarded as more different than ones where words 
+    \item  \textbf{Changes in rank should be counted as more important if they occur further up the list.}
+        A word that is rank 1 in list A but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A but rank 2100 in list B.
+\end{description}
+
+\subsubsection{Metrics used}
+
+\subsubsection{Metrics rejected}
+\begin{description}
+    \item \textbf{Kendall's tau:} This metric is bounded between 0 and 1 and compares the ranks of the elements of two lists. However, it cannot handle elements that only occur in one of the two lists, and thus is not suitable for our purposes.
+    \item \textbf{}
+\end{description}
+
+
+
 \section{Bibliography}
 \bibliographystyle{plain}
-\bibliography{bibliography}
-
+\bibliography{references}
 \end{document}
 
