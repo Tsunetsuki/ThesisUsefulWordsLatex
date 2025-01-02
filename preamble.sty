@@ -1,0 +1,53 @@
+\ProvidesPackage{preamble}
+\usepackage{microtype}
+\usepackage[utf8]{inputenc}
+% \usepackage[ngerman]{babel}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz, tkz-euclide}
+\usepackage{physics}
+\usepackage{amsmath, amssymb}
+\usepackage{float}
+\usepackage{blindtext}
+\usepackage{caption}
+\usepackage{droidsansmono}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\newcommand{\tss}{\textsubscript}
+\newcommand{\inv}[1]{\frac{1}{#1}}
+\newcommand{\invsqrttwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\onehalf}{\frac{1}{2}}
+\newcommand{\degree}{^{\circ}}
+\AddToHook{cmd/section/before}{\clearpage}
+
+% set the default code style
+\lstset{
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    escapeinside={(*}{*)},
+    basicstyle=\footnotesize\droidsansmono,
+    frame=single,
+    commentstyle=\color{ForestGreen}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{BrickRed}, % string color
+    breaklines=true,   
+    emphstyle={\color{blue}},
+    columns=flexible,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+\usepackage{titlesec}
+
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\titleformat*{\paragraph}{\large\bfseries}
+\titleformat*{\subparagraph}{\large\bfseries}
+
