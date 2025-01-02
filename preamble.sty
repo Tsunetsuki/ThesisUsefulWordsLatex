@@ -16,7 +16,16 @@
 \usepackage{titlesec}
 \usepackage{hyperref}
 \usepackage{xfrac}
+\usepackage{fancyhdr}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{geometry}
+\setlength{\headheight}{16pt}
+\pagestyle{fancy}
 \graphicspath{ {images/} }
+
+\fancyhf{}                              % delete the current header and footer
+\fancyhead[LO]{\parbox[t]{0.9\textwidth}{\rightmark}} %<--- use [t] for parbox.
+% \fancyhead[RO]{\parbox[t]{0.02\textwidth}{\textbf{\thepage}}} %<-
 
 \newcommand{\tss}{\textsubscript}
 \newcommand{\inv}[1]{\frac{1}{#1}}
@@ -46,9 +55,9 @@
 
 \usepackage{titlesec}
 
-\titleformat*{\section}{\LARGE\bfseries}
-\titleformat*{\subsection}{\Large\bfseries}
-\titleformat*{\subsubsection}{\large\bfseries}
-\titleformat*{\paragraph}{\large\bfseries}
-\titleformat*{\subparagraph}{\large\bfseries}
-
+% \titleformat*{\section}{\LARGE\bfseries}
+% \titleformat*{\subsection}{\Large\bfseries}
+% \titleformat*{\subsubsection}{\large\bfseries}
+% \titleformat*{\paragraph}{\large\bfseries}
+% \titleformat*{\subparagraph}{\large\bfseries}
+%
