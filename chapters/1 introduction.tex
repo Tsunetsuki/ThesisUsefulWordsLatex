@@ -1,4 +1,5 @@
 \section{Motivation}
+\subsection{Role of vocabulary in language acquisition}
 Learning a second language involves many different skills, often categorized into listening, reading, speaking, and writing.
 Another categorization may be vocabulary, grammatical skills, the ability to understand known words in various accents, understanding language when spoken at a fast speed.
 One skill that is required for any of these if the knowledge of vocabulary in the target language.
@@ -6,12 +7,61 @@ A person with basic grammatical skills but no vocabulary has no ability to expre
 On the other hand, a person familiar with rudimentary vocabulary but no grammatical knowledge may struggle with understanding complex sentences and sound unnatural when speaking, but can at least make sense of short phrases and express themselves.
 Thus, basic knowledge of vocabulary is clearly one of the most essential skills for using a language.
 This raises the question of which vocabulary should be learned first when starting out on the journey of language acquisition.
-Leaving aside vocabulary that might not be desirable at all, this question may be reduced to:
-
-\textbf{What order gives the learner the best set of words to understand and communicate in the language as quickly as possible?}
 
 
-...
+\subsection{Context-specific language learning}
+Learners of languages are typically interested in one or more specific aspects of the language.
+There is no such thing as an unbiased corpus than can fit every use case.
+Decisions must be made how much focus is given to everyday conversation, academic writing, writing pertaining to business like job applications etc.
+Many textbooks group vocabulary by topic, with a new topic being introduced with each lesson that student should ideally be able to converse in after completing the lesson.
+However, this way of introducing vocabulary has several shortcomings:
+\begin{itemize}
+	\item Students spend time learning specific terms about the topic in one lesson while not learning even general vocabulary in other topics until much later.
+	\item Knowing the words from previous lessons becomes a prerequisite for the more advanced material, especially because the terms from earlier lessons are used in example sentences for grammar.
+	      Thus, learners interested in learning the use of the language in one context will have a hard time of skipping earlier, less pertinent lessons to them.
+\end{itemize}
+
+Since the advent of computer-aided natural language processing, methods have been suggested to computationally identify useful words:
+Nation and Waring propose in an 1997 study \cite{nationVocabularySizeText1997} that the frequency with which a word appears in the target language should be used a metric for its importance to the learner, or utility, and thus teaching high-frequency words should be the focus when teaching beginners.
+However, focusing on maximum-frequency words to achieve text coverage (e.g., knowledge of 90\% of words in a text) may not be as useful as one might at first think, as the most frequent words tend to be generic terms like “but”, “from”, “time”, “world” etc.
+Knowing only these words is not sufficient for comprehending most texts.
+
+The TF-IDF metric \cite{qaiserTextMiningUse2018} is often employed for finding the keywords in a document and thus a proxy for how important a word is for the overall meaning of the document.
+It essentially is a frequency normalized against a larger, background corpus and expressed whether the usage frequency in the document is unusual.
+Using TF-IDF as a measure for utility of a word in a given context is possible, but it suppresses words that may be generally useful.
+
+Thus, there is a need for further exploration as to how word utility can be calculated, using modern NLP methods involving artificial intelligence where necessary.
+Put more simply, this question may be reduced to:
+
+\textbf{What order or words, when learned, gives the learner the best set of words to understand and communicate in the language as quickly as possible?}
+
+\subsection{Examples of contexts and words}
+Some examples for contexts that could be interesting to language learners include:
+
+\begin{itemize}
+	\item Reading Wikipedia articles about a specific field (computer science, literature, biographies)
+	\item Watching movies
+	\item Travel to a country where the target language is spoken
+	\item Doing business with a company from a country where the target language is spoken
+	\item Cultural exploration (literature, religion)
+	\item Finding friends from other countries
+\end{itemize}
+
+The different contexts for which learners might be motivated to learn a language differ in how easily corpora can be obtained about to mine patterns from. Movie subtitles and Wikipedia articles are easily obtained from sites such as opensubtitles.org and wikipedia.org. The words that might be relevant for travel are not as easily obtained: One might imagine an ideal scenario to collect data, in which a statistically relevant group of people travelling to the destination to be examined are randomly selected and equipped with microphones and cameras before the travel. During travel, one could record their conversations, conversations with people around them, and materials they attempt to read to navigate their journey such as train schedules, descriptions of tours, restaurant menus, street signs, etc. Lacking the funds to conduct an experiment for every possible language, this paper is interested in finding a methodology to obtain data from readily available corpora and websites online that extracts relevant vocabulary from the source texts.
+Depending on the context, we can think about which of the following English words might be likely to appear frequently in the texts:
+
+\begin{itemize}
+	\item Convert
+	\item Cash
+	\item Hug
+	\item Dammit
+	\item Y'all
+	\item From
+	\item Nineen eighty four
+	\item Married
+\end{itemize}
+
+To examine a few examples: Words like “convert” occur frequent when looking at Wikipedia articles \cite{LeipzigWortschatzEnglish}. “cash” is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
 
 \section{Background}
 \subsection{Requirements for calculating word utility from existing data}
@@ -19,7 +69,7 @@ Leaving aside vocabulary that might not be desirable at all, this question may b
 \begin{description}
 	\item [Large word corpora in many languages]
 	\item [Hardware capabilities]
-    \item [Software is able to process text on semantic level]
+	\item [Software is able to process text on semantic level]
 	      Text processing software and tools have existed since the 1980s, however before the advent of neural networks and other artificial intelligence methods, their capabilities were mostly bereft of any semantic understanding of the text processed: Using exclusively manually crated tools, it is possible to create a program which recognizes that \textit{table} and \textit{tables} derive from the same word, but much harder to recognize that there is any connection whatsoever between \textit{table} and \textit{chair}. The language processing capabilities of any human dwarf those of these early tools.
 \end{description}
 
@@ -31,5 +81,7 @@ Leaving aside vocabulary that might not be desirable at all, this question may b
 	\item [Explainable AI]
 \end{description}
 
-This paper aims to exploit these significant developments to gain insights into which words can provide second language learners with the most utility. 
+This paper aims to exploit these significant developments to gain insights into which words can provide second language learners with the most utility.
 
+\section{Method of this paper}
+Central ideas I have about finding useful words, especially using XAI methods

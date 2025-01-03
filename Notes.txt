@@ -2,3 +2,20 @@ How to find papers
     find relevant current papers and look at the references
 
 
+What is a word?
+    definitions
+        phonological: smallest unit isolatable by word accent and "boundary markers"
+        orthographical: spaces
+        syntactical: smallest permutable and substitutable unit of a sentence
+        lexeme
+
+    problems
+        developed from Eurocentric perspective on linguistics, and European languages are broadly synthetic
+            => word definitions may work best in synthetic languages
+
+
+    glossary
+        lexeme: set of words that derive from same dictionary form ("lemma")
+            may also be phrase such as "black and white"
+        sandhi: sound changes that occur across word boundaries (intrusive R in English)
+

@@ -1,3 +1,50 @@
+\section{Components of XAI word extraction}
+Components are
+\begin{itemize}
+	\item XAI method used
+	\item Tokenizer
+	\item (Pretrained) AI model used
+	\item NLP task
+\end{itemize}
+
+It is readily seen that these components are not independent of each other.
+Some completely determine the choice of another, while others limit the selection of the other components.
+	[describe dependencies between components]
+Task -> model -> tokenizer -> words.
+must investigate comparability of results later.
+(also corpus -> task)
+must investigate comparability of results.
+
+\subsection{Formal problem statement for XAI word extraction}
+
+Givens:
+
+\begin{itemize}
+	\item A set $W$ of $w$ candidate words: $|W| = w$.
+
+	\item A corpus $C$ containing lines/sentences in the target language.
+
+	\item A function $f$ indicating the performance at the chosen task when given the subset of $W$ 
+	      \begin{align*}f : 2^{W} \to \mathbb{R} \\
+			  f (K) \mapsto p
+		  \end{align*}
+
+	\item An integer $k$ denoting the desired cardinality of the (smaller) subset of words to learn.
+\end{itemize}
+Find
+\[
+	\argmax_{K} f(K)
+\]
+\begin{align*}
+	K \subset W \\
+	|K| = k     \\
+	k < |W|
+\end{align*}
+
+In practice, it is often not feasible to calculate calculate $f$ for every possible subset $K$, necessitating the use of approximations.
+
+
+
 
 \section{XAI methods}
 \begin{itemize}
@@ -6,7 +53,7 @@
 \end{itemize}
 
 \section{Tokenizers}
-(intimately related to AI models)
+ (intimately related to AI models)
 \section{AI models}
 \begin{itemize}
 	\item NSP-model ABC
@@ -26,7 +73,7 @@ Considerations of the choice of metric are:
 	      Metrics must be able to handle elements which occur in only one of the two lists.
 	      Thus, a metric which solely compares ranks of elements is not viable.
 	\item [Start of lists is more impactful than end.]
-		Since the beginning of lists contains the words which are ranked as most important, changes at the top should impact the metric more than changes at the bottom. This includes (1) Equal differences in rank should be counted as more important if they occur further up the list.
+	      Since the beginning of lists contains the words which are ranked as most important, changes at the top should impact the metric more than changes at the bottom. This includes (1) Equal differences in rank should be counted as more important if they occur further up the list.
 	      A word that is rank 1 in list A but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
 \end{description}
 
