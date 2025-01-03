@@ -84,4 +84,51 @@ To examine a few examples: Words like “convert” occur frequent when looking 
 This paper aims to exploit these significant developments to gain insights into which words can provide second language learners with the most utility.
 
 \section{Method of this paper}
-Central ideas I have about finding useful words, especially using XAI methods
+It is evident that recent tools based on Artificial Intelligence are much better-equipped for many tasks in the realm of Natural Language Processing than rule-based tools.
+At the same time, it is less clear how exactly these networks achieve the results they do.
+Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
+Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
+
+\subsection{Word extraction methods}
+The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
+\subsubsection{Traditional}
+\begin{description}
+	\item [Raw frequency of words in corpus]
+	      A simple ordering of words by how often they appear in a corpus.
+	\item [TF-IDF]
+	      How often the words appear in a target corpus but divided by their frequency in a more generic corpus.
+	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+\end{description}
+\subsubsection{AI-simulated learner}
+\begin{description}
+	\item [Performance difference of AI for NLP tasks]
+	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
+	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
+	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
+	      Evaluation metrics like Shapley values[5] may be used to measure the impact of missing words
+	\item [Transformer attention]
+		The transformer architecture is based on a mechanism called \textit{self-attention}.
+		It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
+
+	\item [Difference in internal vector representation for AI reading text]
+	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
+	      By using various distance metrics, it may be possible to find out which words have the greatest impact on the model’s understanding of a text.
+	      Most of these approaches can be done both for individual words and word sequences (n-grams).
+	      While individual words are the easiest to examine, sometimes n-grams are insightful for finding sequences of words whose meaning is more than the sum of their parts (idioms and collocations) and which therefore must be learned in separately from their constituents (meaningful English n-grams include e.g. “kick the bucket”, “such that”, “such as”).
+
+	      This also raises the question of what is considered a “word”.
+	      A phrase like “such as” can be considered two words if the definition of a word is simply “something separated by a space” or one word if the definition is “a phrase whose meaning cannot be arrived at trivially from knowing the definition of its parts”.
+	      In Natural Language Processing, tokenizers break down texts into words, but they typically use the first definition for a word in the case of English.
+	      Many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces to separate a different unit of text (syllables in Vietnamese, sentences in Thai), making this definition of a word unpractical.
+	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
+	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
+\end{description}
+
+Key technologies employed include therefore:
+\begin{itemize}
+	\item Tokenizers
+	\item Lemmatizers
+	\item Translators
+	\item AI models to perform NLP tasks
+\end{itemize}
+
