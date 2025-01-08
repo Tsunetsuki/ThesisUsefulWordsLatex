@@ -61,7 +61,7 @@ Depending on the context, we can think about which of the following English word
 	\item Married
 \end{itemize}
 
-To examine a few examples: Words like “convert” occur frequent when looking at Wikipedia articles \cite{LeipzigWortschatzEnglish}. “cash” is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
+To examine a few examples: Words like “convert” occur frequently when looking at Wikipedia articles \footnote{see "Wikipedia" corpus 2016, drawn from one million lines on https://wortschatz.uni-leipzig.de/en/download/English}. “cash” is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
 
 \section{Background}
 \subsection{Requirements for calculating word utility from existing data}
@@ -95,6 +95,8 @@ The approaches for approximating utility with an automatically computable metric
 \begin{description}
 	\item [Raw frequency of words in corpus]
 	      A simple ordering of words by how often they appear in a corpus.
+		\item[Frequency with stopwords filtered out]
+			The same as frequency, but filtering out known stopwords from the resulting lists.
 	\item [TF-IDF]
 	      How often the words appear in a target corpus but divided by their frequency in a more generic corpus.
 	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.

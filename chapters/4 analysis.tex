@@ -10,10 +10,17 @@ Components are
 It is readily seen that these components are not independent of each other.
 Some completely determine the choice of another, while others limit the selection of the other components.
 	[describe dependencies between components]
-Task -> model -> tokenizer -> words.
+Task $\rightarrow$ model $\rightarrow$ tokenizer $\rightarrow$ words.
+
 must investigate comparability of results later.
-(also corpus -> task)
-must investigate comparability of results.
+
+(also corpus $\rightarrow$ task)
+\subsection{Preliminary investigations of integrity}
+The core idea this paper is to evaluate word utility by investigating a function (in the form of an AI model) that presumably represents some level of understanding of the language and checking which inputs (words) have the biggest influence on either the input or the model's internal state.
+To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
+
+\todo{A lot of prelim. test results, for example, first tests of NSP model on opensubs sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
+
 
 \subsection{Formal problem statement for XAI word extraction}
 
@@ -24,10 +31,10 @@ Givens:
 
 	\item A corpus $C$ containing lines/sentences in the target language.
 
-	\item A function $f$ indicating the performance at the chosen task when given the subset of $W$ 
+	\item A function $f$ indicating the performance at the chosen task when given the subset of $W$
 	      \begin{align*}f : 2^{W} \to \mathbb{R} \\
-			  f (K) \mapsto p
-		  \end{align*}
+		      f (K) \mapsto p
+	      \end{align*}
 
 	\item An integer $k$ denoting the desired cardinality of the (smaller) subset of words to learn.
 \end{itemize}
@@ -45,10 +52,73 @@ In practice, it is often not feasible to calculate calculate $f$ for every possi
 
 
 
+\section{NLP tasks}
+The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
+Since we are trying to estimate the utility a word a word has to language understanding, the NLP tasks should reflect language understanding as much as possible.
+A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
+Pre-training tasks are used to first endow the AI model with a general understanding of the language, before using transfer learning to specialize it for a more specific downstream task.
+Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
+\todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
+
+\subsection{NLP pre-training tasks used by state-of-the-art AI models}
+This section takes a look at the pretraining process of recent state-of-the-art LLM models which have made public their training process.
+Both the NLP tasks and the kind of data is considered.
+
+
+\begin{description}
+	\item[GPT-4] \cite{openaiGPT4TechnicalReport2024}
+
+	      Task: Language modeling (see next section).
+
+	      Data: Not disclosed in detail, according to the original paper, the model was trained "using both publicly available data (such as internet data) and data licensed from third-party providers".
+	\item[GPT-3] \cite{brownLanguageModelsAre2020}
+	      GPT-3 is a model that does not rely on transfer learning to apply its linguistic understanding to new tasks; instead, it uses zero-shot and few-shot learning to perform tasks it was not specifically trained for.
+
+	      Task: Language modeling (same as GPT-2 \cite{radfordLanguageModelsAre2019})
+
+	      Data: Common Crawl, WebText2, Books1, Books2, Wikipedia \todo{link sources?}
+	  \item[LLama 3.3] \cite{LlamamodelsModelsLlama3_3}
+
+
+		Task: Meta did not make public the training process for Llama 3.3.
+
+		Data: "data from publicly available sources"
+\end{description}
+
+\subsection{Tasks considered}
+\begin{description}
+	\item[Next Sentence Prediction]
+	      In this task, the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text.
+	      Advantages for this task for our purposes is that such a dataset is easy to generate, as it merely requires a corpus of sentences that follow from each other, which is easily obtained from Wikipedia articles, film subtitles, or any other continuous text.
+
+	\item[Text summarization]
+	      This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible.
+	      Summarizing texts seems to require a high level of "understanding" of the text and would thus seem to be good choice for testing whether ablating certain words from the text would have detrimental effect on the model performance.
+	      Unfortunately, this task requires hand-labeled datasets and is thus not a good candidate if we aim to find approaches which can be implemented in many different languages, as there is a dearth in data in many of the less-studied languages of the world.
+
+	\item[Masked language modeling (aka. "cloze task")]
+	\item[Causal language modeling (aka. Next token prediction)]
+	\item[Sentence order prediction]
+\end{description}
+
+\subsection{Data required for each NLP task}
+The various NLP tasks employed require certain types of corpora to be employed properly:
+
+\begin{itemize}
+	\item[Next sentence prediction]
+	      Requires a corpus that contains consecutive sentences.
+	      Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
+	      This excludes movie subtitles from the possible corpora for this task.
+
+\end{itemize}
 
 \section{XAI methods}
 \begin{itemize}
 	\item Attention as Explanation
+	      Advantages:
+	      Model only needs to be run once per sentence.
+	      Longer sentences do not lead to a much longer calculations
+	      Disadvantages: Justification as explanation controversial.
 	\item Single Token Ablation
 \end{itemize}
 
@@ -57,7 +127,10 @@ In practice, it is often not feasible to calculate calculate $f$ for every possi
 \section{AI models}
 \begin{itemize}
 	\item NSP-model ABC
+	\item LLAMA?
 \end{itemize}
+
+\todo{tests of performance tests of models used with corpora used (e.g., if NSP prediction model is reliable)}
 
 \section{Result evaluation \& comparison}
 
@@ -147,3 +220,5 @@ Considerations of the choice of metric are:
 \end{description}
 
 
+\subsubsection{Tests of applicability}
+[Results of preliminary tests of various metrics on own lists such as rank switching ,replacement at bottom and top of list etc.]
