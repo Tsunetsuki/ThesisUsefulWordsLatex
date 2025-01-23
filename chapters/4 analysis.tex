@@ -77,12 +77,12 @@ Both the NLP tasks and the kind of data is considered.
 	      Task: Language modeling (same as GPT-2 \cite{radfordLanguageModelsAre2019})
 
 	      Data: Common Crawl, WebText2, Books1, Books2, Wikipedia \todo{link sources?}
-	  \item[LLama 3.3] \cite{LlamamodelsModelsLlama3_3}
+	\item[LLama 3.3] \cite{LlamamodelsModelsLlama3_3}
 
 
-		Task: Meta did not make public the training process for Llama 3.3.
+	      Task: Meta did not make public the training process for Llama 3.3.
 
-		Data: "data from publicly available sources"
+	      Data: "data from publicly available sources"
 \end{description}
 
 \subsection{Tasks considered}
@@ -99,6 +99,21 @@ Both the NLP tasks and the kind of data is considered.
 	\item[Masked language modeling (aka. "cloze task")]
 	\item[Causal language modeling (aka. Next token prediction)]
 	\item[Sentence order prediction]
+	\item[Sentence embeddings]
+	      Sentence embeddings take the approach of transforming words into meaningful vectors and extend it to whole sentences.
+	      This "task" differs from the others in that we do not measure differences in performance when the input is perturbed; but rather a distance between the embedding vectors themselves.
+	      This justification for such an approach is that sentences whose meaning is very different should end up further apart from each other in the vector space once embedded.
+	      This brings several advantages:
+	      This approach can be performed on any corpus containing distinct sentences.
+	      These corpus does not have to be document-level, and sentences need not be consecutive.
+			To make this a task on which XAI methods can be applied, we can define a distance from the original token
+\end{description}
+
+\subsection{Sentence embedding methods}
+
+\begin{description}
+	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
+	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
 \end{description}
 
 \subsection{Data required for each NLP task}
@@ -123,7 +138,17 @@ The various NLP tasks employed require certain types of corpora to be employed p
 \end{itemize}
 
 \section{Tokenizers}
- (intimately related to AI models)
+[explanation of why tokenizers are important, explain various possible definitions of "word"]
+[explain why morphosyntactically rich languages necessitate word splitting to some extend]
+
+In some XAI models, we are free to choose any tokenizer we like.
+We can choose, for instance, to only use full words, or word parts in English.
+In input perturbation XAI approaches, we can choose to mask any part of the input with the help of tokenizers.
+For decomposition approaches, the model is not looked at as a black box but instead examined using model-specific methods such as attention or Layer-based Relevance Propagation.
+In such approaches, only the calculations made by the model itself are available for analysis, which means we are not free to choose our own word-splitting approach independent from the model.
+This is because these models are trained using a specific tokenizer in the preprocessing, and changing the preprocessing makes the model function incorrectly.
+
+
 \section{AI models}
 \begin{itemize}
 	\item NSP-model ABC
@@ -150,6 +175,21 @@ Considerations of the choice of metric are:
 	      A word that is rank 1 in list A but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
 \end{description}
 
+\subsection{Interdependencies between components used}
+
+While the components described above can mostly be used in any combination, there are some important restrictions to keep in mind:
+
+\begin{description}
+	\item[Attention as XAI can only be used on transformers]
+	\item[Tokenization (and thus selection of word candidates) is only independent on model used in input perturbation approaches]
+		As a direct consequence of this, other XAI mechanisms like attention as explanation are only useful for our purposes if the AI model uses a tokenization approach that somewhat corresponds to human notions of words.
+		If a model uses tokenization approaches where a token is a combination of any three letters, any list obtained that tries to order the tokens by utility, while meaningful, will not be useful for human vocabulary learning.
+		Note that in such cases, we can postprocess the data obtained, by merging the tokens to human-readable words and taking the average or maximum attention score of the AI model's tokens.
+	\item[]
+\end{description}
+
+
+
 \subsubsection{Metrics used}
 
 \begin{description}
@@ -158,7 +198,7 @@ Considerations of the choice of metric are:
 	      It is therefore more helpful to view its results at various depths.
 	      The original formula for this metric in the case of two lists is:
 	      \[
-		      a_{d} := a \text{from start to rank} d
+		      a_{d} := a \text{ from start to rank } d
 	      \]
 
 	      \[
@@ -222,3 +262,4 @@ Considerations of the choice of metric are:
 
 \subsubsection{Tests of applicability}
 [Results of preliminary tests of various metrics on own lists such as rank switching ,replacement at bottom and top of list etc.]
+
