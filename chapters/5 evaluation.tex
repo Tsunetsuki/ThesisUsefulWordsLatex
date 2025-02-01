@@ -1,0 +1,24 @@
+\section{Selection of evaluation measures}
+
+The various utility extraction approaches produce ranked lists as outputs.
+To compare these, I employ both quantitative and qualitative comparison approaches, described in the following chapters.
+
+\subsection{List similarities}
+In order to compare the results provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
+While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
+A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered descendingly by supposed relevance, and outputs a real number giving either a distance or similarity between the lists.
+
+Considerations of the choice of metric are:
+
+\begin{description}
+	\item [Handling of lists with partial overlap.]
+	      Metrics must be able to handle elements which occur in only one of the two lists.
+	      Thus, a metric which solely compares ranks of elements is not viable.
+	\item [Start of lists is more impactful than end.]
+	      Since the beginning of lists contains the words which are ranked as most important, changes at the top should impact the metric more than changes at the bottom. This includes (1) Equal differences in rank should be counted as more important if they occur further up the list.
+	      A word that is rank 1 in list A but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
+\end{description}
+
+\section{Results}
+
+\section{Discussion}

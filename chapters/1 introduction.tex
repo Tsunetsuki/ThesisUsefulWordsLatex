@@ -95,8 +95,8 @@ The approaches for approximating utility with an automatically computable metric
 \begin{description}
 	\item [Raw frequency of words in corpus]
 	      A simple ordering of words by how often they appear in a corpus.
-		\item[Frequency with stopwords filtered out]
-			The same as frequency, but filtering out known stopwords from the resulting lists.
+	\item[Frequency with stopwords filtered out]
+	      The same as frequency, but filtering out known stopwords from the resulting lists.
 	\item [TF-IDF]
 	      How often the words appear in a target corpus but divided by their frequency in a more generic corpus.
 	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
@@ -107,10 +107,10 @@ The approaches for approximating utility with an automatically computable metric
 	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
 	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
 	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
-		  Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
+	      Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
 	\item [Transformer attention]
-		The transformer architecture is based on a mechanism called \textit{self-attention}.
-		It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
+	      The transformer architecture is based on a mechanism called \textit{self-attention}.
+	      It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
 
 	\item [Difference in internal vector representation for AI reading text]
 	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
@@ -134,3 +134,10 @@ Key technologies employed include therefore:
 	\item AI models to perform NLP tasks
 \end{itemize}
 
+\section{Challenges and Contributions}
+
+\subsection{Research questions}
+\subsection{Challenges}
+[Challenges: Lack of data for all contexts]
+
+\section{Outline of Work}
