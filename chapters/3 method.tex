@@ -1,3 +1,57 @@
+\section{Overview}
+It is evident that recent tools based on Artificial Intelligence are much better-equipped for many tasks in the realm of Natural Language Processing than rule-based tools.
+At the same time, it is less clear how exactly these networks achieve the results they do.
+Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
+Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
+
+\subsection{Word extraction methods}
+The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
+\subsubsection{Traditional}
+\begin{description}
+	\item [Raw frequency of words in corpus]
+	      A simple ordering of words by how often they appear in a corpus.
+	\item[Frequency with stopwords filtered out]
+	      The same as frequency, but filtering out known stopwords from the resulting lists.
+	\item [TF-IDF]
+	      How often the words appear in a target corpus but divided by their frequency in a more generic corpus.
+	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+\end{description}
+\subsubsection{AI-simulated learner}
+\begin{description}
+	\item [Performance difference of AI for NLP tasks]
+	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
+	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
+	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
+	      Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
+	\item [Transformer attention]
+	      The transformer architecture is based on a mechanism called \textit{self-attention}.
+	      It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
+
+	\item [Difference in internal vector representation for AI reading text]
+	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
+	      By using various distance metrics, it may be possible to find out which words have the greatest impact on the model’s understanding of a text.
+	      Most of these approaches can be done both for individual words and word sequences (n-grams).
+	      While individual words are the easiest to examine, sometimes n-grams are insightful for finding sequences of words whose meaning is more than the sum of their parts (idioms and collocations) and which therefore must be learned in separately from their constituents (meaningful English n-grams include e.g. “kick the bucket”, “such that”, “such as”).
+
+	      This also raises the question of what is considered a “word”.
+	      A phrase like “such as” can be considered two words if the definition of a word is simply “something separated by a space” or one word if the definition is “a phrase whose meaning cannot be arrived at trivially from knowing the definition of its parts”.
+	      In Natural Language Processing, tokenizers break down texts into words, but they typically use the first definition for a word in the case of English.
+	      Many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces to separate a different unit of text (syllables in Vietnamese, sentences in Thai), making this definition of a word unpractical.
+	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
+	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
+\end{description}
+
+Key technologies employed include therefore:
+\begin{itemize}
+	\item Tokenizers
+	\item Lemmatizers
+	\item Translators
+	\item AI models to perform NLP tasks
+\end{itemize}
+
+
+
+
 \section{Components of XAI word extraction}
 Components are
 \begin{itemize}
@@ -171,82 +225,6 @@ While the components described above can mostly be used in any combination, ther
 \end{description}
 
 
-
-\subsubsection{Metrics used}
-
-\begin{description}
-	\item [Sequential rank agreement (modified)] \cite{ekstromSequentialRankAgreement2015}: This metric is based on the deviations of some subset of the lists in the upper ranks.
-	      It is important to note that this metric has an additional parameter "depth" which determines how many elements (from the top of the list) are considered.
-	      It is therefore more helpful to view its results at various depths.
-	      The original formula for this metric in the case of two lists is:
-	      \[
-		      a_{d} := a \text{ from start to rank } d
-	      \]
-
-	      \[
-		      S_{d} := a_{d} \cup b_{d}
-	      \]
-
-	      \[
-		      SRA_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \left( r_{b}(x) \right) - \left( r_{a}(x) \right) \right)}{|S_{d}|}
-	      \]
-
-	      where \(\lambda\) is a normalization factor ensuring that \(\max(SRA) = 1\).
-	      In its proposed form, this metric can only compare lists which contain the same set of unique elements, just in different orders.
-	      In order to make it work on lists where this is not the case, one can set the "rank" of nonexisting elements to a value greater than the length of the lists, such as \(2 |a|\).
-	      Another drawback of the metric is that the standard deviation of two numbers does not depend on their absolute value, only their difference.
-	      However, to satisfy number 3 of the stated requirements, we can take the deviation of the logarithm of the ranks instead of the deviation of the ranks themselves, resulting in the formula
-
-	      \[
-		      r^{\prime}(x) :=
-		      \begin{cases}
-			      \mathrm{rank}_{b}(x) & \text{if } x \in b, \\
-			      2 \cdot |a|          & \text{otherwise.}
-		      \end{cases}
-	      \]
-
-	      \[
-		      SRA^{mod}_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \log (r^{\prime}_{b}(x))-\log(r^{\prime}_{a}(x))\right)}{|S_{d}|}
-	      \]
-
-	      For this modified version, \(\lambda\) can be calculated with:
-
-	      \[
-		      \lambda = \frac{1}{SRA_{d}(a, a^{*})},
-	      \]
-
-	      where \(a^{*}\) is a list such that \(a \cap a^{*} = \emptyset\).
-	      % \item \textbf{Average overlap / rank-biased overlap} \cite{webberSimilarityMeasureIndefinite2010}: Compares ranked list and puts more emphasis on the top of the list than at the bottom. However, assumes that the elements of both lists are the same, i.e., that all elements of list A are also in list B and vice versa.
-	      %
-	      % \item \textbf{11-point interpolated average precision} \cite{manningIntroductionInformationRetrieval2008}: Uses set metric precision (though may also use recall or F1 score on various subsets of the list (first 10\%, first 20\% etc.) and takes their geometric mean to arrive at a single number.
-	      %       As each of the elevent numbers is calculated on the partial subset of the list's elements starting at the first element, this means that changes in the top of the list affect more of these numbers and thus have a larger impact on the final calculated mean.
-	      %       One drawback of this method is that precision measurement within the 10\% interval only takes into account set membership, not the order of words:
-	      %       For a list containing 10,000 words, the evaluated intervals are words in the index intervals $\left[ 0, 1000 \right), \left[ 0, 2000 \right), ... ,\left[ 0, 10000 \right)$.  Differences of order within the first 1000 words are thus ignored.
-
-	\item [Discounted Cumulative Gain]:
-	      This formula outputs a value between 0 and 1, with 1 being given if both lists are identical, 0 when they have no elements in common, and values in between when there is partial overlap between elements and/or their order is different.
-	      ${DCG_{p}} =\sum _{i=1}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}=rel_{1}+\sum _{i=2}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}$
-\end{description}
-
-\[
-	rel_{i} :=
-	\begin{cases}
-		\frac{1}{rank_{b}(el_{i}) + 1} & \text{if } el_{i} \in b \\
-		0                              & \text{otherwise}
-	\end{cases}
-\]
-\subsubsection{Metrics rejected}
-\begin{description}
-	\item [Kendall rank correlation ] \cite{kendallNEWMEASURERANK1938b}: This metric is bounded between 0 and 1 and compares the ranks of the elements of two lists. However, it cannot handle elements that only occur in one of the two lists, and thus is not suitable for our purposes. It also does not distinguish between differences in the upper and lower parts of the lists.
-	\item [Spearman's footrule] \cite{spearmanCorrelationCalculatedFaulty1910}: Rejected for the same reasons as Kendall rank correlation.
-\end{description}
-
-
-\subsubsection{Tests of applicability}
-[Results of preliminary tests of various metrics on own lists such as rank switching ,replacement at bottom and top of list etc.]
-
-
-
 \section{Corpora}
 \subsection{Selection criteria}
 
@@ -298,21 +276,6 @@ As of 2025, the latest version of the corpus (v2018) contains aligned subtitles 
 	\caption{The pipeline producing the OpenSubtitles parallel corpus}
     \label{fig:opensubs pipeline}
 \end{figure}
-
-\section{Sources for existing lists for comparison}
-It may be useful to compare the lists generated by the various approaches with existing word lists from educational materials:
-Textbooks often feature chapters with word lists, or sentences which can be converted to word lists with a tokenizer.
-The purpose is to have a point of comparison, to see if generated lists agree with existing lists, and find reasons for differences.
-
-\begin{itemize}
-	\item Language learning textbooks
-
-	\item Language learning applications
-	      \begin{itemize}
-		      \item Duolingo: While Duolingo is the most popular language learning application as of 2024, it does not publish its word lists or course contents that is free of cost and easily convertible to a format that can be processed with NLP tools.
-		      \item Rosetta Stone: Rosetta Stone publishes Course contents on its website. While the contents take the form of sentences, these can be converted to word lists by using a tokenizer on the contents and creating a list in the order in which they appear in the texts.
-	      \end{itemize}
-\end{itemize}
 
 
 \section{Data Augmentation}
