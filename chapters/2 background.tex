@@ -1,3 +1,58 @@
-\section{State of the Art}
+\section{Current teaching of languages}
+ [Short overview what percentage is taught via classrooms/learning apps/textbooks]
+ [I want to develop a method that helps educators (and active students) to select relevant vocabulary.]
 
-\section{Natural Language Processing}
+\section{Basic concepts of Natural Language Processing}
+ [basic concepts, and why they matter to this work.
+  I will add anything that that the target audience is either not familiar with, or where the function in my method is not obvious]
+
+\begin{description}
+	\item [AI model] Container of functional knowledge, in this case linguistic.
+	\item [General NLP tasks] a) Way for AI model to engage with language, b) Test of language ability.
+	\item [Explainable AI] Extraction of knowledge from AI model.
+	\item [Transformer Attention mechanism] Way of finding patterns in functional knowledge of some AI models.
+	\item [Tokenizer] To split continuous text into distinct words, which we can make statistics from, mask in text etc.
+\end{description}
+
+This paper aims to exploit these significant developments to gain insights into which words can provide second language learners with the most utility.
+
+\section{Definitions of terms}
+ [Definition of "utility" of vocabulary]
+
+\section{State of the Art (of vocabulary selection)}
+\subsection{Non-computational methods}
+How is vocabulary order selected by current language teaching tools:
+Not context-specific in most cases
+offers only one order,
+investigate if there are any automatic approaches besides frequency]
+
+[can present methods for extracting useful words from text]
+can be similar in either method or goal.
+goal is finding useful words for language learning
+method is extracting important words from text via XAI
+
+\subsection{Computational methods}
+These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
+These are closer to the method I will
+
+\begin{description}
+	\item [Raw frequency of words in corpus]
+	      A simple ordering of words by how often they appear in a corpus.
+	\item [Frequency with stopwords filtered out]
+	      The same as frequency, but filtering out known stopwords from the resulting lists.
+	\item [TF-IDF]
+	      How often the words appear in a target document but divided by their frequency in a more generic corpus.
+	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+\end{description}
+
+\subsection{Issues with current methods}
+Current methods do not exploit recent developments in AI technology and thus suffer from several shortcomings:
+In general, all of them essentially only count words without taking into account their relationship between each other:
+
+Frequency: The most frequent words in texts are often words that carry little meaning by themselves, such as "a", "the", "of" in English.
+While these may appear in many texts, they are not useful in determining their meaning.
+TF-IDF: This metric has been used successfully to find the words that give the best hints at a text's topic.
+However, it does not take into account and semantic relationships between the words in a text.
+Thus, learning words by aggregating TF-IDFs on multiple texts may aid in identifying the topic of texts, but not at finding out what the message conveyed about the topic is.
+"not" is a highly frequent word in English and thus will have a low TF-IDF score in most documents. But it is essential to know, as it can completely invert the meaning of a sentence.
+
