@@ -4,9 +4,31 @@ At the same time, it is less clear how exactly these networks achieve the result
 Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
 Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
 
-\subsection{Word extraction methods}
-The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
 \subsubsection{AI-simulated learner}
+This work puts forward approaches for evaluating word utility that use AI models as an way to simulate a human interacting with language.
+Humans with language capabilities
+Because AI model in recent years have become highly adept at fulfilling language-related tasks such as language modeling, it may be said that they possess an understanding of language in a behaviorist sense.
+
+Let us examine examples of how utility may be defined:
+In the question "Would you like some coffee?", the most important part is "coffee".
+If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
+If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
+To identify which words are important to understand the question, we could ask a human to point them out.
+However, this is not very quantifiable and the answer is likely to be influenced by bias.
+We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
+While this removes some of the bias, there are still issues with this approach:
+Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
+If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
+These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
+
+\todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
+
+
+While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
+
+
+The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
+
 \begin{description}
 	\item [Performance difference of AI for NLP tasks]
 	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
@@ -102,6 +124,7 @@ Since we are trying to estimate the utility a word a word has to language unders
 A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
 Pre-training tasks are used to first endow the AI model with a general understanding of the language, before using transfer learning to specialize it for a more specific downstream task.
 Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
+Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
 \todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
 
 \subsection{NLP pre-training tasks used by state-of-the-art AI models}
