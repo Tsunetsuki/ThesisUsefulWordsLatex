@@ -1,10 +1,12 @@
-\section{Overview}
-It is evident that recent tools based on Artificial Intelligence are much better-equipped for many tasks in the realm of Natural Language Processing than rule-based tools.
-At the same time, it is less clear how exactly these networks achieve the results they do.
-Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
-Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
+% \section{Overview}
+% It is evident that recent tools based on Artificial Intelligence are much better-equipped for many tasks in the realm of Natural Language Processing than rule-based tools.
+% At the same time, it is less clear how exactly these networks achieve the results they do.
+% Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
+% Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
+%
+\section{Core idea: AI-simulated learner}
+\contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
 
-\subsubsection{AI-simulated learner}
 This work puts forward approaches for evaluating word utility that use AI models as an way to simulate a human interacting with language.
 Humans with language capabilities
 Because AI model in recent years have become highly adept at fulfilling language-related tasks such as language modeling, it may be said that they possess an understanding of language in a behaviorist sense.
@@ -25,6 +27,10 @@ These problems can be alleviated by using AI models: They are cheaper to perform
 
 
 While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
+Explainable AI has the explanation of the decisions of AI models as its aim.
+This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
+If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
+However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
 
 
 The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
@@ -62,6 +68,8 @@ Key technologies employed include therefore:
 \end{itemize}
 
 
+\section{Knowledge extraction from AI model with XAI}
+\contentdescription{Advances in XAI, explain various approaches. May be redundant to write this chapter depending on what I write in previous one.}
 
 
 \section{Components of XAI word extraction}
@@ -126,6 +134,7 @@ Pre-training tasks are used to first endow the AI model with a general understan
 Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
 Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
 \todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
+\todo{include free availability for AI models in their justification}
 
 \subsection{NLP pre-training tasks used by state-of-the-art AI models}
 This section takes a look at the pretraining process of recent state-of-the-art LLM models which have made public their training process.
