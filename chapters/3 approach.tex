@@ -1,11 +1,87 @@
-% \section{Overview}
-% It is evident that recent tools based on Artificial Intelligence are much better-equipped for many tasks in the realm of Natural Language Processing than rule-based tools.
-% At the same time, it is less clear how exactly these networks achieve the results they do.
-% Fortunately, there is a branch in the field of Artificial Intelligence called Explainable Artificial Intelligence which aims at explaining the outputs of AI models.
-% Thus, it may be possible to harness the evident intelligence off AI models to simulate a human, to find out which words have the largest impact on the model's performance.
-%
-\section{Core idea: AI-simulated learner}
+This chapter describes in detail my approach for word utility evaluation, using the concepts explained in chapter \ref{definition-of-terms}.
+I first restate the problem more precisely, then describe a hypothetical approach for evaluating word utility with human test subjects. After pointing out the unfeasability of such a testing method, I suggest ways to solve the problem with AI and XAI, using the concepts referred to in chapter \ref{basic-nlp-concepts}.
+
+\section{Problem statement for word utility evaluation}
+
+% I have defined the following terms before
+% language context
+% utility
+% proxy task
+
+To repeat the introductory sentence of chapter \ref{definition-of-terms}:
+The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
+Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}. The following formula gives a more precise idea of the aim and the variables involved.
+
+Since utility is defined in terms of language ability, we first need a way to put a number on the language ability of a test subject. This is done by means of a proxy task: We can imagine a human test subject taking a language exam as a proxy task to find out their language ability:
+
+\begin{align*}
+	t: \text{Human} \to [0, 1] \\
+	t (s) \mapsto p                 \\
+\end{align*}
+where s is the test subject and t is the proxy task.
+
+We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However for the purposes of this thesis, I focus on vocabulary, and so the vocabulary of the human is introduced as the defining essential variable:
+
+Let $W$ be the set of all words in the language.
+\begin{align*}
+	t: \text{Human}, 2^{W}\to \mathbb{R} \\
+	t (s, V) \mapsto p                    \\
+\end{align*}
+where V is the vocabulary of the human and a subset of $W$.
+
+We now have function from the vocabulary to the performance (the proxy metric for language ability).
+Using the proxy task function, we can define a measure of efficiency of an ordered list of vocabulary $l$ containing elements from $W$.
+The efficiency reflects how quickly a learner improves their language ability if they learn words in the order of the list, measured as a proportion $p_{aim}$ of the maximum achievable performance $t_{max} = t(s,W)$ (knowing all words in the language).
+It is the number of words which must be learned from the vocabulary list to bring the performance above the threshold:
+
+Let
+\begin{align*}
+	l & := (w_1, w_2, \dots, w_n) \quad \text{where } w_i \in W \text{ and } w_i \neq w_j \text{ for } i \neq j. \\
+	V_{l, k} &:= \{w_i \mid i \leq k\}\\
+	p_{aim} & \in  [0, 1] \\
+\end{align*}
+
+Then 
+\begin{align*}
+	e_{t}(s, l, p_{aim}) \mapsto ( -1 )  \cdot  \min\{ k \mid  t(s,  V_{l, k}) \geq p_{aim} \cdot t(s, W)\} \\
+\end{align*}
+The term contains a multiplication with $-1$ such that an efficient list achieves a higher efficiency.
+
+And with this definition of efficiency, we can define the condition for an optimal vocabulary list given a particular $p_{aim}$:
+\begin{align} \label{eq:opt-vocab-list}
+	l_{opt, t} (s, p_{aim}) \mapsto \argmin_{l} \quad e(s, l, p_{aim}) \\
+\end{align}
+
+
+
+\section{Thought experiment: Measuring word utility as ability improvement in humans}
+
+\contentdescription{state utility in terms of language ability improvement
+	aim is not just to evaluate, but also efficiently find lists of vocab
+	give problems that is faced when trying to test this approach with human test subjects: no repeatability, high costs
+}
+
+With the formula \ref{eq:opt-vocab-list}, we now have set our goal more concretely.
+We are left with the question of how to actually make candidate vocabulary lists, and test them for efficiency.
+Let us first consider one vocabulary list of 3000 words.
+To test its efficience, we would need to find a human test subject who does not know anywords of the target language at the outset.
+We would then make the subject learn the words from the list one by one, and test their language ability in regular intervals to see if their desired threshold has been reached.
+This disregards the fact that knowing all words in the language would not necessarily mean the performance would reach 1, but assuming a normal school test that is not an issue.
+
+While this test setup might take a long time to complete depending on the desired threshold, it is still feasable.
+But if we wish to analyze the same subject's performance learning from a second vocabulary list to compare the lists's efficiencies, there is an inavoidable issue:
+The test subject cannot completely forget the words they have learned in the first run.
+The experiment is thus not repeatable.
+If we increase the number of test subjects so each vocabulary list is learned by a new subject, we introduce differences in capabilities between test subjects and the cost of the experiment also quickly increases.
+
+However, this theoretical test setup could be feasable using a non-human test subject:
+Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists iwth drastically reduced costs.
+I shall lay out this approach in the remaining sections of this chapter.
+
+\section{AI-simulated learner}
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
+
+% use the NLP concepts introduced in 2.4
 
 This work puts forward approaches for evaluating word utility that use AI models as an way to simulate a human interacting with language.
 Humans with language capabilities
@@ -33,39 +109,26 @@ If we try to extract truthful knowledge about language from the AI, we are relyi
 However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
 
 
-The approaches for approximating utility with an automatically computable metric which this works aims to compare include:
-
-\begin{description}
-	\item [Performance difference of AI for NLP tasks]
-	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
-	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
-	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
-	      Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
-	\item [Transformer attention]
-	      The transformer architecture is based on a mechanism called \textit{self-attention}.
-	      It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
-
-	\item [Difference in internal vector representation for AI reading text]
-	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
-	      By using various distance metrics, it may be possible to find out which words have the greatest impact on the model’s understanding of a text.
-	      Most of these approaches can be done both for individual words and word sequences (n-grams).
-	      While individual words are the easiest to examine, sometimes n-grams are insightful for finding sequences of words whose meaning is more than the sum of their parts (idioms and collocations) and which therefore must be learned in separately from their constituents (meaningful English n-grams include e.g. “kick the bucket”, “such that”, “such as”).
-
-	      This also raises the question of what is considered a “word”.
-	      A phrase like “such as” can be considered two words if the definition of a word is simply “something separated by a space” or one word if the definition is “a phrase whose meaning cannot be arrived at trivially from knowing the definition of its parts”.
-	      In Natural Language Processing, tokenizers break down texts into words, but they typically use the first definition for a word in the case of English.
-	      Many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces to separate a different unit of text (syllables in Vietnamese, sentences in Thai), making this definition of a word unpractical.
-	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
-	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
-\end{description}
-
-Key technologies employed include therefore:
-\begin{itemize}
-	\item Tokenizers
-	\item Lemmatizers
-	\item Translators
-	\item AI models to perform NLP tasks
-\end{itemize}
+\begin{table}[ht]
+	\centering
+	\begin{tabularx}{\textwidth}{|X|X|}
+		\hline
+		\textbf{Abstract concept}        & \textbf{Implementation}            \\
+		\hline
+		Test subject                     & AI model                           \\
+		\hline
+		Language ability                 & Performance in NLP task            \\
+		\hline
+		Language context                 & Corpus                             \\
+		\hline
+		Analysis of language interaction & XAI method                         \\
+		\hline
+		Word utility                     & Impact of word on task performance \\
+		\hline
+	\end{tabularx}
+	\caption{Correspondence of abstract concepts to parts of implementation.}
+	\label{table:concept-implementation-correspondence}
+\end{table}
 
 
 \section{Knowledge extraction from AI model with XAI}
@@ -94,36 +157,6 @@ The core idea this paper is to evaluate word utility by investigating a function
 To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
 
 \todo{A lot of prelim. test results, for example, first tests of NSP model on opensubs sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
-
-
-\subsection{Formal problem statement for XAI word extraction}
-
-Givens:
-
-\begin{itemize}
-	\item A set $W$ of $w$ candidate words: $|W| = w$.
-
-	\item A corpus $C$ containing lines/sentences in the target language.
-
-	\item A function $f$ indicating the performance at the chosen task when given the subset of $W$
-	      \begin{align*}f : 2^{W} \to \mathbb{R} \\
-		      f (K) \mapsto p
-	      \end{align*}
-
-	\item An integer $k$ denoting the desired cardinality of the (smaller) subset of words to learn.
-\end{itemize}
-Find
-\[
-	\argmax_{K} f(K)
-\]
-\begin{align*}
-	K \subset W \\
-	|K| = k     \\
-	k < |W|
-\end{align*}
-
-In practice, it is often not feasible to calculate calculate $f$ for every possible subset $K$, necessitating the use of approximations.
-
 
 
 \section{NLP tasks}
@@ -182,7 +215,7 @@ Both the NLP tasks and the kind of data is considered.
 	      This brings several advantages:
 	      This approach can be performed on any corpus containing distinct sentences.
 	      These corpus does not have to be document-level, and sentences need not be consecutive.
-			To make this a task on which XAI methods can be applied, we can define a distance from the original token
+	      To make this a task on which XAI methods can be applied, we can define a distance from the original token
 \end{description}
 
 \subsection{Sentence embedding methods}
@@ -204,6 +237,8 @@ The various NLP tasks employed require certain types of corpora to be employed p
 \end{itemize}
 
 \section{XAI methods}
+
+The XAI methods used in this work are the following:
 \begin{itemize}
 	\item Attention as Explanation
 	      Advantages:
@@ -213,6 +248,33 @@ The various NLP tasks employed require certain types of corpora to be employed p
 	\item Single Token Ablation
 \end{itemize}
 
+The following lays out how each of these methods works to achieve the goal of word utility estimation.
+
+\begin{description}
+	\item [Performance difference of AI for NLP tasks]
+	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
+	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
+	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
+	      Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
+	\item [Transformer attention]
+	      The transformer architecture is based on a mechanism called \textit{self-attention}.
+	      It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
+
+	\item [Difference in internal vector representation for AI reading text]
+	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
+	      By using various distance metrics, it may be possible to find out which words have the greatest impact on the model’s understanding of a text.
+	      Most of these approaches can be done both for individual words and word sequences (n-grams).
+	      While individual words are the easiest to examine, sometimes n-grams are insightful for finding sequences of words whose meaning is more than the sum of their parts (idioms and collocations) and which therefore must be learned in separately from their constituents (meaningful English n-grams include e.g. “kick the bucket”, “such that”, “such as”).
+
+	      This also raises the question of what is considered a “word”.
+	      A phrase like “such as” can be considered two words if the definition of a word is simply “something separated by a space” or one word if the definition is “a phrase whose meaning cannot be arrived at trivially from knowing the definition of its parts”.
+	      In Natural Language Processing, tokenizers break down texts into words, but they typically use the first definition for a word in the case of English.
+	      Many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces to separate a different unit of text (syllables in Vietnamese, sentences in Thai), making this definition of a word unpractical.
+	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
+	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
+\end{description}
+
+
 \section{Interdependencies between components used}
 
 While the components described above can mostly be used in any combination, there are some important restrictions to keep in mind:
@@ -220,9 +282,9 @@ While the components described above can mostly be used in any combination, ther
 \begin{description}
 	\item[Attention as XAI can only be used on transformers]
 	\item[Tokenization (and thus selection of word candidates) is only independent on model used in input perturbation approaches]
-		As a direct consequence of this, other XAI mechanisms like attention as explanation are only useful for our purposes if the AI model uses a tokenization approach that somewhat corresponds to human notions of words.
-		If a model uses tokenization approaches where a token is a combination of any three letters, any list obtained that tries to order the tokens by utility, while meaningful, will not be useful for human vocabulary learning.
-		Note that in such cases, we can postprocess the data obtained, by merging the tokens to human-readable words and taking the average or maximum attention score of the AI model's tokens.
+	      As a direct consequence of this, other XAI mechanisms like attention as explanation are only useful for our purposes if the AI model uses a tokenization approach that somewhat corresponds to human notions of words.
+	      If a model uses tokenization approaches where a token is a combination of any three letters, any list obtained that tries to order the tokens by utility, while meaningful, will not be useful for human vocabulary learning.
+	      Note that in such cases, we can postprocess the data obtained, by merging the tokens to human-readable words and taking the average or maximum attention score of the AI model's tokens.
 	\item[]
 \end{description}
 

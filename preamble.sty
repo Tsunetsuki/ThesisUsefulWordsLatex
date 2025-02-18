@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage[dvipsnames]{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{tikz, tkz-euclide}
 \usepackage{physics}
 \usepackage{amsmath, amssymb}
@@ -19,13 +20,16 @@
 \usepackage{fancyhdr}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 \usepackage{geometry}
-\setlength{\headheight}{16pt}
+\usepackage{tabularx}
 \pagestyle{fancy}
 \graphicspath{ {images/} }
+
+{\rowcolors{3}{white}{lightgray!20}
 
 \fancyhf{}                              % delete the current header and footer
 \fancyhead[LO]{\parbox[t]{0.9\textwidth}{\rightmark}} %<--- use [t] for parbox.
 % \fancyhead[RO]{\parbox[t]{0.02\textwidth}{\textbf{\thepage}}} %<-
+\setlength{\headheight}{25pt}
 
 \newcommand{\tss}{\textsubscript}
 \newcommand{\inv}[1]{\frac{1}{#1}}
