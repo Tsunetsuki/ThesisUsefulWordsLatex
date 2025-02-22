@@ -1,14 +1,17 @@
-This chapter describes in detail my approach for word utility evaluation, using the concepts explained in chapter \ref{seq:definition-of-terms}.
-I first restate the problem more precisely, then describe a hypothetical approach for evaluating word utility with human test subjects. After pointing out the unfeasibility of such a testing method, I suggest ways to solve the problem with AI and XAI, using the concepts referred to in chapter \ref{seq:basic-nlp-concepts}.
+This chapter describes in detail our approach for word utility evaluation fulfilling the goal stated in chapter \ref{seq:statement-of-goal}.
+The problem is first put into terms of mathematical objects in chapter \ref{seq:problem-statement-formal}.
+
+We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{seq:human-efficiency-testing}
+After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject, using the technological building blocks referred to in chapter \ref{seq:basic-nlp-concepts}.
 
 \section{Problem Statement for Word Utility Evaluation} \label{seq:problem-statement-formal}
 
-% I have defined the following terms before
+% the following terms have been defined before can should be used now
 % language context
 % utility
 % proxy task
 
-To repeat the introductory sentence of chapter \ref{seq:definition-of-terms}:
+To repeat the introductory sentence of chapter \ref{seq:statement-of-goal}:
 The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}. The following formula gives a more precise idea of the aim and the variables involved.
 
@@ -20,7 +23,7 @@ Since utility is defined in terms of language ability, we first need a way to pu
 \end{align*}
 where $s$ is the test subject and $t$ is the proxy task, with a possible score $p$ between zero and one.
 
-We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However for the purposes of this thesis, I focus on vocabulary, and so the vocabulary of the human is introduced as the defining essential variable:
+We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However, this thesis addresses vocabulary learning, and so the vocabulary of the test subject is provided as an additional parameter into the function
 
 Let $W$ be the set of all words in the language.
 \begin{align*}
@@ -95,7 +98,7 @@ In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek hav
 
 It may be said that they possess an understanding of language in a behaviorist sense.
 
-Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{seq:definition-of-terms} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
+Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{seq:statement-of-goal} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
 Table \ref{table:concept-implementation-correspondence} shows the correspondences between the concept and the technical component.
 
 \begin{table}[ht]
@@ -148,7 +151,7 @@ However, in the case of state-of-the-art models, we know the performance of such
 
 
 \section{Knowledge Extraction from AI Model with XAI}
-\contentdescription{Advances in XAI, explain various approaches. May be redundant to write this chapter depending on what I write in previous one.}
+\contentdescription{Advances in XAI, explain various approaches. May be redundant to write this chapter depending on the contents of the previous one.}
 
 
 \section{Components of XAI word Extraction}

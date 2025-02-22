@@ -1,18 +1,25 @@
+This chapter gives context to estimating the utility of vocabulary.
 
-\section{Definitions of Terms} \label{seq:definition-of-terms}
-\contentdescription{ Definition of "utility", context }
+For this, we start by defining the exact aim of the work  in chapter \ref{seq:statement-of-goal}.
+We then go over how this goal links to research about vocabulary acquisition for second language learners in chapter \ref{seq:context-of-work}.
 
-\todo{Define aim colloquially}
+We then examine current approaches for selecting vocabulary for language learners in chapter \ref{seq:state-of-the-art-vocabulary-selection}, to show what methods are currently employed and how they could be improved.
 
-More precisely, this aim may be expressed as:
-Finding words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
+Finally, chapter \ref{seq:basic-nlp-concepts} explains some of the basic concepts of Natural Language Processing that are employed in this work to perform those improvements.
 
-To clarify this aim further, I start by defining the terms in cursive.
 
-% People interact with languages in their daily lives via speaking, listening, reading and writing.
 
+\section{Statement of goal} \label{seq:statement-of-goal}
+\contentdescription{Statement of goal, definition of "utility", context }
+
+Generally speaking, this work addresses the problem of evaluating how useful a vocabulary word is to learn in the target language of a language learner.
+This helps us in generating ordered lists of vocabulary to learn which aid the learner in gaining competency in their target language quickly.
+Since different language learners learn languages for different reasons, we take into account the learner's motivation to tailor vocabulary specifically to the individual.
+
+To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
+These concepts are used to throughout this work.
 \subsection{(Language) Context}
-By a \textit{language context} or just \textit{context}, I mean a subset of situations in which a person interacts with language.
+By a \textit{language context} or just \textit{context}, a subset of situations is meant in which a person interacts with language.
 Examples of language contexts by topic are:
 News, football, crocheting.
 
@@ -48,7 +55,8 @@ For example, as a proxy measure for a person's general spelling ability, we coul
 
 This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
 
-With the terms defined more precisely, it becomes more concrete what our goal entails:
+\subsection{Restatement of goal}
+With the concepts above defined more precisely, it becomes more concrete what our goal entails:
 
 Finding words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 
@@ -58,7 +66,7 @@ Since the understanding of the learner cannot be directly measured, we use tasks
 
 
 
-\section{Context of the Work}
+\section{Context of the Work} \label{seq:context-of-work}
 \contentdescription{language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
 
 The issue of which words to learn when setting out to acquire a language is not a new one.
@@ -90,7 +98,7 @@ This works attempts to derive usefulness from corpus data, in combination with A
 
 
 
-\section{State of the Art (of Vocabulary Selection)}
+\section{State of the Art (of Vocabulary Selection)} \label{seq:state-of-the-art-vocabulary-selection}
 \subsection{Non-computational Methods}
 How is vocabulary order selected by current language teaching tools:
 Not context-specific in most cases
@@ -114,7 +122,7 @@ Relying on human intuition to evaluate word utility has two main drawbacks compa
 
 \subsection{Computational Methods}
 These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
-These are closer to the method I will
+They are closer related to the methods that this work strives for, and will be used as points of comparison when evaluating our own approaches.
 
 \begin{description}
 	\item [Raw frequency of words in corpus]
@@ -155,7 +163,8 @@ This section explains some basic concepts of Natural Language Processing domain,
 	      Recently, many large corpora have been compiled and are freely available to the public.
 	      Corpora differ from each other mostly in their source and method of compilation.
 	      Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
-	      I will use several such corpora to enable finding the utilities of words in their specific contexts.
+	      In the implementation and evaluation of this work's approach to word utility estimation, several such context-specific corpora will be used.
+
 	\subsection{NLP Task}
 	      Humans are generally intelligent and are not trained from childhood on any specific language task exclusively.
 	      In contrast, AI models are trained to perform one or several specific tasks.
@@ -174,7 +183,7 @@ This section explains some basic concepts of Natural Language Processing domain,
 	      Deep neural networks (the recent standard for AI models) stop being readily understandable to humans rather quickly once the number of neurons and layers is increased.
 	      Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions. \tocite{Notions of explainability and evaluation approaches for explainable artificial intelligence, Interpretable machine learning: A guide for making black box models explainable}
 	      This can be useful to check, if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
-	      By analyzing the decision process of high-performing AI models, I hope to extract useful information about how the language is processed which can be useful to humans as well.
+	      By analyzing the decision process of high-performing AI models, we hope to extract useful information about how the language is processed which can be useful to humans as well.
 
 	\subsection{Transformer Attention Mechanism}
 	      Many of the recent state-of-the-art AI models performing NLP tasks are built with the \textit{transformer} architecture.
@@ -185,7 +194,7 @@ This section explains some basic concepts of Natural Language Processing domain,
 	      \tocite{Attention is all you need}
 	      Attention has been used as one way to make decisions of AI models interpretable \tocite{Understanding Neural Networks through Representation Erasure} \tocite{Interpretable Neural Models for Natural Language
 		      Processing}.
-	      Thus, I will use it as one among several approaches to extract functional knowledge from NLP AI models.
+	      Thus, we will use it as one among several approaches to extract functional knowledge from NLP AI models.
 
 	\subsection{Tokenizer}
 	      Language presents itself in continuous form in most situations:
@@ -204,4 +213,4 @@ This section explains some basic concepts of Natural Language Processing domain,
 		      \item we can mask them in text inputs to AI models to test what effect masking a particular word has on the output.
 	      \end{itemize}
 
-The following chapter lays out in detail how I use these components to work together to create approaches for word utility estimation.
+The following chapter lays out in detail how this work uses these components to work together to create approaches for word utility estimation.
