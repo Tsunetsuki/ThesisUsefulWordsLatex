@@ -92,11 +92,32 @@ Chapter \ref{seq:human-efficiency-testing} has laid out a theoretical approach f
 However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists and a large pool of test subjects lowers the comparability of the scores.
 
 To circumvent this issue, this work proposes the following core idea:
-By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{seq:human-efficiency-testing} consistently.
+By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{seq:human-efficiency-testing} consistently and economically:
 
-In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek have become highly adept at fulfilling language-related tasks such as language modeling \tocite{LLMs}.
+In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek, BERT have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition, Sentiment Detection.
 
 It may be said that they possess an understanding of language in a behaviorist sense.
+
+These AI models are trained on one or more specific NLP tasks.
+If we run the model on a specific corpus and mask some of the words in the input, it is expected that the performance will decrease in comparison to the full input.
+However, presumable some words will have a larger impact on the performance than others.
+So to test the efficiency of a vocabulary list, we could let the AI model perform its NLP task on the corpus.
+At the start, we mask all of the tokens in the input to simulate a language learner who is a complete beginner and thus knows no words in their target language.
+We can then progressively unmask words in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
+This will yield a plot of performance over unmasked words which will tell us how quickly the performance improves with unmasked words.
+A plot with low initial performance increase will betray an inefficient vocabulary list, whereas a quickly increasing performance should correspond to an efficient vocabulary list.
+
+This is a cheap option when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
+
+The experiment described above necessarily requires data to be performed, in the form of a corpus.
+We can suppose that both the corpus and the NLP task performed by the model will influence how quickly the AI model's performance increases with a given vocabulary list:
+
+For example, to perform Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than if the task is related to Information Extraction, such as Temporal Tagging.
+
+The corpus will have a more obvious influence on the performance, since corpora differ in many aspects such as formality, topic, and format of the text, all of which may be closely influenced by the learning reason of a language learner.
+Thus, by choosing an appropriate corpus, we can test performance on language that is similar to the language in which a learner wishes to improve their understanding.
+
+
 
 Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{seq:statement-of-goal} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
 Table \ref{table:concept-implementation-correspondence} shows the correspondences between the concept and the technical component.
@@ -122,7 +143,36 @@ Table \ref{table:concept-implementation-correspondence} shows the correspondence
 	\label{table:concept-implementation-correspondence}
 \end{table}
 
-% use the NLP concepts introduced in 2.4
+
+\section{Generating Lists of Useful Vocabulary}
+The previous chapter describes an approach for evaluating the efficiency of vocabulary lists for learning in a specific context.
+While it can be seen as an improvement on the human setup because of its improved consistency and economy, it describes only the process of evaluation, not generation.
+Actually finding optimal vocabulary lists is theoretically possible by testing every possible vocabulary list with all words in the language.
+
+In practice, however, this would require an enormous amount of computational resources:
+
+If we wish to find the most efficient list of 1,000 words, and we take the most frequent 20,000 words in the language as candidates for members of this list, there is a total number of $P(20000, 1000) = \frac{20000!}{19000!}$ possible vocabulary lists to be tested.
+We can optimize this by running the experiment with every vocabulary with a cardinality between 0 and 1000, which would be
+\[
+\sum_{k=0}^{1000} \binom{20000}{k} \approx \frac{1}{2} \times 2^{20000} = 2^{19999}
+\]
+.
+This is still an unfeasible amount of computation. 
+
+It is therefore clear that finding optimal vocabulary list is much too expensive to be done without approximation.
+As approximations, we suggest XAI to extract information about the linguistic skills of AI models, and the following chapters illustrate this approach.
+
+
+
+\section{Experimental Setup with AI Technology}
+With the experimental setup described in chapter \ref{seq:human-efficiency-testing}, we established a way to test the efficiency of a vocabulary list with a human test subject.
+Now that we have introduced the idea of performing the experiment with an AI model instead, let us examine how such an approach would work:
+Chapter \ref{table:concept-implementation-correspondence} suggested ways that we could use technological components to stand in for abstract concepts.
+
+
+\todo{ restate math problem definition with components replaced by AI}
+
+
 
 \section{TO BE SORTED OR DELETED}
 Let us examine examples of how utility may be defined:
