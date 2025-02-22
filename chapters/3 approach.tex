@@ -1,14 +1,14 @@
-This chapter describes in detail my approach for word utility evaluation, using the concepts explained in chapter \ref{definition-of-terms}.
-I first restate the problem more precisely, then describe a hypothetical approach for evaluating word utility with human test subjects. After pointing out the unfeasability of such a testing method, I suggest ways to solve the problem with AI and XAI, using the concepts referred to in chapter \ref{basic-nlp-concepts}.
+This chapter describes in detail my approach for word utility evaluation, using the concepts explained in chapter \ref{seq:definition-of-terms}.
+I first restate the problem more precisely, then describe a hypothetical approach for evaluating word utility with human test subjects. After pointing out the unfeasibility of such a testing method, I suggest ways to solve the problem with AI and XAI, using the concepts referred to in chapter \ref{seq:basic-nlp-concepts}.
 
-\section{Problem statement for word utility evaluation}
+\section{Problem Statement for Word Utility Evaluation} \label{seq:problem-statement-formal}
 
 % I have defined the following terms before
 % language context
 % utility
 % proxy task
 
-To repeat the introductory sentence of chapter \ref{definition-of-terms}:
+To repeat the introductory sentence of chapter \ref{seq:definition-of-terms}:
 The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}. The following formula gives a more precise idea of the aim and the variables involved.
 
@@ -16,32 +16,32 @@ Since utility is defined in terms of language ability, we first need a way to pu
 
 \begin{align*}
 	t: \text{Human} \to [0, 1] \\
-	t (s) \mapsto p                 \\
+	t (s) \mapsto p            \\
 \end{align*}
-where s is the test subject and t is the proxy task.
+where $s$ is the test subject and $t$ is the proxy task, with a possible score $p$ between zero and one.
 
 We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However for the purposes of this thesis, I focus on vocabulary, and so the vocabulary of the human is introduced as the defining essential variable:
 
 Let $W$ be the set of all words in the language.
 \begin{align*}
 	t: \text{Human}, 2^{W}\to \mathbb{R} \\
-	t (s, V) \mapsto p                    \\
+	t (s, V) \mapsto p                   \\
 \end{align*}
-where V is the vocabulary of the human and a subset of $W$.
+where $V \in W$ is the vocabulary of the test subject.
 
-We now have function from the vocabulary to the performance (the proxy metric for language ability).
+We now have a function from the vocabulary to the score in the proxy task (the proxy metric for language ability).
 Using the proxy task function, we can define a measure of efficiency of an ordered list of vocabulary $l$ containing elements from $W$.
-The efficiency reflects how quickly a learner improves their language ability if they learn words in the order of the list, measured as a proportion $p_{aim}$ of the maximum achievable performance $t_{max} = t(s,W)$ (knowing all words in the language).
+The efficiency reflects how quickly a learner improves their language ability if they learn words in the order of the list, measured as a proportion $p_{aim}$ of the maximum achievable performance $p_{max} = t(s,W)$ (knowing all words in the language).
 It is the number of words which must be learned from the vocabulary list to bring the performance above the threshold:
 
 Let
 \begin{align*}
-	l & := (w_1, w_2, \dots, w_n) \quad \text{where } w_i \in W \text{ and } w_i \neq w_j \text{ for } i \neq j. \\
-	V_{l, k} &:= \{w_i \mid i \leq k\}\\
-	p_{aim} & \in  [0, 1] \\
+	l        & := (w_1, w_2, \dots, w_n) \quad \text{where } w_i \in W \text{ and } w_i \neq w_j \text{ for } i \neq j. \\
+	V_{l, k} & := \{w_i \mid i \leq k\}                                                                                 \\
+	p_{aim}  & \in  [0, 1]                                                                                              \\
 \end{align*}
 
-Then 
+Then
 \begin{align*}
 	e_{t}(s, l, p_{aim}) \mapsto ( -1 )  \cdot  \min\{ k \mid  t(s,  V_{l, k}) \geq p_{aim} \cdot t(s, W)\} \\
 \end{align*}
@@ -49,12 +49,13 @@ The term contains a multiplication with $-1$ such that an efficient list achieve
 
 And with this definition of efficiency, we can define the condition for an optimal vocabulary list given a particular $p_{aim}$:
 \begin{align} \label{eq:opt-vocab-list}
-	l_{opt, t} (s, p_{aim}) = \argmax_{l} e(s, l, p_{aim}) 
+	l_{opt, t} (s, p_{aim}) = \argmax_{l} e(s, l, p_{aim})
 \end{align}
 
+Finding vocabulary lists that approximate an optimal list according to formula \ref{eq:opt-vocab-list} is the aim which the rest of this work is dedicated to.
 
 
-\section{Thought experiment: Measuring word utility as ability improvement in humans}
+\section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{seq:human-efficiency-testing}
 
 \contentdescription{state utility in terms of language ability improvement
 	aim is not just to evaluate, but also efficiently find lists of vocab
@@ -63,51 +64,39 @@ And with this definition of efficiency, we can define the condition for an optim
 
 With the formula \ref{eq:opt-vocab-list}, we now have set our goal more concretely.
 We are left with the question of how to actually make candidate vocabulary lists, and test them for efficiency.
-Let us first consider one vocabulary list of 3000 words.
-To test its efficience, we would need to find a human test subject who does not know anywords of the target language at the outset.
+Let us first consider how we could measure the efficiency of one vocabulary list of 3000 words:
+
+We would need to find a human test subject who does not know any words of the target language at the outset.
 We would then make the subject learn the words from the list one by one, and test their language ability in regular intervals to see if their desired threshold has been reached.
 This disregards the fact that knowing all words in the language would not necessarily mean the performance would reach 1, but assuming a normal school test that is not an issue.
 
-While this test setup might take a long time to complete depending on the desired threshold, it is still feasable.
-But if we wish to analyze the same subject's performance learning from a second vocabulary list to compare the lists's efficiencies, there is an inavoidable issue:
+While this test setup might take a long time to complete depending on the desired threshold, it is still feasible.
+But if we wish to analyze the same subject's performance learning from a second vocabulary list to compare the lists' efficiencies, there is an unavoidable issue:
 The test subject cannot completely forget the words they have learned in the first run.
 The experiment is thus not repeatable.
 If we increase the number of test subjects so each vocabulary list is learned by a new subject, we introduce differences in capabilities between test subjects and the cost of the experiment also quickly increases.
 
-However, this theoretical test setup could be feasable using a non-human test subject:
-Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists iwth drastically reduced costs.
+However, this theoretical test setup could be feasible using a non-human test subject:
+Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists with drastically reduced costs.
 I shall lay out this approach in the remaining sections of this chapter.
 
-\section{AI-simulated learner}
+\section{AI-Simulated Learner}
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
 
-% use the NLP concepts introduced in 2.4
+This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
+Chapter \ref{seq:problem-statement-formal} has specified how with the help of a proxy task, we can define this efficiency.
+Chapter \ref{seq:human-efficiency-testing} has laid out a theoretical approach for how with human test subject, one could test the efficiency of a vocabulary list.
+However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists and a large pool of test subjects lowers the comparability of the scores.
 
-This work puts forward approaches for evaluating word utility that use AI models as an way to simulate a human interacting with language.
-Humans with language capabilities
-Because AI model in recent years have become highly adept at fulfilling language-related tasks such as language modeling, it may be said that they possess an understanding of language in a behaviorist sense.
+To circumvent this issue, this work proposes the following core idea:
+By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{seq:human-efficiency-testing} consistently.
 
-Let us examine examples of how utility may be defined:
-In the question "Would you like some coffee?", the most important part is "coffee".
-If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
-If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
-To identify which words are important to understand the question, we could ask a human to point them out.
-However, this is not very quantifiable and the answer is likely to be influenced by bias.
-We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
-While this removes some of the bias, there are still issues with this approach:
-Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
-If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
-These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
+In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek have become highly adept at fulfilling language-related tasks such as language modeling \tocite{LLMs}.
 
-\todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
+It may be said that they possess an understanding of language in a behaviorist sense.
 
-
-While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
-Explainable AI has the explanation of the decisions of AI models as its aim.
-This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
-If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
-However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
-
+Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{seq:definition-of-terms} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
+Table \ref{table:concept-implementation-correspondence} shows the correspondences between the concept and the technical component.
 
 \begin{table}[ht]
 	\centering
@@ -130,12 +119,39 @@ However, in the case of state-of-the-art models, we know the performance of such
 	\label{table:concept-implementation-correspondence}
 \end{table}
 
+% use the NLP concepts introduced in 2.4
 
-\section{Knowledge extraction from AI model with XAI}
+\section{TO BE SORTED OR DELETED}
+Let us examine examples of how utility may be defined:
+In the question "Would you like some coffee?", the most important part is "coffee".
+If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
+If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
+To identify which words are important to understand the question, we could ask a human to point them out.
+However, this is not very quantifiable and the answer is likely to be influenced by bias.
+We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
+While this removes some of the bias, there are still issues with this approach:
+Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
+If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
+These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
+
+\todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
+
+
+While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
+Explainable AI has the explanation of the decisions of AI models as its aim.
+This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
+If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
+However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
+
+
+
+
+
+\section{Knowledge Extraction from AI Model with XAI}
 \contentdescription{Advances in XAI, explain various approaches. May be redundant to write this chapter depending on what I write in previous one.}
 
 
-\section{Components of XAI word extraction}
+\section{Components of XAI word Extraction}
 Components are
 \begin{itemize}
 	\item XAI method used
@@ -152,14 +168,14 @@ Task $\rightarrow$ model $\rightarrow$ tokenizer $\rightarrow$ words.
 must investigate comparability of results later.
 
 (also corpus $\rightarrow$ task)
-\subsection{Preliminary investigations of integrity}
+\subsection{Preliminary Investigations of Integrity}
 The core idea this paper is to evaluate word utility by investigating a function (in the form of an AI model) that presumably represents some level of understanding of the language and checking which inputs (words) have the biggest influence on either the input or the model's internal state.
 To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
 
 \todo{A lot of prelim. test results, for example, first tests of NSP model on opensubs sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
 
 
-\section{NLP tasks}
+\section{NLP Tasks}
 The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
 Since we are trying to estimate the utility a word a word has to language understanding, the NLP tasks should reflect language understanding as much as possible.
 A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
@@ -169,7 +185,7 @@ Another benefit of using pre-training tasks is that their training is unsupervis
 \todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
 \todo{include free availability for AI models in their justification}
 
-\subsection{NLP pre-training tasks used by state-of-the-art AI models}
+\subsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
 This section takes a look at the pretraining process of recent state-of-the-art LLM models which have made public their training process.
 Both the NLP tasks and the kind of data is considered.
 
@@ -194,7 +210,7 @@ Both the NLP tasks and the kind of data is considered.
 	      Data: "data from publicly available sources"
 \end{description}
 
-\subsection{Tasks considered}
+\subsection{Tasks Considered}
 \begin{description}
 	\item[Next Sentence Prediction]
 	      In this task, the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text.
@@ -218,14 +234,14 @@ Both the NLP tasks and the kind of data is considered.
 	      To make this a task on which XAI methods can be applied, we can define a distance from the original token
 \end{description}
 
-\subsection{Sentence embedding methods}
+\subsection{Sentence Embedding Methods}
 
 \begin{description}
 	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
 	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
 \end{description}
 
-\subsection{Data required for each NLP task}
+\subsection{Data Required for Each NLP Task}
 The various NLP tasks employed require certain types of corpora to be employed properly:
 
 \begin{itemize}
@@ -236,7 +252,7 @@ The various NLP tasks employed require certain types of corpora to be employed p
 
 \end{itemize}
 
-\section{XAI methods}
+\section{XAI Methods}
 
 The XAI methods used in this work are the following:
 \begin{itemize}
@@ -275,7 +291,7 @@ The following lays out how each of these methods works to achieve the goal of wo
 \end{description}
 
 
-\section{Interdependencies between components used}
+\section{Interdependencies Between Components Used}
 
 While the components described above can mostly be used in any combination, there are some important restrictions to keep in mind:
 

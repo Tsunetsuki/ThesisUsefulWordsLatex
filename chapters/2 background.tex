@@ -1,50 +1,64 @@
 
-\section{Definitions of terms} \label{definition-of-terms}
+\section{Definitions of Terms} \label{seq:definition-of-terms}
 \contentdescription{ Definition of "utility", context }
-The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 
-So far it may not be obvious what is meant by the terms in cursive, so in this chapter, I start by defining the terms so as to better define my aim.
+\todo{Define aim colloquially}
+
+More precisely, this aim may be expressed as:
+Finding words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
+
+To clarify this aim further, I start by defining the terms in cursive.
 
 % People interact with languages in their daily lives via speaking, listening, reading and writing.
-\begin{description}
-	\item[(Language) Context]
-	      By a \textit{language context} or just \textit{context}, I mean a subset of situations in which a person interacts with language.
-	      Examples of language contexts by topic are:
-	      News, football, crocheting.
 
-	      Examples of language contexts by situation are:
-	      Everyday conversation, scientific articles, watching movies.
+\subsection{(Language) Context}
+By a \textit{language context} or just \textit{context}, I mean a subset of situations in which a person interacts with language.
+Examples of language contexts by topic are:
+News, football, crocheting.
 
-	      Contexts can be further subdivided into smaller contexts, or grouped across different lines:
-	      "News" could be subdivided into "international politics", "sports", "business", etc.
+Examples of language contexts by situation are:
+Everyday conversation, scientific articles, watching movies.
 
-	      The concept of a language context is useful to a language learner since it enables them to prioritize learning vocabulary and grammar associated with the context they are interested in:
-	      Someone who is learning Arabic to better understand middle-eastern politics will have little use for words which are mostly associated with football.
+Contexts can be further subdivided into smaller contexts, or grouped across different lines:
+"News" could be subdivided into "international politics", "sports", "business", etc.
 
-	      The context could even determine the complexity of sentences that a learner must be able to understand:
-	      Some contexts, like everyday conversation, can be navigated fairly well with short sentences, but political speeches often feature long and structurally complex sentences, with various relative clauses, multiple negations, etc.
-	      Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
+The concept of a language context is useful to a language learner since it enables them to prioritize learning vocabulary and grammar associated with the context they are interested in:
+Someone who is learning Arabic to better understand middle-eastern politics will have little use for words which are mostly associated with football.
 
-	\item[Utility]
-	      I define as \textit{utility} the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
-	      This means being able to understand more of texts they read in the given context, being able to speak about the subject, etc.
-	      It is easy to see that some words will be more useful than others given a context:
-	      In the context of international news, learning the word "war" will bring more understanding to the learner than "pear" or "polymorphism".
+The context could even determine the complexity of sentences that a learner must be able to understand:
+Some contexts, like everyday conversation, can be navigated fairly well with short sentences, but political speeches often feature long and structurally complex sentences, with various relative clauses, multiple negations, etc.
+Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
 
-	\item [Proxy task]
-		Some of the concepts we are the realm of language learning cannot be measured directly:
-	      This can be because they are psychological in nature ("understanding") or because they are too complex to be objectively measured by numbers ("language ability").
-	      I defined word utility above as an increase in "language ability", but to analyze this ability with computers, we must make be able to put a number on it, even though we lack both an agreed upon scale or unit of measurement.
+In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else few contexts are available \tocitecontent{investigage current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
 
-	      To circumvent this issue, I employ so-called \textit{proxy tasks}:
-	      Proxy tasks are tasks that test subjects can perform, where the test result (the \textit{proxy measure}) can be used capture the abstract quantity under study.
-	      For example, as a proxy measure for a person's general spelling ability, we could make them choose from multiple spelling variants of a word, and use the accuracy with which they select the correct answers.
+\subsection{Utility}
+I define as \textit{utility} the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
+This means being able to understand more of texts they read in the given context, being able to speak about the subject, etc.
+It is easy to see that some words will be more useful than others given a context:
+In the context of international news, learning the word "war" will bring more understanding to the learner than "pear" or "polymorphism".
 
-	      This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
-\end{description}
+\subsection{Proxy Task}
+Some of the concepts in the realm of language learning cannot be measured directly:
+This can be because they are psychological in nature ("understanding") or because they are too complex to be objectively measured by numbers ("language ability").
+I define word utility above as an increase in "language ability", but to analyze this ability with computers, we must make be able to put a number on it, even though we lack both an agreed upon scale or unit of measurement.
+
+To circumvent this issue, so-called \textit{proxy tasks} will be used:
+Proxy tasks are tasks that test subjects can perform, where the test result (the \textit{proxy measure}) can be used to capture the abstract quantity under study.
+For example, as a proxy measure for a person's general spelling ability, we could make them choose from multiple spelling variants of a word, and use the accuracy with which they select the correct answers.
+
+This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
+
+With the terms defined more precisely, it becomes more concrete what our goal entails:
+
+Finding words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
+
+With the words filled in, this translates to:
+Finding words that provide a learner with the most understanding in the learning context they are interested in in the minimum amount of words to learn.
+Since the understanding of the learner cannot be directly measured, we use tasks that check the learner's understanding as an imperfect but necessary approximation.
 
 
-\section{Context of the work}
+
+\section{Context of the Work}
 \contentdescription{language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
 
 The issue of which words to learn when setting out to acquire a language is not a new one.
@@ -76,8 +90,8 @@ This works attempts to derive usefulness from corpus data, in combination with A
 
 
 
-\section{State of the Art (of vocabulary selection)}
-\subsection{Non-computational methods}
+\section{State of the Art (of Vocabulary Selection)}
+\subsection{Non-computational Methods}
 How is vocabulary order selected by current language teaching tools:
 Not context-specific in most cases
 offers only one order,
@@ -98,7 +112,7 @@ Relying on human intuition to evaluate word utility has two main drawbacks compa
 	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
 \end{itemize}
 
-\subsection{Computational methods}
+\subsection{Computational Methods}
 These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
 These are closer to the method I will
 
@@ -112,7 +126,7 @@ These are closer to the method I will
 	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
 \end{description}
 
-\subsection{Issues with current methods}
+\subsection{Issues with Current Methods}
 Current methods do not exploit recent developments in AI technology and thus suffer from several shortcomings:
 In general, all of them essentially only count words without taking into account their relationship between each other:
 
@@ -123,26 +137,26 @@ However, it does not take into account and semantic relationships between the wo
 Thus, learning words by aggregating TF-IDFs on multiple texts may aid in identifying the topic of texts, but not at finding out what the message conveyed about the topic is.
 "not" is a highly frequent word in English and thus will have a low TF-IDF score in most documents. But it is essential to know, as it can completely invert the meaning of a sentence.
 
-\section{Basic concepts of Natural Language Processing} \label{basic-nlp-concepts}
+\section{Basic Concepts of Natural Language Processing} \label{seq:basic-nlp-concepts}
 \contentdescription{
 	[basic concepts, and why they matter to this work.
 			Anything that that the target audience is either not familiar with, or where the function in my method is not obvious]
 }
 This section explains some basic concepts of Natural Language Processing domain, and how they relate to the goal of finding useful vocabulary.
 
-\begin{description}
-	\item [AI model]
- While it is assumed the reader is familiar with the concept of AI models, in this work they serve a purpose that might not be obvious:
- The (pre-trained) AI model is thought of as a container of functional knowledge, in this case linguistic.
- The point is to extract this knowledge from them and make it serviceable to a language learner, similar to how humans can observe experts in their domain and learn from their behavior.
 
-	\item [Corpus]
+	\subsection {AI Model}
+	      While it is assumed the reader is familiar with the concept of AI models, in this work they serve a purpose that might not be obvious:
+	      The (pre-trained) AI model is thought of as a test subject in possession of linguistic skills that can be studied.
+	      The point is to analyze its skills and make them serviceable to a language learner, similar to how humans can observe experts in their domain and learn from their behavior.
+
+	\subsection{Corpus}
 	      A \textit{corpus} is simply a dataset consisting of text data.
 	      Recently, many large corpora have been compiled and are freely available to the public.
 	      Corpora differ from each other mostly in their source and method of compilation.
 	      Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
 	      I will use several such corpora to enable finding the utilities of words in their specific contexts.
-	\item [NLP task]
+	\subsection{NLP Task}
 	      Humans are generally intelligent and are not trained from childhood on any specific language task exclusively.
 	      In contrast, AI models are trained to perform one or several specific tasks.
 	      A \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
@@ -156,30 +170,32 @@ This section explains some basic concepts of Natural Language Processing domain,
 
 	      In this work, NLP tasks serve as a way for AI models to interaction with language, enabling us to analyze the interaction.
 
-	\item [Explainable AI]
+	\subsection{Explainable AI}
 	      Deep neural networks (the recent standard for AI models) stop being readily understandable to humans rather quickly once the number of neurons and layers is increased.
-	      Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions. \tocite{Notions of explainability and evaluation approaches for explainable artificial intelligence}
+	      Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions. \tocite{Notions of explainability and evaluation approaches for explainable artificial intelligence, Interpretable machine learning: A guide for making black box models explainable}
 	      This can be useful to check, if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
 	      By analyzing the decision process of high-performing AI models, I hope to extract useful information about how the language is processed which can be useful to humans as well.
 
-	\item [Transformer Attention mechanism]
+	\subsection{Transformer Attention Mechanism}
 	      Many of the recent state-of-the-art AI models performing NLP tasks are built with the \textit{transformer} architecture.
+	      \tocite{Attention is all you need}
 	      This is a particular type of deep neural network characterized by an attention layer before the deep neural layers.
 	      Said attention layer makes the model "focus" on important parts of the important, while "ignoring" less important ones.
 	      This helps the model find patterns in noisy input.
 	      \tocite{Attention is all you need}
-		  Attention has been used as one way to make decisions of AI models interpretable \tocite{Understanding Neural Networks through Representation Erasure} \tocite{Interpretable Neural Models for Natural Language
-Processing}.
-		  Thus, I will use it as one among several approaches to extract functional knowledge from NLP AI models.
+	      Attention has been used as one way to make decisions of AI models interpretable \tocite{Understanding Neural Networks through Representation Erasure} \tocite{Interpretable Neural Models for Natural Language
+		      Processing}.
+	      Thus, I will use it as one among several approaches to extract functional knowledge from NLP AI models.
 
-	\item [Tokenizer]
+	\subsection{Tokenizer}
 	      Language presents itself in continuous form in most situations:
 	      When listening to spoken language, it is not obvious where one word ends and another begins.
 	      Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
 	      While words in the written English language are mostly separated by spaces, a writer may choose to create a new hyphenated word sequence on the spot as necessity demands.
 
-Further complicating the issue of where to separate words is the fact that many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
-	      For this reason, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into their words.
+	      Further complicating the issue of where to separate words is the fact that many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
+		  For this reason, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into their words. \tocite{Daniel Jurafsky \& James H. Martin: Speech and Language Processing}
+		  \todo{Explain various types of tokenization?}
 
 	      Splitting continuous text into distinct words has several benefits:
 	      \begin{itemize}
@@ -187,6 +203,5 @@ Further complicating the issue of where to separate words is the fact that many 
 		      \item we can assign values to them, such as estimated utility.
 		      \item we can mask them in text inputs to AI models to test what effect masking a particular word has on the output.
 	      \end{itemize}
-\end{description}
 
 The following chapter lays out in detail how I use these components to work together to create approaches for word utility estimation.
