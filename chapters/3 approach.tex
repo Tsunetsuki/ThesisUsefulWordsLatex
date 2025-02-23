@@ -1,17 +1,20 @@
-This chapter describes in detail our approach for word utility evaluation fulfilling the goal stated in chapter \ref{seq:statement-of-goal}.
-The problem is first put into terms of mathematical objects in chapter \ref{seq:problem-statement-formal}.
+This chapter describes in detail our approach for word utility evaluation fulfilling the goal stated in chapter \ref{sec:statement-of-goal}.
 
-We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{seq:human-efficiency-testing}
-After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject, using the technological building blocks referred to in chapter \ref{seq:basic-nlp-concepts}.
+The problem is first put into terms of mathematical objects in chapter \ref{sec:problem-statement-formal}.
+We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{sec:human-efficiency-testing}
+After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject in chapter \ref{sec:ai-simulated-learner}, using the technological building blocks referred to previously in chapter \ref{sec:basic-nlp-concepts}.
 
-\section{Problem Statement for Word Utility Evaluation} \label{seq:problem-statement-formal}
+With a method for utility evaluation established, we then point out why it is in itself not yet sufficient for actually generating useful lists of vocabulary that a human learner could utilize in chapter \ref{sec:eval-vs-creation}.
+To solve this final problem, \ref{sec:utility-extraction-with-xai} puts forward a general approach for list generation.
+
+\section{Problem Statement for Word Utility Evaluation} \label{sec:problem-statement-formal}
 
 % the following terms have been defined before can should be used now
 % language context
 % utility
 % proxy task
 
-To repeat the introductory sentence of chapter \ref{seq:statement-of-goal}:
+To repeat the introductory sentence of chapter \ref{sec:statement-of-goal}:
 The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}. The following formula gives a more precise idea of the aim and the variables involved.
 
@@ -58,7 +61,7 @@ And with this definition of efficiency, we can define the condition for an optim
 Finding vocabulary lists that approximate an optimal list according to formula \ref{eq:opt-vocab-list} is the aim which the rest of this work is dedicated to.
 
 
-\section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{seq:human-efficiency-testing}
+\section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{sec:human-efficiency-testing}
 
 \contentdescription{state utility in terms of language ability improvement
 	aim is not just to evaluate, but also efficiently find lists of vocab
@@ -83,16 +86,16 @@ However, this theoretical test setup could be feasible using a non-human test su
 Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists with drastically reduced costs.
 I shall lay out this approach in the remaining sections of this chapter.
 
-\section{AI-Simulated Learner} \label{seq:ai-simulated-learner}
+\section{AI-Simulated Learner} \label{sec:ai-simulated-learner}
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
 
 This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
-Chapter \ref{seq:problem-statement-formal} has specified how with the help of a proxy task, we can define this efficiency.
-Chapter \ref{seq:human-efficiency-testing} has laid out a theoretical approach for how with human test subject, one could test the efficiency of a vocabulary list.
+Chapter \ref{sec:problem-statement-formal} has specified how with the help of a proxy task, we can define this efficiency.
+Chapter \ref{sec:human-efficiency-testing} has laid out a theoretical approach for how with human test subject, one could test the efficiency of a vocabulary list.
 However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists and a large pool of test subjects lowers the comparability of the scores.
 
 To circumvent this issue, this work proposes the following core idea:
-By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{seq:human-efficiency-testing} consistently and economically:
+By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{sec:human-efficiency-testing} consistently and economically:
 
 In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek, BERT have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition, Sentiment Detection.
 
@@ -119,7 +122,7 @@ Thus, by choosing an appropriate corpus, we can test performance on language tha
 
 
 
-Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{seq:statement-of-goal} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
+Thus, with this model in mind, we can translate some of the concepts introduced in chapters \ref{sec:statement-of-goal} into technical components to see how we could implement a technical solution to the problem of analyzing the utility of words.
 Table \ref{table:concept-implementation-correspondence} shows the correspondences between the concept and the technical component.
 
 \begin{table}[ht]
@@ -144,7 +147,7 @@ Table \ref{table:concept-implementation-correspondence} shows the correspondence
 \end{table}
 
 
-\section{Generating Lists of Useful Vocabulary}
+\section{Evaluating vs. Making Lists of Useful Vocabulary} \label{sec:eval-vs-creation}
 The previous chapter describes an approach for evaluating the efficiency of vocabulary lists for learning in a specific context.
 While it can be seen as an improvement on the human setup because of its improved consistency and economy, it describes only the process of evaluation, not generation.
 Actually finding optimal vocabulary lists is theoretically possible by testing every possible vocabulary list with all words in the language.
@@ -162,7 +165,7 @@ This is still an unfeasible amount of computation.
 It is therefore clear that finding optimal vocabulary list is much too expensive to be done without approximation.
 As approximations, we suggest XAI to extract information about the linguistic skills of AI models, and the following chapters illustrate this approach.
 
-\section{Knowledge Extraction from AI Model with XAI}
+\section{Utility extraction with Explainable AI} \label{sec:utility-extraction-with-xai}
 \contentdescription{Advances in XAI, explain various approaches.}
 
 The previous chapters have shown the challenges in evaluating the efficiency of vocabulary lists with human test subjects, and suggested a way to use AI models in connection with NLP tasks as a way to make a consistent and repeatable approach.
@@ -170,7 +173,7 @@ The problem of generating the lists in the first place still remains, however.
 
 The guiding question of this thesis is:
 \textit{"Which words provide the most language understanding in a particular context?"}.
-Simulating the learner with AI models in the way described in chapter \ref{seq:ai-simulated-learner} turns this question into:
+Simulating the learner with AI models in the way described in chapter \ref{sec:ai-simulated-learner} turns this question into:
 \textit{"Which words improve the performance of the AI model in the NLP task for a given corpus?"}.
 
 This question is very close to the questions that the field of Explainable AI seeks to answer.
@@ -243,138 +246,4 @@ Explainable AI has the explanation of the decisions of AI models as its aim.
 This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
 If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
 However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
-
-
-
-
-
-\section{NLP Tasks}
-The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
-Since we are trying to estimate the utility a word a word has to language understanding, the NLP tasks should reflect language understanding as much as possible.
-A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
-Pre-training tasks are used to first endow the AI model with a general understanding of the language, before using transfer learning to specialize it for a more specific downstream task.
-Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
-Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
-\todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
-\todo{include free availability for AI models in their justification}
-
-\subsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
-This section takes a look at the pretraining process of recent state-of-the-art LLM models which have made public their training process.
-Both the NLP tasks and the kind of data is considered.
-
-
-\begin{description}
-	\item[GPT-4] \cite{openaiGPT4TechnicalReport2024}
-
-	      Task: Language modeling (see next section).
-
-	      Data: Not disclosed in detail, according to the original paper, the model was trained "using both publicly available data (such as internet data) and data licensed from third-party providers".
-	\item[GPT-3] \cite{brownLanguageModelsAre2020}
-	      GPT-3 is a model that does not rely on transfer learning to apply its linguistic understanding to new tasks; instead, it uses zero-shot and few-shot learning to perform tasks it was not specifically trained for.
-
-	      Task: Language modeling (same as GPT-2 \cite{radfordLanguageModelsAre2019})
-
-	      Data: Common Crawl, WebText2, Books1, Books2, Wikipedia \todo{link sources?}
-	\item[LLama 3.3] \cite{LlamamodelsModelsLlama3_3}
-
-
-	      Task: Meta did not make public the training process for Llama 3.3.
-
-	      Data: "data from publicly available sources"
-\end{description}
-
-\subsection{Tasks Considered}
-\begin{description}
-	\item[Next Sentence Prediction]
-	      In this task, the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text.
-	      Advantages for this task for our purposes is that such a dataset is easy to generate, as it merely requires a corpus of sentences that follow from each other, which is easily obtained from Wikipedia articles, film subtitles, or any other continuous text.
-
-	\item[Text summarization]
-	      This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible.
-	      Summarizing texts seems to require a high level of "understanding" of the text and would thus seem to be good choice for testing whether ablating certain words from the text would have detrimental effect on the model performance.
-	      Unfortunately, this task requires hand-labeled datasets and is thus not a good candidate if we aim to find approaches which can be implemented in many different languages, as there is a dearth in data in many of the less-studied languages of the world.
-
-	\item[Masked language modeling (aka. "cloze task")]
-	\item[Causal language modeling (aka. Next token prediction)]
-	\item[Sentence order prediction]
-	\item[Sentence embeddings]
-	      Sentence embeddings take the approach of transforming words into meaningful vectors and extend it to whole sentences.
-	      This "task" differs from the others in that we do not measure differences in performance when the input is perturbed; but rather a distance between the embedding vectors themselves.
-	      This justification for such an approach is that sentences whose meaning is very different should end up further apart from each other in the vector space once embedded.
-	      This brings several advantages:
-	      This approach can be performed on any corpus containing distinct sentences.
-	      These corpus does not have to be document-level, and sentences need not be consecutive.
-	      To make this a task on which XAI methods can be applied, we can define a distance from the original token
-\end{description}
-
-\subsection{Sentence Embedding Methods}
-
-\begin{description}
-	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
-	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
-\end{description}
-
-\subsection{Data Required for Each NLP Task}
-The various NLP tasks employed require certain types of corpora to be employed properly:
-
-\begin{itemize}
-	\item[Next sentence prediction]
-	      Requires a corpus that contains consecutive sentences.
-	      Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
-	      This excludes movie subtitles from the possible corpora for this task.
-
-\end{itemize}
-
-\section{XAI Methods}
-
-The XAI methods used in this work are the following:
-\begin{itemize}
-	\item Attention as Explanation
-	      Advantages:
-	      Model only needs to be run once per sentence.
-	      Longer sentences do not lead to a much longer calculations
-	      Disadvantages: Justification as explanation controversial.
-	\item Single Token Ablation
-\end{itemize}
-
-The following lays out how each of these methods works to achieve the goal of word utility estimation.
-
-\begin{description}
-	\item [Performance difference of AI for NLP tasks]
-	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
-	      To find out which words help the AI model the most in performing its tasks, words are methodically omitted from texts and the AI’s performance is recorded.
-	      This metric attempts to approximate utility by finding words which, when missing, cause the greatest performance loss in the NLP tasks.
-	      Evaluation metrics like Shapley values \cite{wangShapleyExplanationNetworks2021} may be used to measure the impact of missing words
-	\item [Transformer attention]
-	      The transformer architecture is based on a mechanism called \textit{self-attention}.
-	      It allocates the neural network's processing to important parts of the input and thus provides some degree of explainability "out of the box".
-
-	\item [Difference in internal vector representation for AI reading text]
-	      This approach words similarly to the above involving an AI model, but instead of measuring the changes in the quality of its output, it measures how much changing the input to the model changes its the internal vector state: AI stores data in vector format, and when performing NLP tasks on texts, there is an internal vector representation.
-	      By using various distance metrics, it may be possible to find out which words have the greatest impact on the model’s understanding of a text.
-	      Most of these approaches can be done both for individual words and word sequences (n-grams).
-	      While individual words are the easiest to examine, sometimes n-grams are insightful for finding sequences of words whose meaning is more than the sum of their parts (idioms and collocations) and which therefore must be learned in separately from their constituents (meaningful English n-grams include e.g. “kick the bucket”, “such that”, “such as”).
-
-	      This also raises the question of what is considered a “word”.
-	      A phrase like “such as” can be considered two words if the definition of a word is simply “something separated by a space” or one word if the definition is “a phrase whose meaning cannot be arrived at trivially from knowing the definition of its parts”.
-	      In Natural Language Processing, tokenizers break down texts into words, but they typically use the first definition for a word in the case of English.
-	      Many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces to separate a different unit of text (syllables in Vietnamese, sentences in Thai), making this definition of a word unpractical.
-	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
-	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
-\end{description}
-
-
-\section{Interdependencies Between Components Used}
-
-While the components described above can mostly be used in any combination, there are some important restrictions to keep in mind:
-
-\begin{description}
-	\item[Attention as XAI can only be used on transformers]
-	\item[Tokenization (and thus selection of word candidates) is only independent on model used in input perturbation approaches]
-	      As a direct consequence of this, other XAI mechanisms like attention as explanation are only useful for our purposes if the AI model uses a tokenization approach that somewhat corresponds to human notions of words.
-	      If a model uses tokenization approaches where a token is a combination of any three letters, any list obtained that tries to order the tokens by utility, while meaningful, will not be useful for human vocabulary learning.
-	      Note that in such cases, we can postprocess the data obtained, by merging the tokens to human-readable words and taking the average or maximum attention score of the AI model's tokens.
-	\item[]
-\end{description}
-
 
