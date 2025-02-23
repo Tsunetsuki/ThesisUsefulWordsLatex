@@ -83,7 +83,7 @@ However, this theoretical test setup could be feasible using a non-human test su
 Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists with drastically reduced costs.
 I shall lay out this approach in the remaining sections of this chapter.
 
-\section{AI-Simulated Learner}
+\section{AI-Simulated Learner} \label{seq:ai-simulated-learner}
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
 
 This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
@@ -152,27 +152,75 @@ Actually finding optimal vocabulary lists is theoretically possible by testing e
 In practice, however, this would require an enormous amount of computational resources:
 
 If we wish to find the most efficient list of 1,000 words, and we take the most frequent 20,000 words in the language as candidates for members of this list, there is a total number of $P(20000, 1000) = \frac{20000!}{19000!}$ possible vocabulary lists to be tested.
-We can optimize this by running the experiment with every vocabulary with a cardinality between 0 and 1000, which would be
-\[
+Since every one of these test consists of running the proxy task with a vocabulary which is a subset taken from the first $n$ elements where $n \in [0, 1]$, and all of the subsets will appear in the runs of many vocabulary lists, we can optimize this by running the task with every vocabulary with a cardinality between 0 and 1,000, which would be
+$
 \sum_{k=0}^{1000} \binom{20000}{k} \approx \frac{1}{2} \times 2^{20000} = 2^{19999}
-\]
+$ runs of the proxy task.
 .
 This is still an unfeasible amount of computation. 
 
 It is therefore clear that finding optimal vocabulary list is much too expensive to be done without approximation.
 As approximations, we suggest XAI to extract information about the linguistic skills of AI models, and the following chapters illustrate this approach.
 
+\section{Knowledge Extraction from AI Model with XAI}
+\contentdescription{Advances in XAI, explain various approaches.}
+
+The previous chapters have shown the challenges in evaluating the efficiency of vocabulary lists with human test subjects, and suggested a way to use AI models in connection with NLP tasks as a way to make a consistent and repeatable approach.
+The problem of generating the lists in the first place still remains, however.
+
+The guiding question of this thesis is:
+\textit{"Which words provide the most language understanding in a particular context?"}.
+Simulating the learner with AI models in the way described in chapter \ref{seq:ai-simulated-learner} turns this question into:
+\textit{"Which words improve the performance of the AI model in the NLP task for a given corpus?"}.
+
+This question is very close to the questions that the field of Explainable AI seeks to answer.
+A typical question of Explainable AI would be:
+\textit{"Why for a given input, did the model arrive at its output?"}.
+If the input takes the form of natural language, we can be more specific:
+\textit{"Which words in the input made the model arrive at its output?"}
+
+By using XAI and answering this questions across the entire corpus, we can find out which words are the most essential for the AI model to perform its task in the corpus.
+If the words found in this way are close to those that would provide the most utility to a human learner as well, they could be used to create very efficient vocabulary lists as well.
 
 
-\section{Experimental Setup with AI Technology}
-With the experimental setup described in chapter \ref{seq:human-efficiency-testing}, we established a way to test the efficiency of a vocabulary list with a human test subject.
-Now that we have introduced the idea of performing the experiment with an AI model instead, let us examine how such an approach would work:
-Chapter \ref{table:concept-implementation-correspondence} suggested ways that we could use technological components to stand in for abstract concepts.
+We therefore propose a framework to extract useful words which has the following main components:
+\begin{itemize}
+	\item Corpus
+	\item (Pretrained) AI model
+	\item NLP task
+	\item XAI method
+\end{itemize}
+
+In the implementation, we will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
+
+%
+% It is readily seen that these components are not independent of each other.
+% Some completely determine the choice of another, while others limit the selection of the other components.
+% 	[describe dependencies between components]
+% Task $\rightarrow$ model $\rightarrow$ tokenizer $\rightarrow$ words.
+%
+% must investigate comparability of results later.
+
+% (also corpus $\rightarrow$ task)
+% \subsection{Preliminary Investigations of Integrity}
+% The core idea this paper is to evaluate word utility by investigating a function (in the form of an AI model) that presumably represents some level of understanding of the language and checking which inputs (words) have the biggest influence on either the input or the model's internal state.
+% To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
+%
+% \todo{A lot of prelim. test results, for example, first tests of NSP model on opensubs sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
+%
 
 
-\todo{ restate math problem definition with components replaced by AI}
-
-
+%
+%
+% \section{Experimental Setup with AI Technology}
+% With the experimental setup described in chapter \ref{seq:human-efficiency-testing}, we established a way to test the efficiency of a vocabulary list with a human test subject.
+% Now that we have introduced the idea of performing the experiment with an AI model instead, let us examine how such an approach would work:
+% Chapter \ref{table:concept-implementation-correspondence} suggested ways that we could use technological components to stand in for abstract concepts.
+%
+%
+% \todo{ restate math problem definition with components replaced by AI}
+%
+%
 
 \section{TO BE SORTED OR DELETED}
 Let us examine examples of how utility may be defined:
@@ -198,34 +246,6 @@ However, in the case of state-of-the-art models, we know the performance of such
 
 
 
-
-
-\section{Knowledge Extraction from AI Model with XAI}
-\contentdescription{Advances in XAI, explain various approaches. May be redundant to write this chapter depending on the contents of the previous one.}
-
-
-\section{Components of XAI word Extraction}
-Components are
-\begin{itemize}
-	\item XAI method used
-	\item Tokenizer
-	\item (Pretrained) AI model used
-	\item NLP task
-\end{itemize}
-
-It is readily seen that these components are not independent of each other.
-Some completely determine the choice of another, while others limit the selection of the other components.
-	[describe dependencies between components]
-Task $\rightarrow$ model $\rightarrow$ tokenizer $\rightarrow$ words.
-
-must investigate comparability of results later.
-
-(also corpus $\rightarrow$ task)
-\subsection{Preliminary Investigations of Integrity}
-The core idea this paper is to evaluate word utility by investigating a function (in the form of an AI model) that presumably represents some level of understanding of the language and checking which inputs (words) have the biggest influence on either the input or the model's internal state.
-To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
-
-\todo{A lot of prelim. test results, for example, first tests of NSP model on opensubs sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
 
 
 \section{NLP Tasks}
