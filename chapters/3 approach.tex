@@ -2,7 +2,7 @@ This chapter describes in detail our approach for word utility evaluation to ful
 
 The problem is first put into terms of mathematical objects in chapter \ref{sec:problem-statement-formal}.
 We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{sec:human-efficiency-testing}
-After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject in chapter \ref{sec:ai-simulated-learner}, using the technological building blocks referred to previously in chapter \ref{sec:basic-nlp-concepts}.
+After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject in chapter \ref{sec:ai-simulated-learner}, using the technological building blocks referred to previously in chapter \ref{ch:background}.
 
 With a method for utility evaluation established, we then point out why it is in itself not yet sufficient for actually generating useful lists of vocabulary that a human learner could utilize in chapter \ref{sec:eval-vs-creation}.
 To solve this final problem, \ref{sec:utility-extraction-with-xai} puts forward a general approach for list generation.
@@ -194,7 +194,10 @@ We therefore propose a framework to extract useful words which has the following
 	\item XAI method
 \end{itemize}
 
-In the implementation, we will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
+\todo{Insert diagram of components interactions with each other}
+
+In the next chapter, we will tackle the implementation of this approach.
+We will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
 
 %
 % It is readily seen that these components are not independent of each other.
