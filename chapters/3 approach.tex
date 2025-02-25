@@ -228,25 +228,25 @@ We will present various choices for these components, and argue for some to be u
 %
 %
 
-\section{TO BE MOVED OR DELETED}
-Let us examine examples of how utility may be defined:
-In the question "Would you like some coffee?", the most important part is "coffee".
-If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
-If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
-To identify which words are important to understand the question, we could ask a human to point them out.
-However, this is not very quantifiable and the answer is likely to be influenced by bias.
-We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
-While this removes some of the bias, there are still issues with this approach:
-Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
-If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
-These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
-
-\todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
-
-
-While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
-Explainable AI has the explanation of the decisions of AI models as its aim.
-This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
-If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
-However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
-
+% \section{TO BE MOVED OR DELETED}
+% Let us examine examples of how utility may be defined:
+% In the question "Would you like some coffee?", the most important part is "coffee".
+% If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
+% If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
+% To identify which words are important to understand the question, we could ask a human to point them out.
+% However, this is not very quantifiable and the answer is likely to be influenced by bias.
+% We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
+% While this removes some of the bias, there are still issues with this approach:
+% Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
+% If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
+% These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
+%
+% \todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
+%
+%
+% While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
+% Explainable AI has the explanation of the decisions of AI models as its aim.
+% This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
+% If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
+% However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
+%
