@@ -52,8 +52,7 @@ To make this goal more specific, we define several concepts that help us speak m
 These concepts are used to throughout this work.
 
 \subsubsection{Linguistic Context}
-In \tocite{Charles Meyer: Introducing English Linguistics}, a \textit{linguistic context} is defined as the "surrounding "
-By a  or just \textit{context}, a subset of situations is meant in which a person interacts with language.
+By a linguistic context or just \textit{context}, a subset of situations is meant in which a person interacts with language.
 Examples of language contexts by topic are:
 News, football, crocheting.
 
@@ -103,7 +102,7 @@ The following chapters will go over the fields addressed in achieving this aim, 
 
 \section{Natural Language Processing} \label{sec:natural-language-processing}
 While the aim of the work is to make vocabulary lists that serve human learners, the technical implementation of this necessarily will process human language with the use of computers.
-This domain is called \textit{Natural Language Processing}, a field defined as \toresearch \tocite{Jurafsky, Martin: Speech and Language Processing}.
+This domain is called \textit{Natural Language Processing}, a field defined in \tocite{Clark/The Handbook of Computational Linguistics and Natural Language Processing} as the engineering domain of Computational Linguistics.
 Natural Language Processing, often abbreviated as \textit{NLP}, is both used in Computational Linguistics (the field concerned with analyzing natural language through language data) and as well as in practical applications such as Chatbots, Machine Translation, Speech Recognition etc. \tocite{Jurafsky, Martin: Speech and Language Processing}.
 This work addresses of these both aspects, as it is an undertaking of Computational Linguistics through the analysis of how AI models perform typical \textbf{NLP tasks}.
 
@@ -116,6 +115,7 @@ Corpora differ from each other mostly in their source and method of compilation.
 Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
 
 In the implementation and evaluation of this work's approach to word utility estimation, several such context-specific corpora will be used, as they present a way to analyze how language (and more specifically, vocabulary) is used in the linguistic context of the corpus.
+\todo{Quote previous work that uses corpora to model linguistic contexts for the purposes of language learning}
 
 \subsection{NLP Task}
 This work attempts to make use of not only static data in the form of corpora, but also the interaction of AI models with those corpora in order to gain insights into word utility.
@@ -123,9 +123,9 @@ This active part of \NLP\ consists of performing \textbf{NLP tasks}.
 Typical NLP tasks include \tocite{Jurafsky, Martin: Speech and Language Processing}:
 
 \begin{itemize}
-	\item Sentiment detection: Given a text, estimate the emotional state of the author.
+	\item Sentiment Detection: Given a text, estimate the emotional state of the author.
 	\item Masked Language modeling: Given a text with a word blanked out, estimate what the word should be.
-	\item Machine translation: Given a text, translate the meaning into another language while preserving meaning as faithfully as possible.
+	\item Machine Translation: Given a text, translate the meaning into another language while preserving meaning as faithfully as possible.
 \end{itemize}
 
 
