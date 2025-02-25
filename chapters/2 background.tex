@@ -32,9 +32,9 @@ The word "internationalization" may not be a particularly frequent word in most 
 Finally, there is the criterion of \textit{usefulness}.
 While it is distinguished from frequency, it is not defined what constitutes usefulness.
 
-\tocite{ Choosing Words to Teach: A Novel Method for Vocabulary Selection and Its Practical Application } against picks up the above three criteria in order to group words into clusters which can be used to determine priority in vocabulary learning.
+\tocite{ Choosing Words to Teach: A Novel Method for Vocabulary Selection and Its Practical Application } again picks up the above three criteria in order to group words into clusters which can be used to determine priority in vocabulary learning.
 
-However, again it is not defined what constitutes usefulness suggests no way to measure it beyond "human intuition".
+However, again it is not defined what constitutes usefulness and no way to measure it is suggested beyond "human intuition".
 In fact, it is put in contrast with frequency, which may be derived from corpus data, whereas usefulness cannot.
 
 The following chapter will attempt to define utility and related concepts more carefully, in order to state the aim of this work more formally.
@@ -49,8 +49,9 @@ Since different language learners learn languages for different reasons, we take
 To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
 These concepts are used to throughout this work.
 
-\subsubsection{(Language) Context}
-By a \textit{language context} or just \textit{context}, a subset of situations is meant in which a person interacts with language.
+\subsubsection{Linguistic Context}
+In \tocite{Charles Meyer: Introducing English Linguistics}, a \textit{linguistic context} is defined as the "surrounding "
+By a  or just \textit{context}, a subset of situations is meant in which a person interacts with language.
 Examples of language contexts by topic are:
 News, football, crocheting.
 
@@ -100,13 +101,28 @@ The following chapters will go over the fields addressed in achieving this aim, 
 
 \section{Natural Language Processing} \label{sec:natural-language-processing}
 \contentdescription{
-	[basic concepts, and why they matter to this work.
+	[the fields involved in the work. Introduce tools used in my approach.
 			Anything that that the target audience is either not familiar with, or where the function in my method is not obvious]}
+
+While the aim of the work is to make vocabulary lists that serve human learners, the technical implementation of this necessarily will process human language with the use of computers.
+This domain is called \textit{Natural Language Processing}, a field which has existed since the \toresearch.
+It is defined as \toresearch \tocite{Jurafsky, Martin: Speech and Language Processing}.
+Natural Language Processing, often abbreviated as \textit{NLP}, is both used in Computational Linguistics (the field concerned with analyzing natural language through language data) and as well as in practical applications such as Chatbots, Machine Translation, Speech Recognition etc. \tocite{Jurafsky, Martin: Speech and Language Processing}.
+This work uses aspects from both parts of NLP to perform Computational Linguistics through the analysis of how AI models perform typical \textbf{NLP tasks}.
+
+\subsection{Corpus}
+The typical way Computational Linguistics empirically analyzes language is through the use of \textbf{corpora}.
+A common definition of a corpus can be seen in \tocite{S. Hunston: Corpus Linguistics} as "an electronically stored collection of samples of naturally occurring language", which "can be a test bed for hypotheses and can be used to add a quantitative dimension to many linguistic studies".
+
+Recently, many large corpora have been compiled and are freely available to the public.
+Corpora differ from each other mostly in their source and method of compilation.
+Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
+In the implementation and evaluation of this work's approach to word utility estimation, several such context-specific corpora will be used, as they present a way to analyze how language (and more specifically, words) is used in the linguistic context of the corpus.
+
 \subsection{NLP Task}
-Humans are generally intelligent and are not trained from childhood on any specific language task exclusively.
-In contrast, AI models are trained to perform one or several specific tasks.
-A \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
-Typical NLP tasks include:
+This work attempts to use not only static data in the form of corpora, but also the interaction of AI models with those corpora.
+This active part of \NLP\ consists of performing \textbf{NLP tasks}.
+Typical NLP tasks include \tocite{Jurafsky, Martin: Speech and Language Processing}:
 
 \begin{itemize}
 	\item Sentiment detection: Given a text, estimate the emotional state of the author.
@@ -114,16 +130,15 @@ Typical NLP tasks include:
 	\item Machine translation: Given a text, translate the meaning into another language while preserving meaning as faithfully as possible.
 \end{itemize}
 
-In this work, NLP tasks serve as a way for AI models to interaction with language, enabling us to analyze the interaction.
 
-\subsection{Corpus}
-A \textit{corpus} is simply a dataset consisting of text data.
-Recently, many large corpora have been compiled and are freely available to the public.
-Corpora differ from each other mostly in their source and method of compilation.
-Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
-In the implementation and evaluation of this work's approach to word utility estimation, several such context-specific corpora will be used.
+Humans are generally intelligent and are not trained from childhood to do any one language "task":
+They can have conversations, answer questions about things they have seen, etc.
+In contrast, the interaction of computers usually more rigidly defined by specific NLP tasks, and AI models are trained to perform one or several of these tasks.
+For the purposes of this work, an \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
+In this work, NLP tasks serve as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction.
 
-\subsection{Tokenizer}
+
+\subsection{Tokenization}
 Language presents itself in continuous form in most situations:
 When listening to spoken language, it is not obvious where one word ends and another begins.
 Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
@@ -139,16 +154,34 @@ Splitting continuous text into distinct words has several benefits:
 	\item we can assign values to them, such as estimated utility.
 	\item we can mask them in text inputs to AI models to test what effect masking a particular word has on the output.
 \end{itemize}
-\section{Machine Learning}
-\subsection {AI Model}
-While it is assumed the reader is familiar with the concept of AI models, in this work they serve a purpose that might not be obvious:
+
+
+In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
+As this work makes extensive use of AI models, the next section therefore briefly introduces the field of \AI.
+
+\section{Artificial Intelligence}
+% \tocite{Wolfgang Ertel: Introduction to Artificial Intelligence} defines \AI\ as ""
+Elaine Rich, in her work \tocite{Elaine Rich: Artifical Intelligence} defines \AI\ as "the study of how to make computers do things at which, at the moment, people are better".
+\ML\ is concerned with imparting machines with the ability to learn general patterns from data, and using this knowledge to handle input data the model has not yet seen \tocite{https://www.ibm.com/think/topics/machine-learning}, and the basis for most modern \AI\ systems.
+This is opposed to traditional algorithms which can only follow algorithms which have been explicitly programmed.
+
+\subsection{AI Models}
+The building block of Artificial Intelligence is called an \textbf{AI Model}, which is a stochastic model using training data to learn patterns, which can be deployed on problems that were not identically present in the training dataset.
+
+AI models are used in this work to simulate an agent interacting with language.
 The (pre-trained) AI model is thought of as a test subject in possession of linguistic skills that can be studied.
-The point is to analyze its skills and make them serviceable to a language learner, similar to how humans can observe experts in their domain and learn from their behavior.
+Through its training process, AI models learn patterns that are generalizable across the problem domain.
+If these patterns resemble the knowledge that humans gain when they learn a new ability, it may be possible to analyze the interaction of AI models with data so that a human learner can learn from their behavior, similar to how humans can observe experts in their domain and learn from their behavior.
+The method of choice for analyzing this interaction is Explainable AI, which is explained in chapter \ref{sec:explainable-ai}.
+
+The current de facto standard for recent AI models is the \textit{Neural Network} architecture \tocite{Jurafsky, Martin: Speech and Language Processing}, which attempts to imitate the neural makeup of the human brain.
+Such models achieve state-of-the-art results on most NLP tasks \tocitecontent{NLP task AI models} and all models in used in this work are Neural Networks.
+However, within this architecture there exist further subtypes of AI models, the most important for this work is the \textbf{transformer model}.
 
 
-\subsection{Transformer Attention Mechanism}
-Many of the recent state-of-the-art AI models performing NLP tasks are built with the \textit{transformer} architecture.
-\tocite{Attention is all you need}
+
+\subsection{Transformer Model} \label{sec:transformer}
+Many of the recent state-of-the-art AI models performing NLP tasks are built with the \textit{transformer} architecture \tocite{Attention is all you need}.
 This is a particular type of deep neural network characterized by an attention layer before the deep neural layers.
 Said attention layer makes the model "focus" on important parts of the important, while "ignoring" less important ones.
 This helps the model find patterns in noisy input.
@@ -157,12 +190,35 @@ Attention has been used as one way to make decisions of AI models interpretable 
 	Processing}.
 Thus, we will use it as one among several approaches to extract functional knowledge from NLP AI models.
 
-\section{Explainable AI}
-Deep neural networks (the recent standard for AI models) stop being readily understandable to humans rather quickly once the number of neurons and layers is increased.
+This section has introduced the important AI models used in this thesis, namely the Neural Network and one of its most effective subtypes, the transformer.
+While these types of AI model have driven many recent improvements in performing common NLP tasks, deep neural networks stop being readily understandable to humans rather quickly once the number of neurons and layers is increased.
+We are interested in how the inputs (words) influence the outputs of AI models when performing NLP tasks.
+This kind of analysis is the domain of \textbf{Explainable AI}, which is why the next section briefly introduces this last necessary field for the approach put forward in this work.
+
+\section{Explainable AI} \label{sec:explainable-ai}
 Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions. \tocite{Notions of explainability and evaluation approaches for explainable artificial intelligence, Interpretable machine learning: A guide for making black box models explainable}
-This can be useful to check, if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
+This can be useful to check if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
 By analyzing the decision process of high-performing AI models, we hope to extract useful information about how the language is processed which can be useful to humans as well.
 
+\subsection{Distinctions between XAI methods}
+There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
+
+As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
+The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, which attempts to attribute importance values to features in the input.
+Thus, all XAI methods in this paper belong to this group.
+
+One of the most important characteristics of an XAI method is whether it is \textbf{model-agnostic} or \textbf{model-specific}.
+A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees \tocitecontent{decision tree}, or neural networks.
+Model-agnostic models are also called black-box-approaches, as they do not look into the model (such as weights in neural networks) but only perturb the inputs and observe changes in the model output.
+While model agnostic explanations are inherently desirable since they can be used on any AI model, model specific explanations can use more data about the model as explanations, hence both types of XAI methods will be used in this work.
+
+Another feature of XAI methods is the scope of its explanations:
+\textbf{Local} XAI methods explain why a model output was generated for one particular input.
+A \textbf{global} method attempts to reason about the model's behavior in general, independent of any particular input data.
+All methods used in this paper will be local methods, the reasons for which will be laid out in chapter \ref{sec:xai-methods}.
+
+The transformer attention mechanism introduced in chapter \ref{sec:transformer} has been used as a model-specific XAI method, and will be used in this work as one among several XAI methods employed to gauge the impact of words in the input to the output of (transformer) AI models.
+The use of attention as explanation, too, will be discussed in more detail when describing the implementation of our approach in chapter \ref{sec:xai-methods}.
 
 
 \section{State of the Art (of Vocabulary Selection)} \label{sec:state-of-the-art-vocabulary-selection}
