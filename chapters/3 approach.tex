@@ -1,13 +1,13 @@
 This chapter describes in detail our approach for word utility evaluation to fulfill the goal stated in chapter \ref{sec:statement-of-goal}.
 
-The problem is first put into terms of mathematical objects in chapter \ref{sec:problem-statement-mathematical}.
+The problem is first put into terms of mathematical objects in chapter \ref{sec:formal-problem-statement}.
 We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{sec:human-efficiency-testing}
 After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject in chapter \ref{sec:ai-simulated-learner}, using the technological building blocks referred to previously in chapter \ref{ch:background}.
 
 With a method for utility evaluation established, we then point out why it is in itself not yet sufficient for actually generating useful lists of vocabulary that a human learner could utilize in chapter \ref{sec:eval-vs-creation}.
 To solve this final problem, \ref{sec:utility-extraction-with-xai} puts forward a general approach for list generation.
 
-\section{Mathematical Formulation of the Problem} \label{sec:problem-statement-mathematical}
+\section{Formal Problem Statement} \label{sec:formal-problem-statement}
 
 % the following terms have been defined before can should be used now
 % language context
@@ -30,7 +30,7 @@ We can imagine many variables going into this function, such as the time when th
 
 Let $W$ be the set of all words in the language.
 \begin{align*}
-	t: \text{Human}, 2^{W}\to \mathbb{R} \\
+	t: \text{Human}, 2^{W}\to [0, 1] \\
 	t (s, V) \mapsto p                   \\
 \end{align*}
 where $V \in W$ is the vocabulary of the test subject.
@@ -90,7 +90,7 @@ This approach is laid out in the following chapters.
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
 
 This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
-Chapter \ref{sec:problem-statement-mathematical} has specified how with the help of a proxy task, we can define this efficiency.
+Chapter \ref{sec:formal-problem-statement} has specified how with the help of a proxy task, we can define this efficiency.
 Chapter \ref{sec:human-efficiency-testing} has laid out a theoretical approach for how with human test subject, one could test the efficiency of a vocabulary list.
 However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists and a large pool of test subjects lowers the comparability of the scores.
 

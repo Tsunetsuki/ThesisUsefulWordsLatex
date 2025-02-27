@@ -138,14 +138,14 @@ For the purposes of this work, an \textit{NLP task} is a function with a specifi
 NLP tasks will serve as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in chapter \ref{ch:approach}.
 
 
-\subsection{Tokenization}
+\subsection{NLP Preprocessing: Tokenization}
 Language presents itself in continuous form in most situations:
 When listening to spoken language, it is not obvious where one word ends and another begins.
 Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
 While words in the written English language are mostly separated by spaces, a writer may choose to create a new hyphenated word sequence on the spot as necessity demands.
 
 Further complicating the issue of where to separate words is the fact that many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
-For this reason, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into their words \cite{jurafskySpeechLanguageProcessing2025}. 
+For this reason, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into their words \cite{jurafskySpeechLanguageProcessing2025}.
 \todo{Explain various types of tokenization?}
 
 Splitting continuous text into distinct words has several benefits:
@@ -162,8 +162,8 @@ As this work makes extensive use of AI models, the next section therefore briefl
 \section{Artificial Intelligence}
 % \tocite{Wolfgang Ertel: Introduction to Artificial Intelligence} defines \AI\ as ""
 Elaine Rich, in her 1983 work "Artificial Intelligence", defines \AI\ as "the study of how to make computers do things at which, at the moment, people are better" \cite{rich1983artificial}.
-An introductory article by IBM describes it as "a technology that enables computers and machines to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy" \footnote{https://www.ibm.com/think/topics/artificial-intelligence, last accessed February 26th, 2025}.
-And this 
+An introductory article by IBM describes it as "a technology that enables computers and machines to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy" \footnote{\url{https://www.ibm.com/think/topics/artificial-intelligence}, last accessed February 26th, 2025}.
+And this
 This is opposed to traditional algorithms which can only follow algorithms which have been explicitly programmed.
 
 \subsection{AI Models}
@@ -198,23 +198,37 @@ This kind of analysis is the domain of \textbf{Explainable AI}, which is why the
 Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions \cite{viloneNotionsExplainabilityEvaluation2021}.
 This can be useful to check if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
 By analyzing the decision process of high-performing AI models, this work attempts to extract useful information about how the language is processed by them which may be useful to humans as well.
+For this analysis, XAI is used a tool to find out which inputs influence the performance of AI models the most.
 
 \subsection{Distinctions between XAI methods}
 There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
+This chapter will go into some of distinctions and argue why some types are more appropriate to the aim of this thesis than others.
 
 As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
-The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, which attempts to attribute importance values to features in the input.
+The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with the question: \textit{"how does each feature affect the model?"} \footnote{\url{https://courses.cs.washington.edu/courses/csep590b/22sp/files/lectures/lecture2_part1.pdf}, last accessed on February 27, 2025.}.
 Thus, all XAI methods in this paper belong to this group.
 
-One of the most important characteristics of an XAI method is whether it is \textbf{model-agnostic} or \textbf{model-specific}.
+Feature importance explanations can be further subdivided into two groups:
+\textbf{Feature selection} methods explain the model's decisions by trying to predict a subset of all input features which are deemed "important".
+\textbf{Feature attribution} methods attribute a concrete importance score $a_i$ $\in \mathbb{R}$ to each input feature $x_i$.
+This work uses feature attribution methods exclusively, as the scores will allow us to rank words in a list by their importance.
+
+Another important characteristics of an XAI method is whether it is \textbf{model-agnostic} or \textbf{model-specific}.
 A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees \missingcitation{decision tree}, or neural networks.
 Model-agnostic models are also called black-box-approaches, as they do not look into the model (such as weights in neural networks) but only perturb the inputs and observe changes in the model output.
-While model agnostic explanations are inherently desirable since they can be used on any AI model, model specific explanations can use more data about the model as explanations, hence both types of XAI methods will be used in this work.
+A advantage of model agnostic explanations is that they can be used on any AI model
+However, many recent state-of-the-art AI models are build using the transformer architecture, hence methods specific to transformer models can also be fairly broadly applied.
+A major upshot of model-specific explanations is their efficiency:
+Black-box approaches require us to perturb the input to observe differences in the output, requiring us to run the model multiple times for a single explanation, which can constitute a great computational effort.
+On the other hand, model-specific methods typically only require one run of the model, as they can look into the model itself for an explanation.
+For these reasons, both model-agnostic and model-specific approaches will be used in this work.
 
 Another feature of XAI methods is the scope of its explanations:
 \textbf{Local} XAI methods explain why a model output was generated for one particular input.
 A \textbf{global} method attempts to reason about the model's behavior in general, independent of any particular input data.
-All methods used in this paper will be local methods, the reasons for which will be laid out in chapter \ref{sec:xai-methods}.
+This work is interested in observing the interaction of the AI model with a particular corpus, not only the AI model.
+For this reason, all methods used in this paper will be local methods.
+However, while local explanations only explain a single decision of the model (which, in the work, will be the interaction of the model with a single sentence), we will aggregate the individual decisions across the corpus to get a bigger picture about this interaction.
 
 The transformer attention mechanism introduced in chapter \ref{sec:transformer} has been used as a model-specific XAI method
 \cite{liUnderstandingNeuralNetworks2017}
@@ -222,6 +236,24 @@ The transformer attention mechanism introduced in chapter \ref{sec:transformer} 
 , and will be used in this work as one among several XAI methods employed to gauge the impact of words in the input to the output of (transformer) AI models.
 The use of attention as explanation, too, will be discussed in more detail when describing the implementation of our approach in chapter \ref{sec:xai-methods}.
 
+Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
+
+\begin{table}[ht]
+	\centering
+	\begin{tabularx}{\textwidth}{|X|X|X|}
+		\hline
+		\textbf{Attribute} & \textbf{Type Selected for this work} & \textbf{Reason for selection} \\
+		\hline
+		\makecell[l]{Model-Specificity                                                               \\(Model-Agnostic or \\Model-Specific)} & Both Model-Agnostic and Model-Specific & Model-Agnostic methods: Broad applicability; Model-specific methods: Computational efficiency \\
+		\hline
+		\makecell[l]{Importance Explanation \\(Feature attribution or \\Feature selection)}                                 & Feature Attribution                 & Use of scores to order words in vocabulary lists                                                                        \\
+		\hline
+		\makecell[l]{Scope\\(Local or Global)}                                                       & Local                                  & Attain explanations taking into account the corpus                                          \\
+		\hline
+	\end{tabularx}
+	\caption{XAI methods used in this work}
+	\label{table:XAi-method-criteria}
+\end{table}
 
 \section{State of the Art (of Vocabulary Selection)} \label{sec:state-of-the-art-vocabulary-selection}
 \subsection{Non-computational Methods}
