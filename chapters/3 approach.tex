@@ -65,10 +65,11 @@ If the test subject learns the word exclusively in order of the list $l$ (and re
 	V_{l, k} := \{l_i \mid i \leq k\}                                                                                 \\
 \end{equation*}
 
+
 This thesis aims at finding vocabulary lists that improve the ability of a language learner at the fastest possible rate.
 We can call this property the efficiency of the list.
 To measure it, we can think of a score $p_{aim} \in [0, 1]$ that the learner wishes to achieve in the language exam.
-An efficient list will let the learner achieve their goal in the shortest amount of time, or the least amount of words.
+An efficient list will let the learner achieve their goal in the shortest amount of time, or the least amount of words (see figure \ref{fig:voc-list-efficiency}).
 Therefore, the efficiency of a vocabulary list shall be inversely proportional to the number of words which must be learned from the vocabulary list to bring the performance above the threshold $p_{aim}$:
 
 \begin{equation}
@@ -82,6 +83,29 @@ And with this definition of efficiency, we can define the condition for an optim
 
 Finding vocabulary lists that approximate an optimal list according to formula \ref{eq:optimal-vocab-list} is the aim of the rest of this work.
 
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				axis lines = middle,
+				xlabel = {\#words learned from list},
+				ylabel = {performance},
+				xtick = {0,500,1000,1500,2000,2500,3000},
+				ytick = {-1,-0.5,0,0.5,1},
+				samples = 100,
+				domain = 0:3000,
+				ymax=1.2,
+				width=10cm
+			]
+
+			%curve
+			\addplot[blue, thick] {1 - (1/((0.003*x)+1)};
+			\addplot[red, thick] {1 - (1/(((0.0005*x)^3)+1)};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Visualization of vocabulary list efficiency: \textbf{\textcolor{red}{Red}} represents the learning curve with an efficient list, \textbf{\textcolor{blue}{Blue}} represents a less efficient list (i.e, less useful words at the top of the list)}
+	\label{fig:voc-list-efficiency}
+\end{figure}
 
 \section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{sec:human-efficiency-testing}
 
@@ -126,50 +150,31 @@ To circumvent this issue, this work proposes the following core idea:
 To replace the human test subject in the experiment describe in chapter \ref{sec:human-efficiency-testing} consistently and economically with an AI model, facilitating a consistent and economical setup.
 
 \subsubsection{AI as Container of Skills}
-In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek, BERT have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition, Sentiment Detection.
+In recent years, AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek, BERT have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition, Sentiment Detection.
+\todo{revise the above sentence to not only reference LLMs}
 
 It may be said that they possess an understanding of language in a behaviorist sense.
 
 These AI models are trained on one or more specific NLP tasks.
 If we run the model on a specific corpus and mask some of the words in the input, it is expected that the performance will decrease in comparison to the full input.
 However, presumably some words will have a larger impact on the performance than others.
-So to test the efficiency of a vocabulary list, we could let the AI model perform its NLP task on the corpus.
+If we view removing words from the input as the equivalent of a human not knowing a word in a text, this performance differential can be a proxy metric for word utility and for human language ability.
+
+\subsubsection{Modified Experimental Setup with AI}
+With this new proxy metric for word utility in mind, we can propose a new experiment.
+To test the efficiency of a vocabulary list, we modify the setup from \ref{sec:human-efficiency-testing} as follows:
+
+Let a pre-trained AI model perform its NLP task on a corpus.
 At the start, we mask all of the tokens in the input to simulate a language learner who is a complete beginner and thus knows no words in their target language.
-We can then progressively unmask words in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
-This will yield a plot of performance over unmasked words which will tell us how quickly the performance improves with unmasked words.
-A plot with low initial performance increase will betray an inefficient vocabulary list, whereas a quickly increasing performance should correspond to an efficient vocabulary list.
+We then progressively unmask the words from the vocabulary list in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
 
+This will yield a plot of performance over unmasked words which will tell us how quickly the performance improves with unmasked words, similar to figure \ref{fig:voc-list-efficiency}.
+A quickly increasing performance will correspond to an efficient vocabulary list, whereas an inefficient list will create a plot with low initial gains in performance.
 
-
-
-\begin{figure}[!ht]
-	\label{fig:voc-list-efficiency}
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[
-				axis lines = middle,
-				xlabel = {\#words learned from list},
-				ylabel = {performance},
-				xtick = {0,500,1000,1500,2000,2500,3000},
-				ytick = {-1,-0.5,0,0.5,1},
-				samples = 100,
-				domain = 0:3000,
-				ymax=1.2,
-				width=10cm
-			]
-
-			%curve
-			\addplot[blue, thick] {1 - (1/((0.003*x)+1)};
-			\addplot[red, thick] {1 - (1/(((0.0005*x)^3)+1)};
-		\end{axis}
-	\end{tikzpicture}
-	\caption{Visualization of Vocabulary list efficiency: \textbf{\textcolor{red}{Red}} represents the learning curve with an efficient list, \textbf{\textcolor{blue}{Blue}} represents a less efficient list (i.e, less useful words at the top of the list)}
-\end{figure}
-
-
+\subsubsection{Influence of Components on Result}
 This is a cheap option when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
 
-The experiment described above necessarily requires data to be performed, in the form of a corpus.
+The experiment described above data to be performed, in the form of a corpus.
 We can suppose that both the corpus and the NLP task performed by the model will influence how quickly the AI model's performance increases with a given vocabulary list:
 
 For example, to perform Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than if the task is related to Information Extraction, such as Temporal Tagging.
