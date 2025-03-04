@@ -1,6 +1,6 @@
 This chapter describes in detail our approach for word utility evaluation to fulfill the goal stated in chapter \ref{sec:statement-of-goal}.
 
-The problem is first put into terms of mathematical objects in chapter \ref{sec:formal-problem-statement}.
+The problem is first put formally by putting the terms of word utility and vocabulary list efficiency into mathematical objects in chapter \ref{sec:formal-problem-statement}.
 We then describe a hypothetical experiment that could be performed to evaluate word utility using human feedback in chapter \ref{sec:human-efficiency-testing}
 After pointing out the unfeasibility of such a testing method, we suggest ways to perform the experiment with AI models instead of humans as the test subject in chapter \ref{sec:ai-simulated-learner}, using the technological building blocks referred to previously in chapter \ref{ch:background}.
 
@@ -14,51 +14,73 @@ To solve this final problem, \ref{sec:utility-extraction-with-xai} puts forward 
 % utility
 % proxy task
 
-To repeat the introductory sentence of chapter \ref{sec:statement-of-goal}:
+To repeat the essential sentence of chapter \ref{sec:statement-of-goal}:
 The aim of this work is to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
-Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}. The following formula gives a more precise idea of the aim and the variables involved.
 
+Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an \textbf{ordered list of words}.
+Theoretically, if this word list is ordered by descending word, we can speak of a \textbf{maximally efficient} vocabulary list.
+We could also put a number on \textit{any} list of words which measures how efficient a vocabulary list is to understand a given linguistic context.
+A list should be evaluated as efficient if useful words appear at the top of the list, and less efficient if less useful words are at the top, since that would mean that someone learning the words in that order would not gain understanding at the highest possible rate.
+
+We can subdivide the overarching goal of word utility evaluation into three related, but not quite equivalent sub-goals:
+\begin{itemize}
+	\item Evaluating the utility of a single word.
+	\item Evaluating the efficiency of a list of words to learn.
+	\item Generating maximally efficient lists of words to learn.
+\end{itemize}
+
+This section will put utility and efficiency into mathematical terms, to provide a clearer explanation of the variables involved in these tasks and their relationship.
+
+\subsubsection{Proxy Task}
 Since utility is defined in terms of language ability, we first need a way to put a number on the language ability of a test subject. This is done by means of a proxy task: We can imagine a human test subject taking a language exam as a proxy task to find out their language ability:
 
 \begin{align*}
 	t: \text{Human} \to [0, 1] \\
 	t (s) \mapsto p            \\
 \end{align*}
-where $s$ is the test subject and $t$ is the proxy task, with a possible score $p$ between zero and one.
+where $s$ is the test subject and $t$ is the proxy task, with a possible performance score $p$ between zero and one.
 
-We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However, this thesis addresses vocabulary learning, and so the vocabulary of the test subject is provided as an additional parameter into the function
+We can imagine many variables going into this function, such as the time when the test is taken (hopefully the human's performance would increase over time). However, this thesis addresses vocabulary learning, and so the vocabulary of the test subject is provided as an additional parameter to the function $t$ to make a slightly modified function, $t'$:
 
-Let $W$ be the set of all words in the language.
+\subsubsection{Proxy Task with Vocabulary}
 \begin{align*}
-	t: \text{Human}, 2^{W}\to [0, 1] \\
-	t (s, V) \mapsto p                   \\
+	t': \text{Human}, 2^{W}\to [0, 1] \\
+	t' (s, V) \mapsto p               \\
 \end{align*}
-where $V \in W$ is the vocabulary of the test subject.
+where $W$ be the set of all words in the language, and $V \in W$ is the vocabulary of the test subject.
 
-We now have a function from the vocabulary to the score in the proxy task (the proxy metric for language ability).
-Using the proxy task function, we can define a measure of efficiency of an ordered list of vocabulary $l$ containing elements from $W$.
-The efficiency reflects how quickly a learner improves their language ability if they learn words in the order of the list, measured as a proportion $p_{aim}$ of the maximum achievable performance $p_{max} = t(s,W)$ (knowing all words in the language).
-It is the number of words which must be learned from the vocabulary list to bring the performance above the threshold:
+\subsubsection{Vocabulary List Efficiency}
+We now have a function $t'$ from the vocabulary to the score in the proxy task (the proxy metric for language ability).
+Using this function, we can define a measure for the efficiency of an ordered list of vocabulary $l$ containing elements from $W$.
 
-Let
-\begin{align*}
-	l        & := (w_1, w_2, \dots, w_n) \quad \text{where } w_i \in W \text{ and } w_i \neq w_j \text{ for } i \neq j. \\
-	V_{l, k} & := \{w_i \mid i \leq k\}                                                                                 \\
-	p_{aim}  & \in  [0, 1]                                                                                              \\
-\end{align*}
+A list of vocabulary is simply an ordered list whose elements are words of the target language, with no duplicates:
 
-Then
-\begin{align*}
-	e_{t}(s, l, p_{aim}) \mapsto ( -1 )  \cdot  \min\{ k \mid  t(s,  V_{l, k}) \geq p_{aim} \cdot t(s, W)\} \\
-\end{align*}
-The term contains a multiplication with $-1$ such that an efficient list achieves a higher efficiency.
+\begin{equation*}
+	l        := (l_1, l_2, \dots, l_n) \quad \text{where } l_i \in W \text{ and } \forall i,j: i \neq j \implies l_i \neq l_j . \\
+\end{equation*}
+Note that by this definition, the list need not contain all words of the language.
+
+If the test subject learns the word exclusively in order of the list $l$ (and retains them perfectly), their vocabulary at any point will be that list up until some index $k$:
+\begin{equation*}
+	V_{l, k} := \{l_i \mid i \leq k\}                                                                                 \\
+\end{equation*}
+
+This thesis aims at finding vocabulary lists that improve the ability of a language learner at the fastest possible rate.
+We can call this property the efficiency of the list.
+To measure it, we can think of a score $p_{aim} \in [0, 1]$ that the learner wishes to achieve in the language exam.
+An efficient list will let the learner achieve their goal in the shortest amount of time, or the least amount of words.
+Therefore, the efficiency of a vocabulary list shall be inversely proportional to the number of words which must be learned from the vocabulary list to bring the performance above the threshold $p_{aim}$:
+
+\begin{equation}
+	e_{t, s, p_{aim}}(l) \mapsto -  \min\{ k \mid  t'(s,  V_{l, k}) \geq p_{aim} \} \\
+\end{equation}
 
 And with this definition of efficiency, we can define the condition for an optimal vocabulary list given a particular $p_{aim}$:
-\begin{align} \label{eq:opt-vocab-list}
+\begin{equation} \label{eq:optimal-vocab-list}
 	l_{opt, t} (s, p_{aim}) = \argmax_{l} e(s, l, p_{aim})
-\end{align}
+\end{equation}
 
-Finding vocabulary lists that approximate an optimal list according to formula \ref{eq:opt-vocab-list} is the aim which the rest of this work is dedicated to.
+Finding vocabulary lists that approximate an optimal list according to formula \ref{eq:optimal-vocab-list} is the aim of the rest of this work.
 
 
 \section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{sec:human-efficiency-testing}
@@ -68,19 +90,25 @@ Finding vocabulary lists that approximate an optimal list according to formula \
 	give problems that is faced when trying to test this approach with human test subjects: no repeatability, high costs
 }
 
-With the formula \ref{eq:opt-vocab-list}, we now have set our goal more concretely.
-We are left with the question of how to actually make candidate vocabulary lists, and test them for efficiency.
-Let us first consider how we could measure the efficiency of one vocabulary list of 3000 words:
+With the formula \ref{eq:optimal-vocab-list}, we now have set our goal more concretely.
+We are left with the question of how to design an actual experiment to test vocabulary list efficiency, and also how to generate one that is approximates an optimal list.
+Hence, this chapter lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will however be found to suffer from problems of feasibility, which the following chapters will set out to solve.
 
-We would need to find a human test subject who does not know any words of the target language at the outset.
-We would then make the subject learn the words from the list one by one, and test their language ability in regular intervals to see if their desired threshold has been reached.
-This disregards the fact that knowing all words in the language would not necessarily mean the performance would reach 1, but assuming a normal school test that is not an issue.
+\subsubsection{Experimental Setup}
+Let us first consider an example scenario, where we wish to measure the efficiency of one vocabulary list $l_A$ of 3000 words for a desired performance of $p_{aim} = 0.8$:
 
-While this test setup might take a long time to complete depending on the desired threshold, it is still feasible.
-But if we wish to analyze the same subject's performance learning from a second vocabulary list to compare the lists' efficiencies, there is an unavoidable issue:
-The test subject cannot completely forget the words they have learned in the first run.
+We would need to find a human test subject $s$ who does not know any words of the target language at the outset.
+We would then make the subject learn the words from $l_A$ one by one, and test their language ability in regular intervals to see when their performance reaches $0.8$.
+This disregards the fact that, depending on the task, even knowing all words in the language would not necessarily mean the performance would reach 0.8, but assuming a normal school test that is not an issue.
+
+\subsubsection{Problems of the Setup}
+While this test setup might take a long time to complete (especially for higher thresholds), it is still feasible.
+But if we wish to compare the efficiency of $l_A$ with a second list $l_B$, we must measure how the same subject performs if they learn from the second vocabulary list, which presents is an unavoidable issue:
+\textbf{The test subject cannot arbitrarily forget the words they have learned from the first list $l_A$.}
 The experiment is thus not repeatable.
-If we increase the number of test subjects so each vocabulary list is learned by a new subject, we introduce differences in capabilities between test subjects and the cost of the experiment also quickly increases.
+
+If we tweak the experiment such that each vocabulary list is learned by a different test subject, we introduce differences in capabilities between test subjects, making the evaluation of the list's efficiencies much more complicated to measure.
+To make up for these inconsistencies, we might boost the number of test subjects to the point where each list is learned by a statistically significant group of subjects, but this would cause a sharp increase in the cost of the experiment.
 
 However, this theoretical test setup could be feasible using a non-human test subject:
 Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists with drastically reduced costs.
@@ -91,12 +119,13 @@ This approach is laid out in the following chapters.
 
 This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
 Chapter \ref{sec:formal-problem-statement} has specified how with the help of a proxy task, we can define this efficiency.
-Chapter \ref{sec:human-efficiency-testing} has laid out a theoretical approach for how with human test subject, one could test the efficiency of a vocabulary list.
-However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists and a large pool of test subjects lowers the comparability of the scores.
+Chapter \ref{sec:human-efficiency-testing} has suggested a hypothetical experiment for testing the efficiency of a vocabulary list with human test subject.
+However, we have established that the experiment is not easy to set up consistently, as it cannot be repeated with the same test subject on different lists, and a large pool of test subjects either means lower comparability of the scores or significantly increased costs.
 
 To circumvent this issue, this work proposes the following core idea:
-By replacing the human test subject with an AI model, it could be possible to execute the experiment described in chapter \ref{sec:human-efficiency-testing} consistently and economically:
+To replace the human test subject in the experiment describe in chapter \ref{sec:human-efficiency-testing} consistently and economically with an AI model, facilitating a consistent and economical setup.
 
+\subsubsection{AI as Container of Skills}
 In recent years AI models such as ChatGPT \tocite{ChatGPT}, Gemini, DeepSeek, BERT have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition, Sentiment Detection.
 
 It may be said that they possess an understanding of language in a behaviorist sense.
@@ -109,6 +138,34 @@ At the start, we mask all of the tokens in the input to simulate a language lear
 We can then progressively unmask words in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
 This will yield a plot of performance over unmasked words which will tell us how quickly the performance improves with unmasked words.
 A plot with low initial performance increase will betray an inefficient vocabulary list, whereas a quickly increasing performance should correspond to an efficient vocabulary list.
+
+
+
+
+\begin{figure}[!ht]
+	\label{fig:voc-list-efficiency}
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				axis lines = middle,
+				xlabel = {\#words learned from list},
+				ylabel = {performance},
+				xtick = {0,500,1000,1500,2000,2500,3000},
+				ytick = {-1,-0.5,0,0.5,1},
+				samples = 100,
+				domain = 0:3000,
+				ymax=1.2,
+				width=10cm
+			]
+
+			%curve
+			\addplot[blue, thick] {1 - (1/((0.003*x)+1)};
+			\addplot[red, thick] {1 - (1/(((0.0005*x)^3)+1)};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Visualization of Vocabulary list efficiency: \textbf{\textcolor{red}{Red}} represents the learning curve with an efficient list, \textbf{\textcolor{blue}{Blue}} represents a less efficient list (i.e, less useful words at the top of the list)}
+\end{figure}
+
 
 This is a cheap option when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
 
@@ -157,10 +214,10 @@ In practice, however, this would require an enormous amount of computational res
 If we wish to find the most efficient list of 1,000 words, and we take the most frequent 20,000 words in the language as candidates for members of this list, there is a total number of $P(20000, 1000) = \frac{20000!}{19000!}$ possible vocabulary lists to be tested.
 Since every one of these test consists of running the proxy task with a vocabulary which is a subset taken from the first $n$ elements where $n \in [0, 1]$, and all of the subsets will appear in the runs of many vocabulary lists, we can optimize this by running the task with every vocabulary with a cardinality between 0 and 1,000, which would be
 $
-\sum_{k=0}^{1000} \binom{20000}{k} \approx \frac{1}{2} \times 2^{20000} = 2^{19999}
+	\sum_{k=0}^{1000} \binom{20000}{k} \approx \frac{1}{2} \times 2^{20000} = 2^{19999}
 $ runs of the proxy task.
 .
-This is still an unfeasible amount of computation. 
+This is still an unfeasible amount of computation.
 
 It is therefore clear that finding optimal vocabulary list is much too expensive to be done without approximation.
 As approximations, we suggest XAI to extract information about the linguistic skills of AI models, and the following chapters illustrate this approach.
