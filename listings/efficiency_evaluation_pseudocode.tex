@@ -1,0 +1,27 @@
+\begin{algorithm}
+\caption{Efficient List Generation}
+\label{alg:efficiency-evaluation}
+\begin{algorithmic}[1]
+\Require voc\_list, corpus, model
+\State Initialize $vocabulary \gets \emptyset$
+\State Initialize $scores \gets []$
+\State Set $test\_interval \gets 100$
+
+\For{$i \gets 0$ to $\text{length}(voc\_list)$ step $test\_interval$}
+    \State Add $voc\_list[i]$ to $vocabulary$
+    \State Initialize $line\_scores \gets []$
+    
+    \For{each $line$ in $corpus$}
+        \State $line\_with\_only\_known\_words \gets$ mask\_words\_not\_in\_vocabulary($line$, $vocabulary$)
+        \State $baseline \gets$ model($line$)
+        \State $model\_output \gets$ model($line\_with\_only\_known\_words$)
+        \State $score \gets$ similarity($baseline$, $model\_output$)
+        \State Append $score$ to $line\_scores$
+    \EndFor
+
+    \State $avg\_score \gets$ average($line\_scores$)
+    \State Append $avg\_score$ to $scores$
+\EndFor
+
+\end{algorithmic}
+\end{algorithm}

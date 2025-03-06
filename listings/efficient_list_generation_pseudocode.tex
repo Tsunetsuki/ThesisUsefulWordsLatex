@@ -1,0 +1,19 @@
+\begin{algorithm}
+\caption{Efficient List Generation}
+\label{alg:efficient-list-generation}
+\begin{algorithmic}[1]
+\Require corpus, model, xai
+\State Initialize $line\_word\_utilities\_scores \gets []$
+
+\For{each $line$ in $corpus$}
+    \State $word\_utilities\_for\_this\_line \gets xai(model, line)$
+    \State Append $word\_utilities\_for\_this\_line$ to $line\_word\_utilities\_scores$
+\EndFor
+
+\State $corpus\_word\_utilities\_scores \gets$ aggregate\_word\_utilities($line\_word\_utilities\_scores$)
+
+\State $voc\_list \gets$ words ordered by $corpus\_word\_utilities\_scores$
+
+\State \Return $voc\_list$
+\end{algorithmic}
+\end{algorithm}

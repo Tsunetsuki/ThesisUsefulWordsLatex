@@ -177,9 +177,10 @@ A quickly increasing performance will correspond to an efficient vocabulary list
 The modified experiment addresses the two issues proposed with the original setup:
 It is cheap when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
 
-Listing \ref{lst:efficiency-evaluation} shows pseudocode for the described setup.
 
-\lstinputlisting[caption={Efficiency Evaluation Pseudocode}, label={lst:efficiency-evaluation}]{./listings/efficiency_evaluation_pseudocode.txt}
+Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup:
+
+\input{listings/efficiency_evaluation_pseudocode.tex}
 
 Next, let us see how the components in this setup interact with each other to model the concepts introduces in chapter \ref{sec:statement-of-goal}:
 
@@ -279,13 +280,9 @@ By adding XAI as a tool for analyzing the interaction of the AI model with the c
 This is not a replacement of the approach described in chapter \ref{sec:ai-as-test-subject}.
 Rather, this work will use the generation approach to make lists (chapter \ref{ch:implementation}), and the evaluation approach for testing which method leads to the most efficient lists (chapter \ref{ch:evaluation}).
 
+Algorithm \ref{alg:efficient-list-generation} shows pseudocode for the described setup.
 
-Listing \ref{lst:efficient-list-generation} shows pseudocode for the described setup.
-
-\lstinputlisting[caption={Efficient List Generation Pseudocode}, label={lst:efficient-list-generation}]{./listings/efficient_list_generation_pseudocode.txt}
-
-
-\todo{Insert diagram of components interactions with each other}
+\input{listings/efficient_list_generation_pseudocode.tex}
 
 In the next chapter, we will tackle the implementation of this approach.
 We will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
