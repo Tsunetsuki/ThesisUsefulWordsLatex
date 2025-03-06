@@ -1,0 +1,12 @@
+Given: corpus, model, xai
+
+line_word_utilities_scores = []
+for line in corpus:
+    word_utilities_for_this_line = xai(model, line)
+    line_word_utilities_scores.append(word_utilities_for_this_line)
+
+corpus_word_utilities_scores = aggregate_word_utilities(line_word_utilities_scores)
+
+voc_list = words ordered by corpus utility scores
+
+Return voc_list 

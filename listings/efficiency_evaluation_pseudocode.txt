@@ -1,0 +1,21 @@
+Given: voc_list, corpus, model
+
+vocabulary = {}
+scores = []
+test_interval = 100
+
+for (i = 0; i < length(voc_list); i += test_interval)
+    vocabulary.add(voc_list[i])
+
+    line_scores = []
+    for line in corpus:
+        line_with_only_known_words = mask_words_not_in_vocabulary(line, vocabulary)
+
+        baseline = model(line)
+        model_output = model(line_with_only_known_words)
+        
+        score = similarity(baseline, model_output)
+        line_scores.append(score)
+
+    score = average(line_scores)
+    scores.append(score)
