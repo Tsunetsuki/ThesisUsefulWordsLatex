@@ -3,7 +3,7 @@
 \label{alg:efficient-list-generation}
 \begin{algorithmic}[1]
 \Require corpus, model, xai
-\State Initialize $line\_word\_utilities\_scores \gets []$
+\State Initialize $line\_word\_utilities\_scores \gets$ empty list
 
 \For{each $line$ in $corpus$}
     \State $word\_utilities\_for\_this\_line \gets xai(model, line)$
