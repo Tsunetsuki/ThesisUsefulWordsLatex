@@ -12,7 +12,7 @@ However, the evaluation with our approach will use the same components as the li
 
 
 \section{NLP Tasks}
-The NLP task and the corpus used for list generation 
+The NLP task and the corpus used for list generation
 
 There are many NLP tasks we could choose from \tocite{huggingface NLP task list or something}.
 But not all are equally suitable.
@@ -22,14 +22,19 @@ The NLP tasks we choose will dictate the format of our input data, i.e., the cor
 Therefore, the selection of corpora will be discussed in the next chapter.
 
 \subsection{Desiderata} \label{sec:nlp-tasks-desiderata}
+
 \contentdescription{
-	Support many languages
-	Be as close to human need as possible
-		-> task should show general language understanding
-	data is easy to acquire 
-		-> data should be freely available for lots of contexts
-		-> no need for manual labeling data
-}
+	{
+			\begin{itemize}
+				\item Support many languages
+				\item Be as close to human need as possible
+				\item -> task should show general language understanding
+				\item data is easy to acquire
+				\item -> data should be freely available for lots of contexts
+				\item -> no need for manual labeling data
+			\end{itemize}
+		}}
+
 This section will put forward four criteria for selecting NLP tasks for word utility extraction:
 The availability of many multilingual AI models and corpora usable as input for the task, generality of the task and ease of evaluation.
 These criteria will be used in the next chapter to select concrete tasks for our implementation.
@@ -165,15 +170,54 @@ The various NLP tasks employed require certain types of corpora to be employed p
 
 
 \section{Corpora}
+The previous section has put forth criteria for which NLP tasks should be used in our word utility evaluation approach.
+The other core component of the approach is the input data used to perform the experiments, as it serves the purpose of modeling the language contexts in which the language learner is striving to achieve proficiency.
+This chapter will therefore first lay out the general selection criteria for corpora.
+We will then introduce some publicly available corpora which are suitable for our evaluation approach, as well as propose data augmentation methods to increase their usefulness further.
+
+
+
 \subsection{Desiderata}
 
-For the purposes of this paper, it was desirable that the corpora used be:
-\begin{itemize}
-    \item representative of what language learners strive for
-    \item available in many languages
-    \item for background corpora: Document-level
-    \item freely accessible
-\end{itemize}
+\contentdescription{
+	{
+			For the purposes of this paper, it was desirable that the corpora used be:
+			\begin{itemize}
+				\item representative of what language learners strive for
+				\item available in many languages
+				\item can be split up into diverse linguistic contexts
+				\item for background corpora: Document-level
+				\item freely accessible
+			\end{itemize}
+		}}
+
+This section will put forward our general criteria for corpus selection, following from our overarching goal of using the model to model linguistic contexts for the purpose of language learning.
+\todo{when the following subsection stand, summarize here}
+\todo{when actual corpora are decided: Mention them in throughout this chapter too}
+
+Some tasks place additional
+With the selected tasks of Sentence Embedding, Next Sentence Prediction and Token Masking, there come certain requirements as to which corpora we can use as inputs for the data pipeline.
+
+The requirements stemming from NLP tasks are as follows:
+As Next Sentence Prediction predicts whether one sentence is likely the continuation of another, it requires continuous sentences pairs to work. To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
+
+\subsubsection{ Free Availability in Many Languages}
+In chapter \ref{sec:nlp-tasks-desiderata} we put forward reasons for why freely available AI models which can handle a diverse pool of languages are desirable for our undertaking.
+By the same token, we also prefer corpora which are publicly available in many languages over corpora which only include data in one language.
+While a monolingual corpus is not inferior to a multilingual one, its use necessitates that the user manually compile many corpora if a multilingual implementation is to be achieved.
+
+\subsubsection{Closeness to Linguistic Contexts Desired by Language Learners}
+As mentioned before, the corpus in our word utility extraction approach serves the purpose of modeling a linguistic context, and this linguistic context should reflect some set of situations that a language learner is likely to find themselves in.
+Typical situations would include reading the news, reading literature or watching movies in their target language.
+As such, corpora which are close to the materials which language learners are likely to engage with are desirable, since their use makes the AI model's performance on the task more reflective of skills that a language learner would like to acquire.
+
+\subsubsection{Diversity of Linguistic Contexts within Corpus}
+Not only the relevance of the entire corpus's linguistic context is important:
+Some corpora enable us to further split them up into smaller corpora with more specific language contexts.
+For instance, while we can use a corpus such as \textit{Wikipedia} as a whole, the structure of Wikipedia enables us to group articles by the category they belong to (politics/sports etc.), as well as split them by subheading (History/Introduction/etc.) to find more specific contexts.
+Such corpora are especially efficient for generating multiple contexts, hence we will make use of such corpora.
+
+
 
 \subsection{Corpora Used}
 \begin{description}
@@ -192,16 +236,16 @@ For the purposes of this paper, it was desirable that the corpora used be:
 		      \item From available subtitles, identifying the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as user ratings of subtitles.
 
 	      \end{enumerate}
-		  One advantageous aspect of this corpus is that is contains many sentences that are sequential, which means we can generate a Next Sentence Prediction dataset from it (add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs).
-		  This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
-		  While it is possible to reconstruct which movies the subtitle lines came from from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
+	      One advantageous aspect of this corpus is that is contains many sentences that are sequential, which means we can generate a Next Sentence Prediction dataset from it (add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs).
+	      This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
+	      While it is possible to reconstruct which movies the subtitle lines came from from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
 
 	\item[Leipzig Wortschatz Corpora]
-		Available in x languages
+	      Available in x languages
 
-		But: data quality issues, methodology might be outdated
+	      But: data quality issues, methodology might be outdated
 
-		\cite{goldhahnBuildingLargeMonolingual2012}
+	      \cite{goldhahnBuildingLargeMonolingual2012}
 	\item[CCMatrix / NLLB]
 
 \end{description}
@@ -211,9 +255,9 @@ As of 2025, the latest version of the corpus (v2018) contains aligned subtitles 
 
 \begin{figure}[H]
 	\centering
-    \includegraphics[width=\textwidth]{opensubs_corpus_processing.png}
+	\includegraphics[width=\textwidth]{opensubs_corpus_processing.png}
 	\caption{The pipeline producing the OpenSubtitles parallel corpus}
-    \label{fig:opensubs pipeline}
+	\label{fig:opensubs pipeline}
 \end{figure}
 
 
