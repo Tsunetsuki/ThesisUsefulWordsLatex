@@ -145,16 +145,17 @@ Likewise, written texts we find online or in books are not necessarily subdivide
 While words in the written English language are mostly separated by spaces, a writer may choose to create a new hyphenated word sequence on the spot as necessity demands.
 
 Further complicating the issue of where to separate words is the fact that many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
-For this reason, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into their words \cite{jurafskySpeechLanguageProcessing2025}.
-\todo{Explain various types of tokenization?}
+For these reasons, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into individual words \cite{jurafskySpeechLanguageProcessing2025}.
+\todo{Explain various types of tokenization: Sub-word, word etc.}
 
-Splitting continuous text into distinct words has several benefits:
+Splitting continuous text into distinct words will be required for this work and will serve the following purposes:
 \begin{itemize}
-	\item we can make statistics from them (e.g., counting which words occur many times).
-	\item we can assign values to them, such as estimated utility.
-	\item we can mask them in text inputs to AI models to test what effect masking a particular word has on the output.
+	\item Making statistics from word counts (e.g., counting which words occur many times).
+	\item Assigning estimated utility to words.
+	\item Being able to remove individual words in text inputs to AI models, in order to test what effect removing a particular word has on the output.
 \end{itemize}
 
+In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle differently language of different syntactic structures.
 
 In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
 As this work makes extensive use of AI models, the next section therefore briefly introduces the field of \AI.

@@ -28,10 +28,10 @@ Therefore, the selection of corpora will be discussed in the next chapter.
 			\begin{itemize}
 				\item Support many languages
 				\item Be as close to human need as possible
-				\item -> task should show general language understanding
+				\item $\rightarrow$ task should show general language understanding
 				\item data is easy to acquire
-				\item -> data should be freely available for lots of contexts
-				\item -> no need for manual labeling data
+				\item $\rightarrow$ data should be freely available for lots of contexts
+				\item $\rightarrow$ no need for manual labeling data
 			\end{itemize}
 		}}
 
@@ -184,10 +184,9 @@ We will then introduce some publicly available corpora which are suitable for ou
 			For the purposes of this paper, it was desirable that the corpora used be:
 			\begin{itemize}
 				\item representative of what language learners strive for
-				\item available in many languages
+				\item freely available in many languages
 				\item can be split up into diverse linguistic contexts
-				\item for background corpora: Document-level
-				\item freely accessible
+				\item for NSP: must be comprised of documents for continuous sentences
 			\end{itemize}
 		}}
 
@@ -195,7 +194,6 @@ This section will put forward our general criteria for corpus selection, followi
 \todo{when the following subsection stand, summarize here}
 \todo{when actual corpora are decided: Mention them in throughout this chapter too}
 
-Some tasks place additional
 With the selected tasks of Sentence Embedding, Next Sentence Prediction and Token Masking, there come certain requirements as to which corpora we can use as inputs for the data pipeline.
 
 The requirements stemming from NLP tasks are as follows:
@@ -278,19 +276,134 @@ As of 2025, the latest version of the corpus (v2018) contains aligned subtitles 
 %
 
 \section{XAI Methods} \label{sec:xai-methods}
+In order to appraise the influence of words in a corpus on the performance of the AI model performing and NLP task, this work employs Explainable AI methods, as explained in chapter \ref{sec:xai-as-tools-of-analysis}.
+Chapter \ref{sec:explainable-ai} has explained its use and stated what kind of XAI methods are especially appropriate for our approach:
+We will employ local, feature attribution XAI methods of both model-specific and model-agnostic type, as these will allow use to gauge the importance of words in the input from multiple points of view.
+Model-specific methods have an advantage in that they typically do not require many model calls to attribute importances to features, and take the model structure into account.
+On the other hand, model-agnostic methods are useful in that they can be used on any model and gauge the input-output relationship by performing actual experiments on the model, by observing the way changes to input change the output of the model.
 
-The XAI methods used in this work are the following:
-\begin{itemize}
-	\item Attention as Explanation
-	      Advantages:
-	      Model only needs to be run once per sentence.
-	      Longer sentences do not lead to a much longer calculations
-	      Disadvantages: Justification as explanation controversial.
-	\item Single Token Ablation
-\end{itemize}
+This chapter will propose several concrete XAI methods for use with our approach.
+The relationship of the XAI methods to the NLP tasks will also be discussed, as not every XAI method is feasible with every tasks, either because of unrealistic amount of computation or because the results of the combination are difficult to evaluate.
+The results of the experiments with these methods will be seen in chapter \ref{ch:evaluation}.
+\todo{argue against approaches where the input is reduced to BOW, such as SHAP}
 
+\subsection{Model-Agnostic Approaches}
+\contentdescription{
+	Single Token Ablation, Progressive Summary with
+}
+
+\subsubsection{Single Token Ablation}
+Our aim in using XAI methods is to find out which words, if known, improve the model's performance the most, when compared to not knowing the word.
+Perhaps the simplest way of testing this is by going through every word in the input to the AI model, and checking the model performance when the word is removed from the input.
+Within this work, this approach will be known as \textbf{Single Token Ablation}.
+
+\paragraph{Approach:}
+Given an input line or pair of lines:
+For each word in the input, create a variation of the input where the word is removed.
+Run the model on all inputs and measure how much performance is degraded in each case.
+Estimated utility is the difference in performance between not removing and removing the word.
+
+\paragraph{Advantages:}
+One advantage of Single Token Ablation is its conceptual simplicity, as it is very easy to implement.
+Furthermore, its time complexity is fairly minimal for a feature method, as it requires only one model call for each unique token in the sentence ($\mathcal{O}(n)$).
+
+\paragraph{Disadvantages:}
+The main downside of this method is that, in long sentences, leaving out a single token will not change the meaning of the sentence to such an extend that the sentence becomes unintelligible.
+Assuming the AI model can process sentences with missing words with similar accuracy as humans, the impact on performance may therefore be minimal or not predictive of actual usefulness.
+Furthermore, this method does not take into account the utility of a word in the context of word combinations:
+In a sentence such as "The band 'The Beatles' is a musical group which was active in the 1970s", not knowing 
+
+\paragraph{Summary:}
+Among model-agnostic methods, Single Token Ablation is a computationally inexpensive whose feature perturbation consists of ablating single words.
+We may think of this method as simulating a language learner who already knows all words in a sentence except for one, and as such it may not model word utility in such a way that the resulting list is useful for beginners.
+
+\subsubsection{Progressive Summary}
+While Single Token Ablation is easy to implement and cheap to execute, its downside is that the performance differences may not be representative of actual utility.
+To achieve a more accurate evaluation, we may think of a approach that is in some sense the inverse of removing single words from sentences:
+Checking which words are the most essential by reducing the sentence a minimal number of words.
+
+\paragraph{Approach:}
+Given an input line, we first let the AI model run on the unaltered input.
+We then go through every word in the input line, let the model run with the single word as input, and check which of the words produces an output that is close to the output for the unaltered line.
+We can thus see which word summarized the sentence the best.
+
+However, we need not stop here:
+After determining the most essential word in the sentence, we can check which words from the remaining pool of words brings the outputs closer still.
+By iterating this method, we progressively reconstruct the original sentence, which each step being the best next word to add in order to restore the original output.
+For this reason, we will refer to this method as \textbf{Progressive Summary}.
+Here, the estimated utility of a word is the boost in performance which is brought to the sentence when the word is added.
+
+\paragraph{Advantages:}
+The Progressive Summary approach models the perception of a beginner-level language learner better than Single Token Ablation.
+The latter asks which single word, when lacking, degrades performance the most.
+Progressive Summary instead asks which words, if known, bring language performance closest to knowing all words in the sentence.
+
+\paragraph{Disadvantages:}
+Progressive Summary is much more computationally intensive than Single Token Ablation, which requires only one model call per word in the sentence.
+Because of its iterative approach, for a sentence with 10 words, Progressive Summary calls the model $10+9+8+... $ or $\sum_{i=1}^{n}i = \frac{n^2 + n}{2}$ times, which is a time complexity of $\mathcal{O}(n^2)$.
+
+
+\paragraph{Compatibility with NLP tasks}
+As Progressive Summary starts from a set of one words and then progresses to larger sets, it is difficulty to meaningfully employ in combination with an NLP task whose input is not a single line, e.g., Next Sentence Prediction.
+One could circumvent the issue by leaving one of the sentences in its original form and only perturbing the other, but this can hardly be seen as a modeling of natural language ability.
+
+\todo{Maybe: Describe issues of using PS with models whose output is single number: Approximating with single words may not be meaningful approximation at all. But should test empirically.}
+
+As such, our implementation Progressive Summary is not used with Next Sentence Prediction.
+
+\paragraph{Summary:}
+Progressive Summary attempts to find the most important words in a sentence one by one, by first reducing the sentence to one word, then two etc., and using a distance metric to compare the "summaries" to the original sentence.
+The words which bring the model output for the summary closest to that of the original sentence are regarded as the most useful.
+
+\subsection{Model-Specific Methods}
+The model-agnostic methods so far are general tools which can be employed on any model.
+However, as many of the latest state-of-the-art AI models follow the Neural Network architecture, and more specifically the transformer architecture (see chapter \ref{sec:transformer}), we will also attempt word utility estimation with methods specific to these model.
+These model-specific XAI methods have the advantage of being computationally efficient:
+Model-agnostic methods extract information about the model by perturbing its inputs and analyzing the resulting changes in the output.
+This requires many model calls for one input datum.
+In contrast, model-specific methods can analyze the input-output relationship with only one model call, as they look into the model itself for information.
+We will therefore try two model-specific methods for analyzing word utility as well, as their more efficient calculations means they can process more input data in a given time, which should increase the accuracy of the resulting word list.
+
+\subsubsection{Attention as Explanation}
+One XAI method which has been proposed to explain the decision of transformer models specifically is the transformer's own attention mechanism:
+As stated in chapter \ref{sec:transformer}, transformer model use attention to focus on some inputs over others.
+This may be used as a kind of explanation, as the inputs which receive more attention presumably contribute more to the model's decision than those with less attention.
+
+\paragraph{Approach:}
+Let a transformer model run on an input line.
+The transformer will attribution an attention value to each token in the input.
+Normalize the attentions such that the attention for all words in the line sums up to one.
+The attributed attention to a word is its estimated utility.
+
+\paragraph{Advantages:}
+As hinted at before, this method uses one model call for one input line, and thus has a time complexity of $\mathcal{O}(1)$.
+
+
+\paragraph{Disadvantages:}
+One disadvantage of Attention as our attention mechanism is that attentions are attributed to input tokens of the model.
+Unlike the black-box methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
+AI models are trained with some tokenizer as preprocessing the input, and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
+This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
+Additionally, many tokenizer which are used in the preprocessing of models tokenize on a \textit{sub-word} level:
+
+In addition to this technical downside, Attention is controversial as a mechanism to explain model decisions.
+\tocite{Attention is not Explanation}
+
+\paragraph{Summary:}
+
+
+\subsubsection{Layer-wise Relevance Propagation (not yet implemented $\rightarrow$ may be deleted)}
+
+\paragraph{Approach:}
+
+\paragraph{Advantages:}
+
+\paragraph{Disadvantages:}
+
+\paragraph{Summary:}
+
+\subsection{TO BE SORTED}
 The following lays out how each of these methods works to achieve the goal of word utility estimation.
-
 \begin{description}
 	\item [Performance difference of AI for NLP tasks]
 	      Here, a Large Language Model (LLM) or a more specific language processing model is made to run NLP tasks such as text summarization, sentiment detection or question-answering.
@@ -314,8 +427,6 @@ The following lays out how each of these methods works to achieve the goal of wo
 	      In most languages, words can appear in various different forms: Verbs in Spanish are conjugated according to the time and originator of an action, Nouns in German are declined depending on their number and grammatical case.
 	      This adds another variable for compiling word lists: Whether the list should consider any different combination of letters as a different word, or whether different forms of the same headword should be viewed as only one word.
 \end{description}
-
-
 
 
 
