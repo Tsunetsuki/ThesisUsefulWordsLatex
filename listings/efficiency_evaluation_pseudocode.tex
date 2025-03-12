@@ -2,30 +2,33 @@
 \caption{List Efficiency Evaluation}
 \label{alg:efficiency-evaluation}
 \begin{algorithmic}[1]
-\Require voc\_list, corpus, model, p\_aim
-\State Initialize $scores \gets \text{empty list}$
-\State Set $test\_interval \gets 100$
+\Require voc\_list, corpus, model
 
-\For{$i \gets 0$ to $\text{length}(voc\_list)$ step $test\_interval$}
+\State $INIT\_VOCABULARY\_SIZE \gets 10$ 
+\State $VOCAB\_EXPANSION\_FACTOR \gets 2$ 
+\State $vocabulary\_size \gets VOCABULARY\_SIZE\_INIT$ 
+
+\State Initialize $vocabulary\_scores \gets \text{empty list}$
+
+\While{$vocabulary\_size < length(voc\_list)$ }
     % \State $vocabulary$ \gets $voc\_list$ until index $i$
-    \State $vocabulary \gets voc\_list$ until index $i$
+    \State $\text{vocabulary\_size} \gets vocabulary\_size * VOCAB\_EXPANSION\_FACTOR$ 
+    \State $vocabulary \gets voc\_list$ until index $vocabulary\_size$
     \State Initialize $line\_scores \gets$ empty list
     
     \For{each $line$ in $corpus$}
         \State $line\_with\_only\_known\_words \gets line $ without words not in $vocabulary$
         \State $baseline\_output \gets$ model($line$)
         \State $new\_output \gets$ model($line\_with\_only\_known\_words$)
-        \State $score \gets$ similarity($baseline\_output $, $new\_output$)
-        \State Append $score$ to $line\_scores$
+        \State $line\_score \gets$ similarity($baseline\_output $, $new\_output$)
+        \State Append $line\_score$ to $line\_scores$
     \EndFor
 
-    \If {$avg\_score > p\_aim$}
-       \State \Return -i
-    \EndIf
-\EndFor
+    \State $vocabulary_score$ = avg ($line_scores$)
+    \State Append ($vocabulary\_size$, $avg\_score$) to $scores$
+\EndWhile
 
-\Comment{If the threshold score could not be reached with the list}
-\State \Return $-\infty$
+\State \Return $scores$
 
 \end{algorithmic}
 \end{algorithm}

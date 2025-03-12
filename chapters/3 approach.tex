@@ -178,10 +178,6 @@ The modified experiment addresses the two issues proposed with the original setu
 It is cheap when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
 
 
-Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup:
-
-\input{listings/efficiency_evaluation_pseudocode.tex}
-
 Next, let us see how the components in this setup interact with each other to model the concepts introduces in chapter \ref{sec:statement-of-goal}:
 
 \subsubsection{Influence of Components on Result}
@@ -279,10 +275,6 @@ In other words, our approach ignores possible synergistic effects between words.
 By adding XAI as a tool for analyzing the interaction of the AI model with the corpus, we finally have an experimental setup for generating efficient vocabulary lists.
 This is not a replacement of the approach described in chapter \ref{sec:ai-as-test-subject}.
 Rather, this work will use the generation approach to make lists (chapter \ref{ch:implementation}), and the evaluation approach for testing which method leads to the most efficient lists (chapter \ref{ch:evaluation}).
-
-Algorithm \ref{alg:efficient-list-generation} shows pseudocode for the described setup.
-
-\input{listings/efficient_list_generation_pseudocode.tex}
 
 In the next chapter, we will tackle the implementation of this approach.
 We will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
