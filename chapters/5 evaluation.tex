@@ -146,12 +146,32 @@ The next chapter will introduce some of these methods, which we will use to gene
 
 
 \subsection{Existing List Generation Methods}
-To get an impression of how well the XAI-based methods perform, it will be informative to test established methods such
-\begin{itemize}
-	\item Frequency: The frequency of the word in the context-specific corpus.
-	\item Frequency without stopwords: The frequency of the word in the context-specific corpus, but with known stopwords filtered out.
-	\item TF-IDF: The frequency of a word in the context-specific corpus, normalized against a background corpus.
-\end{itemize}
+To get an impression of how well our XAI-based method for vocabulary list generation performs, it will be informative to test established methods for extracting important words from texts. 
+
+\subsubsection{Raw Frequency}
+
+Raw word frequency has been used as a criterion for which words to teach to language learners \cite{heChoosingWordsTeach2019}.
+Frequency is much less computationally intensive than any of the XAI-based approaches, as it only requires a tokenizer to be run on a corpus, without involving model calls.
+
+\subsubsection{Frequency, Without Stopwords}
+One drawback of using raw frequency the criterion by which to order vocabulary lists is that he most frequent words in most corpora will consist of stopwords.
+This can be seen in the following frequency word list from corpus [x]. 
+\todo{insert sample from raw frequency word list from corpora used in experiments }
+
+These words, while being the most generally useful, have very little meaning by themselves \cite{rajaraman2011data}.
+For this reason, they are often filtered out in the inputs of NLP tasks.
+Removing from the raw frequency-based word lists could be a way boost the lists's  efficiency, especially at the top of the list.
+We therefore filter out known stop words, based on a list from the popular NLP library \textit{NLTK} \footnote{\url{https://www.nltk.org/}}.
+\footnote{The NLTK stopword list can be downloaded by following the instructions on \url{https://www.nltk.org/howto/corpus.html\#word-lists-and-lexicons}.}
+
+
+\subsubsection{TF-IDF}
+\todo{either finish this section or replace with collection frequency normalization}
+To characterize the contents of a document, \cite{qaiserTextMiningUse2018}.
+TF-IDF has, to the best of our knowledge, not been considered for vocabulary list generation.
+However, it is often employed to find key terms in a document, which characterize the document's contents with a small number of words.
+
+TF-IDF: The frequency of a word in the context-specific corpus, normalized against a background corpus.
 
 \subsection{LLM Prompts}
 In recent years, Large Language Models have become a popular tools for language learners to find new words to learn about specific areas.
