@@ -245,11 +245,11 @@ Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
 		\hline
 		\textbf{Attribute} & \textbf{Type Selected for this work} & \textbf{Reason for selection} \\
 		\hline
-		\makecell[l]{Model-Specificity                                                               \\(Model-Agnostic or \\Model-Specific)} & Both Model-Agnostic and Model-Specific & Model-Agnostic methods: Broad applicability; Model-specific methods: Computational efficiency \\
+		\makecell[l]{Model-Specificity                                                            \\(Model-Agnostic or \\Model-Specific)} & Both Model-Agnostic and Model-Specific & Model-Agnostic methods: Broad applicability; Model-specific methods: Computational efficiency \\
 		\hline
-		\makecell[l]{Importance Explanation \\(Feature attribution or \\Feature selection)}                                 & Feature Attribution                 & Use of scores to order words in vocabulary lists                                                                        \\
+		\makecell[l]{Importance Explanation                                                       \\(Feature attribution or \\Feature selection)}                                 & Feature Attribution                 & Use of scores to order words in vocabulary lists                                                                        \\
 		\hline
-		\makecell[l]{Scope\\(Local or Global)}                                                       & Local                                  & Attain explanations taking into account the corpus                                          \\
+		\makecell[l]{Scope                                                                        \\(Local or Global)}                                                       & Local                                  & Attain explanations taking into account the corpus                                          \\
 		\hline
 	\end{tabularx}
 	\caption{XAI methods used in this work}
@@ -278,6 +278,28 @@ Relying on human intuition to evaluate word utility has two main drawbacks compa
 	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
 \end{itemize}
 
+\subsubsection{Tiered Approach}
+We can see one non-computational approach of vocabulary selection that Reading Rockets publishes on their website.
+Reading Rockets \footnote{\url{https://www.readingrockets.org/}} is an American national public media literacy initiative by WETA Washington, D.C. \footnote{\url{https://weta.org/}}, a television station of the non-commercial public broadcaster Public Broadcasting Service \footnote{\url{https://www.pbs.org/}}.
+
+As such, one of its aims is to help find reading materials appropriate for teaching children of school age words they are not yet familiar with, an aim similar to teaching second language learners new vocabulary.
+Reading Rockets has made public several recommendation for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students. 
+For this purpose, Reading Rockets uses a tiered system to sort vocabulary items into three tiers:
+\footnote{\label{footnote:reading-rockets-choosing-words-to-teach} \url{https://www.readingrockets.org/topics/vocabulary/articles/choosing-words-teach}, last accessed on March 15, 2025.}
+Tier One items are words which most children know before even entering primary school and thus need not be taught.
+This includes words such as \textit{happy} and \textit{baby}.
+
+Tier Three items are words which are useful mostly in one specific domain, such as \textit{peninsula} or \textit{lathe}.
+These are not high frequency words, and thus Reading Rockets conclude that these words are best learned not in isolation, but rather "when needed in a content area".
+
+Tier Two words are fairly high frequency words that are not so common as to be know by all children, but still useful across many domains, such as \textit{coincidence}, \textit{absurd}.
+For this reason, Reading Rockets deems that "instruction in these words can add productively to an individual’s language ability." \footnoteref{footnote:reading-rockets-choosing-words-to-teach}
+
+This system of triage can be useful and could be made to fit with the aim of teaching second-language learners too, by teaching Tier One words first, then moving on to Tier Two and Tier Three words.
+Because the system proposed by Reading Rockets is a manual one, it requires some effort on the side of a teacher who would like to apply the system to their classroom.
+
+In the next chapter, we will discuss various vocabulary selection methods that utilize analysis of existing textual data to arrive at vocabulary lists.
+
 \subsection{Computational Methods}
 These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
 They are closer related to the methods that this work strives for, and will be used as points of comparison when evaluating our own approaches.
@@ -290,6 +312,11 @@ They are closer related to the methods that this work strives for, and will be u
 	\item [TF-IDF]
 	      How often the words appear in a target document but divided by their frequency in a more generic corpus.
 	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+	\item [Average Reduced Frequency]
+
+	      Seems to be first brought up in \cite{savickyMeasuresWordCommonness2002},
+	      used for vocab list compilation in \cite{kokkinakisCorpusbasedApproachesCreation2011}
+	      and used by SketchEngine for tools of analysis \url{http://www.sketchengine.co.uk/} along with raw and relative frequency.
 \end{description}
 
 \subsection{Issues with Current Methods}
