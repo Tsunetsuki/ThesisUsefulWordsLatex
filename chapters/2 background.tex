@@ -256,7 +256,7 @@ Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
 	\label{table:XAi-method-criteria}
 \end{table}
 
-\section{State of the Art (of Vocabulary Selection)} \label{sec:state-of-the-art-vocabulary-selection}
+\section{Ordering Lists of Vocabulary} \label{sec:state-of-the-art-vocabulary-selection}
 \subsection{Non-computational Methods}
 How is vocabulary order selected by current language teaching tools:
 Not context-specific in most cases
@@ -283,7 +283,7 @@ We can see one non-computational approach of vocabulary selection that Reading R
 Reading Rockets \footnote{\url{https://www.readingrockets.org/}} is an American national public media literacy initiative by WETA Washington, D.C. \footnote{\url{https://weta.org/}}, a television station of the non-commercial public broadcaster Public Broadcasting Service \footnote{\url{https://www.pbs.org/}}.
 
 As such, one of its aims is to help find reading materials appropriate for teaching children of school age words they are not yet familiar with, an aim similar to teaching second language learners new vocabulary.
-Reading Rockets has made public several recommendation for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students. 
+Reading Rockets has made public several recommendation for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students.
 For this purpose, Reading Rockets uses a tiered system to sort vocabulary items into three tiers:
 \footnote{\label{footnote:reading-rockets-choosing-words-to-teach} \url{https://www.readingrockets.org/topics/vocabulary/articles/choosing-words-teach}, last accessed on March 15, 2025.}
 Tier One items are words which most children know before even entering primary school and thus need not be taught.
@@ -304,20 +304,43 @@ In the next chapter, we will discuss various vocabulary selection methods that u
 These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
 They are closer related to the methods that this work strives for, and will be used as points of comparison when evaluating our own approaches.
 
-\begin{description}
-	\item [Raw frequency of words in corpus]
-	      A simple ordering of words by how often they appear in a corpus.
-	\item [Frequency with stopwords filtered out]
-	      The same as frequency, but filtering out known stopwords from the resulting lists.
-	\item [TF-IDF]
-	      How often the words appear in a target document but divided by their frequency in a more generic corpus.
-	      This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
-	\item [Average Reduced Frequency]
+\subsubsection {Raw frequency of words in corpus}
+A simple ordering of words by how often they appear in a corpus.
 
-	      Seems to be first brought up in \cite{savickyMeasuresWordCommonness2002},
-	      used for vocab list compilation in \cite{kokkinakisCorpusbasedApproachesCreation2011}
-	      and used by SketchEngine for tools of analysis \url{http://www.sketchengine.co.uk/} along with raw and relative frequency.
-\end{description}
+\subsubsection {Frequency with stopwords filtered out}
+The same as frequency, but filtering out known stopwords from the resulting lists.
+
+
+\subsubsection {Average Reduced Frequency}
+The raw frequency count can give indications about which word in a long corpus are important to know.
+However, consider two words that both appear in a corpus $n$ times, but one of them only appears in one small section, while the other is distributed evenly across the corpus.
+In such a case, we might draw the conclusion that the former is less generally useful than the latter.
+
+This is the thought behind \textbf{Average Reduced Frequency} (ARF) \cite{savickyMeasuresWordCommonness2002}:
+If a word occurs $n$ times throughout the corpus, and these occurrences are evenly distributed throughout the corpus, its ARF will be roughly $n$.
+However, the more localized its occurrences are, the more its ARF approaches $1$.
+The exact formula can be seen in equation \ref{eq:arf}.
+
+\begin{equation}\label{eq:arf}
+	ARF = \frac{1}{v}\sum_{i=1}^{f} \min\{d_i,v\}
+\end{equation}
+
+where:
+
+$f$ is the raw frequency of the word,
+
+$d_i$ is the distance between each occurrence of the word (included the cyclic interval between the first and last occurence in the corpus), and
+
+$v$ is the average number of tokens between occurrences.
+	
+Average Reduced Frequency has been used for the purpose of compiling generally useful vocabulary lists:
+The KELLY project was a project by multiple European universities aimed at "developing language learning word cards with a language's most frequent words corresponding to the Common European Framework (CEFR)" \footnote{\url{https://spraakbanken.gu.se/en/projects/kelly}}.
+KELLY employed ARF along with the raw frequency and relative frequency of a word in corpora to find useful words and thus generate lists of vocabulary \cite{kokkinakisCorpusbasedApproachesCreation2011}.
+
+\subsubsection {TF-IDF}
+How often the words appear in a target document but divided by their frequency in a more generic corpus.
+This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+
 
 \subsection{Issues with Current Methods}
 Current methods do not exploit recent developments in AI technology and thus suffer from several shortcomings:
