@@ -6,13 +6,13 @@ After this, we defining the exact aim of the work in chapter \ref{sec:statement-
 
 The following three chapters explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in chapter \ref{ch:approach}.
 
-Finally, we examine current approaches for selecting vocabulary for language learners in chapter \ref{sec:state-of-the-art-vocabulary-selection}, to show what methods are currently employed and how they could be improved.
+Finally, we examine current approaches for selecting vocabulary for language learners in chapter \ref{sec:ordering-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
 
 
 \section{Context of the Work} \label{sec:context-of-work}
 \contentdescription{language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
 
-\subsection{Linguistic motivation}
+\subsection{Linguistic motivation} \label{sec:linguistic-motivation}
 The issue of which words to learn when setting out to acquire a language is not a new one.
 Every textbook on language which does not focus exclusively on grammar must ask address the issue, and proactive learners will doubtless find themselves finding ways to optimize the return on their invested studying time.
 
@@ -256,33 +256,48 @@ Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
 	\label{table:XAi-method-criteria}
 \end{table}
 
-\section{Ordering Lists of Vocabulary} \label{sec:state-of-the-art-vocabulary-selection}
-\subsection{Non-computational Methods}
-How is vocabulary order selected by current language teaching tools:
-Not context-specific in most cases
-offers only one order,
-investigate if there are any automatic approaches besides frequency]
+\section{Ordering Lists of Vocabulary} \label{sec:ordering-lists-of-vocabulary}
 
-[can present methods for extracting useful words from text]
-can be similar in either method or goal.
-goal is finding useful words for language learning
-method is extracting important words from text via XAI
+% \contentdescription{{
+% 		\begin{itemize}
+% 			\item How is vocabulary order selected by current language teaching tools:
+% 			\item Not context-specific in most cases
+% 			\item offers only one order,
+% 			\item investigate if there are any automatic approaches besides frequency
+% 			\item can present methods for extracting useful words from text
+% 			\item can be similar in either method or goal.
+% 			\item goal is finding useful words for language learning
+% 			\item method is extracting important words from text via XAI
+% 		\end{itemize}
+% 	} }
 
-\cite{heChoosingWordsTeach2019} cites concepts of frequency, usefulness and difficulty of words as widely accepted criteria to decide when to teach it.
-However, the literature is not clear on how usefulness is defined outside of "human intuition" \cite{heChoosingWordsTeach2019}.
-Furthermore, usefulness is presented as independent from frequency, making it more unclear still how it may be defined.
-The advantage of human intuition is that humans can understand the nuances of texts better than computers, especially before the invention of large AI models tackling NLP tasks.
-Relying on human intuition to evaluate word utility has two main drawbacks compared to computational methods:
-\begin{itemize}
-	\item Difficult to put a concrete number on word.
-	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
-\end{itemize}
+As described in chapter \ref{sec:linguistic-motivation}, the Routledge Handbook of Second Language Acquisition cites the concepts of frequency, usefulness and difficulty as widely accepted criteria to decide when to teach which words.
+To the best of our knowledge, all previous methods for making lists of vocabulary for language learners use similar criteria.
+They can be classified roughly into two categories based on which of the previously named criteria they employ:
+Approaches which use frequency have the benefit of being easy to implement on a computer and putting a simple number on each word.
 
-\subsubsection{Tiered Approach}
-We can see one non-computational approach of vocabulary selection that Reading Rockets publishes on their website.
+Previous approaches which have aimed at generating lists by a utility concept outside of frequency have relied on human experts.
+This chapter will introduce concrete methods from both categories, and examine each method's strong and weak points.
+It is this work's contention that AI models make it possible to mechanistically calculate utility in addition to frequency, and that this could be a possible point of attack for refining previously accepted approaches for vocabulary list compilation.
+
+
+% However, the literature is not clear on how usefulness is defined outside of "human intuition" \cite{heChoosingWordsTeach2019}.
+% Furthermore, usefulness is presented as independent from frequency, making it more unclear still how it may be defined.
+% The advantage of human intuition is that humans can understand the nuances of texts better than computers, especially before the invention of large AI models tackling NLP tasks.
+% Relying on human intuition to evaluate word utility has two main drawbacks compared to computational methods:
+% \begin{itemize}
+% 	\item Difficult to put a concrete number on word.
+% 	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
+% \end{itemize}
+
+\subsection{Expert Judgement: Reading Rockets Tier System}
+This chapter will introduce a traditional approach to vocabulary list generation.
+While it does put forth criteria for vocabulary selection, they are not considered possible to calculate mechanistically, and thus it relies on the judgement of individual language experts (teachers) to find useful words for their students.
+
+It is seen in the recommendations for vocabulary selection by the initiative Reading Rockets:
 Reading Rockets \footnote{\url{https://www.readingrockets.org/}} is an American national public media literacy initiative by WETA Washington, D.C. \footnote{\url{https://weta.org/}}, a television station of the non-commercial public broadcaster Public Broadcasting Service \footnote{\url{https://www.pbs.org/}}.
 
-As such, one of its aims is to help find reading materials appropriate for teaching children of school age words they are not yet familiar with, an aim similar to teaching second language learners new vocabulary.
+As such, one of its aims is to help find reading materials appropriate for teaching children of school age words they are not yet familiar with but which are useful and important, an aim similar to that of finding useful vocabulary for second language learners.
 Reading Rockets has made public several recommendation for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students.
 For this purpose, Reading Rockets uses a tiered system to sort vocabulary items into three tiers:
 \footnote{\label{footnote:reading-rockets-choosing-words-to-teach} \url{https://www.readingrockets.org/topics/vocabulary/articles/choosing-words-teach}, last accessed on March 15, 2025.}
@@ -332,7 +347,7 @@ $f$ is the raw frequency of the word,
 $d_i$ is the distance between each occurrence of the word (included the cyclic interval between the first and last occurence in the corpus), and
 
 $v$ is the average number of tokens between occurrences.
-	
+
 Average Reduced Frequency has been used for the purpose of compiling generally useful vocabulary lists:
 The KELLY project was a project by multiple European universities aimed at "developing language learning word cards with a language's most frequent words corresponding to the Common European Framework (CEFR)" \footnote{\url{https://spraakbanken.gu.se/en/projects/kelly}}.
 KELLY employed ARF along with the raw frequency and relative frequency of a word in corpora to find useful words and thus generate lists of vocabulary \cite{kokkinakisCorpusbasedApproachesCreation2011}.
