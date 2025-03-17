@@ -315,15 +315,44 @@ Because the system proposed by Reading Rockets is a manual one, it requires some
 
 In the next chapter, we will discuss various vocabulary selection methods that utilize analysis of existing textual data to arrive at vocabulary lists.
 
-\subsection{Computational Methods}
-These methods generate vocabulary lists by using corpora and computer-aided language processing to compile vocabulary lists.
-They are closer related to the methods that this work strives for, and will be used as points of comparison when evaluating our own approaches.
+\subsection{Computational Methods: Frequency}
+To the best of our knowledge, current algorithmic approaches for vocabulary list generation all rely on frequency as their main criterion for list ordering.
+However, the raw number of occurrences is not the only metric which falls into this category:
+The literature offers at least three frequency metrics for vocabulary list creation, namely \textit{Raw Frequency}, \textit{Relative Frequency}, \textit{Average Reduced Frequency}.
+This section will therefore introduce and discuss these approaches and their advantages and disadvantages.
+Furthermore, we will discuss \textit{TF-IDF}:
+A metric which, to our knowledge, have not been used to create vocabulary lists, but for a similar purpose, such as finding words in a document that most characterize its contents.
 
-\subsubsection {Raw frequency of words in corpus}
-A simple ordering of words by how often they appear in a corpus.
+These computational methods generate vocabulary lists by using corpora and computer-aided language processing (mostly tokenization) to compile vocabulary lists.
+Compared to the expert-based approach explained in the previous section, they are closer related to the methods that this work strives for, and will be used as points of comparison when evaluating our own approaches.
 
-\subsubsection {Frequency with stopwords filtered out}
-The same as frequency, but filtering out known stopwords from the resulting lists.
+\subsubsection {Raw Frequency}
+The raw frequency of a word is simply the number of times it occurs in a given text.
+The idea of making lists of vocabulary by ordering words by their number of occurrences in a corpus is not new:
+In 1953, English language teacher Michael West published his "General Service List of English Words" \cite{michaelwestGeneralServiceList1953}, and the frequency of the words in a corpus was one of the criteria used to determine its members and ordering.
+
+Nation and Waring are prominent proponents of frequency-based approaches:
+In their 1997 paper "Vocabulary size, text coverage and word lists" \cite{nationVocabularySizeText1997}, they affirm that the frequency with which a word appears in the target language should be used a metric for its importance to the learner, or utility, and thus teaching high-frequency words should be the focus when teaching beginners, claiming that:
+"Frequency information provides a rational basis for making sure that learners get the best return for their vocabulary learning effort."
+
+Herein we can see the appeal of frequency as a basis for vocabulary selection:
+It gives the reader the highest \textit{coverage} of texts, i.e., the percentage of words in the texts they read.
+However, focusing on maximum-frequency words to achieve text coverage does not take into account that the most frequent words in the language are typically words with little meaning by themselves: 
+The following words are the most frequent ten words on Wikipedia according to a count by Leipzig University \footnote{see "Wikipedia" corpus 2016, https://wortschatz.uni-leipzig.de/en/download/English}:
+"the", "of", "and", "in", "to", "a", "is", "was", "the", "for".
+
+Herein, we can see can issue with using frequency as the exclusive criterion for vocabulary selection:
+We do not contend that the above words are useful and among the most important words to know for an English learner.
+However, if we were to teach these as the first words, the learner would not be able to understand the meaning any sentence, nor make a complete sentence of their own design.
+This is because they are prepositions, articles, and copula verbs, which by themselves do not allow for the construction of a grammatically correct sentences, nor convey much meaning.
+Such words are called \textit{stopwords} in the realm of Natural Language Processing, and they are often filtered out from the inputs for AI models since they are not necessary to perform many NLP tasks \tocite{stopwords being useless}.
+Thus, knowing only these words is not sufficient for comprehending most texts.
+
+
+\subsubsection {Possible Improvement: Frequency with stopwords filtered out}
+Given the above issue, we can immediately of a way to remedy the issue:
+There exist stopword lists for many languages, such as the one provided by the NLTK library \footnote{\url{https://www.nltk.org/}}..
+Therefore, we could make a more useful vocabulary list by first counting the frequency of words, and then deprioritizing stopwords by a constant factor, or dispersing them more evenly throughout the vocabulary list, such that the first words already contain nouns and verbs allowing for the construction of (though very limited) grammatically correct sentences.
 
 
 \subsubsection {Average Reduced Frequency}
@@ -355,6 +384,10 @@ KELLY employed ARF along with the raw frequency and relative frequency of a word
 \subsubsection {TF-IDF}
 How often the words appear in a target document but divided by their frequency in a more generic corpus.
 This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
+
+The TF-IDF metric \cite{qaiserTextMiningUse2018} is often employed for finding the keywords in a document and thus a proxy for how important a word is for the overall meaning of the document.
+It essentially is a frequency normalized against a larger, background corpus and expressed whether the usage frequency in the document is unusual.
+Using TF-IDF as a measure for utility of a word in a given context is possible, but it suppresses words that may be generally useful.
 
 
 \subsection{Issues with Current Methods}
