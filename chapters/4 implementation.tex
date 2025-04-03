@@ -1,6 +1,6 @@
 Chapter \ref{ch:approach} has formalized the problem and put forward a novel framework for finding useful words, consisting of two major functionalities:
 Vocabulary list generation, and vocabulary list evaluation.
-The list evaluation approach, described in Section \ref{sec:experimental-setup-with-ai}), utilizes the performance of an AI model, corpus, proxy task as a proxy metric for language ability, in order to estimate how efficiently the vocabulary list may help a human language learner acquire competency.
+The list evaluation approach, described in Section \ref{sec:experimental-setup-with-ai}, utilizes the performance of an AI model, corpus, proxy task as a proxy metric for language ability, in order to estimate how efficiently the vocabulary list may help a human language learner acquire competency.
 
 The list generation approach, proposed in Section \ref{sec:list-generation}, additionally uses Explainable AI as a tool for analyzing the interaction of the AI model with the corpus to compile vocabulary lists that approach maximal efficiency.
 
@@ -44,7 +44,7 @@ The NLP task and the corpus used for list generation
 There are many NLP tasks we could choose from \tocite{huggingface NLP task list or something}.
 But not all are equally suitable.
 This chapter will first put forward criteria for selecting NLP tasks in Section \ref{sec:nlp-tasks-desiderata} for word utility evaluation.
-Afterwards, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
+After this, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
 The NLP tasks we choose will dictate the format of our input data, i.e., the corpora we can use.
 Therefore, the selection of corpora will be discussed in the next chapter.
 
@@ -69,7 +69,7 @@ These criteria will be used in the next chapter to select concrete tasks for our
 \subsubsection{Model Availability in Many Languages}
 The goal of this work is to find approaches to find useful words for the purpose of language learning.
 Much research in Natural Language Processing is dedicated to improving NLP performance in English and other high-resource languages such as Spanish, French or Mandarin Chinese \tocite{resource availability in various languages}.
-This has the consequence that many AI models and other NLP methods achieve high levels of performance only in these languages, and many AI models are only available in English or a only small number of languages.
+This has the consequence that many AI models and other NLP methods achieve high levels of performance only in these languages, and many AI models are only available in English or only a small number of languages.
 However, there are over 7,000 languages in the world \tocite{Ethnologue}, and for many of these there exist corpora, or online digital texts which could hypothetically be used as inputs for our word utility extraction approach.
 For this reason, our implementation strives to realize word utility extraction in \textbf{as many languages as possible}.
 
@@ -100,7 +100,7 @@ Finally, the task must be easily scorable, since the task score is the metric by
 
 The next section will present several tasks which fulfill the above criteria, and explain what consequences their selection has on the other components of vocabulary list generation.
 The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
-Since we are trying to estimate the utility a word a word has to language understanding, the NLP tasks should reflect language understanding as much as possible.
+Since we are trying to estimate utility by measuring the impact of a word on language understanding, the NLP tasks should reflect language understanding as much as possible.
 
 \subsection{Task Selection} \label{sec:nlp-tasks-selection}
 A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
@@ -111,7 +111,7 @@ Another benefit of using pre-training tasks is that their training is unsupervis
 \todo{include free availability for AI models in their justification}
 
 \subsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
-This section takes a look at the pretraining process of recent state-of-the-art LLM models which have made public their training process.
+This section takes a look at the pre-training process of recent state-of-the-art LLM models which have made public their training process.
 Both the NLP tasks and the kind of data is considered.
 
 
@@ -218,7 +218,7 @@ As Next Sentence Prediction predicts whether one sentence is likely the continua
 To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
 This presents a challenge, as many corpora which are compiled from Web Crawls, such as the Common Crawl dataset \footnote{\url{https://commoncrawl.org/}}, present independent single lines, mostly because single sentences cannot be put under copyright in many states \tocite{copyright being the reason for non-document level corpora}
 One solution to this would be make a dataset from crawling various news pages ourselves.
-However, Wikipedia contains articles one many different topic which do not underlie strict copyright license (see the section on Wikipedia), thus for this work, we opted not to compile our own document-level corpus.
+However, Wikipedia contains articles on many different topics which do not underlie strict copyright license (see the section on Wikipedia), thus for this work, we opted not to compile our own document-level corpus.
 
 \subsubsection{Free Availability in Many Languages}
 In Section \ref{sec:nlp-tasks-desiderata} we put forward reasons for why freely available AI models which can handle a diverse pool of languages are desirable for our undertaking.
@@ -253,16 +253,16 @@ These include:
 \begin{enumerate}
 	\item Enforcing universal UTF-8 character encoding.
 	\item
-	      Splitting and joining of sentences from their original subtitles blocks (the segments which appear on screen when watching the movie with its subtitle).
+	      Splitting and joining of sentences from their original subtitles blocks (the segments which appear on-screen when watching the movie with its subtitle).
 	      One such block may contain multiple sentences, or only a partial one.
-	      There is thus a n-to-m-relationship between the blocks and sentences.
+	      There is thus an n-to-m-relationship between the blocks and sentences.
 	\item Checking and correcting possible spelling issues, especially ones arising from OCR (Optical character recognition) errors.
 	\item From available subtitles, identifying the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as user ratings of subtitles.
 
 \end{enumerate}
-One advantageous aspect of this corpus is that is contains many sentences that are sequential, which means we can generate a Next Sentence Prediction dataset from it (add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs).
+One advantageous aspect of this corpus is that it contains many sentences that are sequential, which means we can generate a Next Sentence Prediction dataset from it (add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs).
 This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
-While it is possible to reconstruct which movies the subtitle lines came from from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
+While it is possible to reconstruct which movies the subtitle lines came from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
 
 
 The full process, as illustrated by the authors, can be seen in Figure \ref{fig:opensubs pipeline}
@@ -291,7 +291,7 @@ In this work, these dumps will be valuable in modeling various linguistic contex
 
 Wikipedia is a valuable resource for several reasons:
 It contains a vast number of articles, from a diverse set of topics.
-Wikipedia articles have category assigned to them, which we can use to group articles into linguistic contexts
+Wikipedia articles have categories assigned to them, which we can use to group articles into linguistic contexts.
 This means we do not have to assign the articles to topics ourselves, thus enabling the creation of many smaller-scope corpora from Wikipedia with minimal effort.
 The characteristics of the article category system on Wikipedia will be discussed in the paragraph below.
 
@@ -307,11 +307,11 @@ Wikipedia is less likely to contain informal language, such as nonstandard langu
 Furthermore, it features little language taking conversational form.
 % This means that e.g., for English, the second person pronoun "you" occurs very infrequently on Wikipedia. \tocite{Wikipedia rank of you}
 This is especially relevant for languages where the certain grammatical forms signify something about the relationship between the speaker and listener:
-In Japanese, there exist various linguistic markers of politeness (\textit{Teineigo} and \textit{Keigo}) which play a crucial role in in-person interactions between Japanese speakers, as their presence or absence can signify respect, familiarity or humility with regards to one's interlocutor.
+In Japanese, there exist various linguistic markers of politeness (\textit{Teineigo} and \textit{Keigo}) which play a crucial role in in-person interactions between Japanese speakers, as their presence or absence can signify respect, familiarity or humility with regard to one's interlocutor.
 However, such forms are rarely found on Wikipedia, as it does not take the form of a person addressing another person or persons.
 Thus, we can see that texts on Wikipedia are of limited use to model linguistic contexts involving in-person conversion.
 
-With these advantages an disadvantages in mind, this work uses Wikipedia articles and their associated metadata to make corpora of various sizes, as will be seen in the next section.
+With these advantages and disadvantages in mind, this work uses Wikipedia articles and their associated metadata to make corpora of various sizes, as will be seen in the next section.
 
 \paragraph{Modeling Linguistic Contexts}
 
@@ -325,7 +325,7 @@ We can thus check if learning vocabulary from a category genuinely prepares a le
 At the same time, a learner could also wish to make a vocabulary list from concrete Wikipedia articles they would like to read.
 For that reason, also use single articles as corpora to be processed by our list generation approach.
 In that case, no split of training and test data is necessary, as the aim is not to model general knowledge about a domain, but equip the learner with vocabulary about the \textbf{closed} context of a Wikipedia article.
-Therefore in the single-article approach, both the list generation and evaluation use all lines of the article.
+Therefore, in the single-article approach, both the list generation and evaluation use all lines of the article.
 
 
 % \paragraph{Wikipedia's Category System for Articles}
@@ -374,7 +374,7 @@ In addition to these taxonomical specifications, an ideal XAI method for word ex
 Apart from the benefit of attaining faster results, a computationally lightweight approach allows the model to process more data in less time, presumably boosting the accuracy of the resulting utility evaluation.
 
 In the following sections, we will propose several concrete XAI methods for use with the described list generation approach.
-The relationship of the XAI methods to the NLP tasks will also be discussed, as not every XAI method is feasible with every tasks, either because of unrealistic amount of computation or because the results of the combination are difficult to evaluate.
+The relationship of the XAI methods to the NLP tasks will also be discussed, as not every XAI method is feasible with every task, either because of unrealistic amount of computation or because the results of the combination are difficult to evaluate.
 The results of the experiments with these methods will be seen in Chapter \ref{ch:evaluation}.
 \todo{argue against approaches where the input is reduced to BOW, such as SHAP}
 
@@ -389,7 +389,7 @@ Perhaps the simplest way of testing this is by going through every word in the i
 Within this work, this approach will be known as \textbf{Single Token Ablation}.
 
 \paragraph{Approach:}
-Given an input line or pair of lines:
+Given an input line or a pair of lines:
 For each word in the input, create a variation of the input where the word is removed.
 Run the model on all inputs and measure how much performance is degraded in each case.
 Estimated utility is the difference in performance between not removing and removing the word.
@@ -399,7 +399,7 @@ One advantage of Single Token Ablation is its conceptual simplicity, as it is ve
 Furthermore, its time complexity is fairly minimal for a feature method, as it requires only one model call for each unique token in the sentence ($\mathcal{O}(n)$).
 
 \paragraph{Disadvantages:}
-The main downside of this method is that, in long sentences, leaving out a single token will not change the meaning of the sentence to such an extend that the sentence becomes unintelligible.
+The main downside of this method is that, in long sentences, leaving out a single token will not change the meaning of the sentence to such an extent that the sentence becomes unintelligible.
 Assuming the AI model can process sentences with missing words with similar accuracy as humans, the impact on performance may therefore be minimal or not predictive of actual usefulness.
 Furthermore, this method does not take into account the utility of a word in the context of word combinations.
 
@@ -409,7 +409,7 @@ We may think of this method as simulating a language learner who already knows a
 
 \subsubsection{Progressive Summary}
 While Single Token Ablation is easy to implement and cheap to execute, its downside is that the performance differences may not be representative of actual utility.
-To achieve a more accurate evaluation, we may think of a approach that is in some sense the inverse of removing single words from sentences:
+To achieve a more accurate evaluation, we may think of an approach that is in some sense the inverse of removing single words from sentences:
 Checking which words are the most essential by reducing the sentence a minimal number of words.
 
 \paragraph{Approach:}
@@ -461,7 +461,7 @@ This may be used as a kind of explanation, as the inputs which receive more atte
 
 \paragraph{Approach:}
 Let a transformer model run on an input line.
-The transformer will attribution an attention value to each token in the input.
+The transformer will attribute an attention value to each token in the input.
 Normalize the attentions such that the attention for all words in the line sums up to one.
 The attributed attention to a word is its estimated utility.
 
@@ -474,7 +474,7 @@ One disadvantage of Attention as our attention mechanism is that attentions are 
 Unlike the black-box methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
 AI models are trained with some tokenizer as preprocessing the input, and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
 This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
-Additionally, many tokenizer which are used in the preprocessing of models tokenize on a \textit{sub-word} level:
+Additionally, many tokenizers which are used in the preprocessing of models tokenize on a \textit{sub-word} level:
 
 In addition to this technical downside, Attention is controversial as a mechanism to explain model decisions.
 \tocite{Attention is not Explanation}

@@ -193,7 +193,7 @@ This kind of analysis is the domain of \textbf{Explainable AI}, which is why the
 Explainable AI (abbreviated: XAI) is the fields of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions \cite{viloneNotionsExplainabilityEvaluation2021}.
 This can be useful to check if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
 By analyzing the decision process of high-performing AI models, this work attempts to extract useful information about how the language is processed by them which may be useful to humans as well.
-For this analysis, XAI is used a tool to find out which inputs influence the performance of AI models the most.
+For this analysis, XAI is used as a tool to find out which inputs influence the performance of AI models the most.
 
 \subsection{Distinctions between XAI Methods}
 There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
@@ -212,9 +212,9 @@ Another important characteristics of an XAI method is whether it is \textbf{mode
 A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees \missingcitation{decision tree}, or neural networks.
 Model-agnostic models are also called black-box-approaches, as they do not look into the model (such as weights in neural networks) but only perturb the inputs and observe changes in the model output.
 An advantage of model agnostic explanations is that they can be used on any AI model
-However, many recent state-of-the-art AI models are build using the transformer architecture, hence methods specific to transformer models can also be fairly broadly applied.
+However, many recent state-of-the-art AI models are built using the transformer architecture, hence methods specific to transformer models can also be fairly broadly applied.
 A major upshot of model-specific explanations is their efficiency:
-Black-box approaches require us to perturb the input to observe differences in the output, requiring us to run the model multiple times for a single explanation, which can constitute a great computational effort.
+Model-agnostic approaches require us to perturb the input to observe differences in the output, and thus to run the model multiple times for a single explanation, which can constitute a great computational effort.
 On the other hand, model-specific methods typically only require one run of the model, as they can look into the model itself for an explanation.
 For these reasons, both model-agnostic and model-specific approaches will be used in this work.
 
