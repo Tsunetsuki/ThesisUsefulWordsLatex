@@ -241,9 +241,22 @@ Such corpora are especially efficient for generating multiple contexts, hence we
 \subsection{Corpora Used}
 
 \subsubsection{Background Corpus: mOscar}
+For the implementation of TF-IDF, we require a generic background corpus to normalize raw word frequencies found in context-specific corpora (that is, to calculate the IDF part of TF-IDF).
+For this purpose, corpora crawled from the internet offer themselves as a diverse option:
+While we cannot be certain if some kinds of web pages will feature disproportionately in the final corpus, web content is diverse in that it encompassed both formal and informal content on many different topics.
 
+A natural choice of diverse web content is the \textit{Common Crawl} dataset \footnote{\url{https://commoncrawl.org/}}.
+However, in its raw form, it takes the form of HTML code and includes much boilerplate content such as cookie requests, necessitating much preprocessing.
+Another major downsize of \textit{Common Crawl} is that its data is not categorized by language, meaning we would have to perform language categorization as an additional preprocessing step before using it for our purposes.
+We also rejected the \textit{Wortschatz Leipzig} Web Corpora because, while these corpora are stripped of any HTML code, they are lines taken randomly from websites, rather than whole documents.
+The original paper for the \textit{Wortschatz} corpus also mentions political content was utilized to bootstrap in the web searches for data gathering, including the \textit{Universal Declaration of Human Rights} and the Jehova's Witnesses magazine \textit{Watchtower} \footnote{Previously available at \url{watchtower.org}}, which may lead to a respective bias in the final corpus.
 
-\cite{futeralMOSCARLargescaleMultilingual2024}
+Finally, a corpus from the \textit{Oscar} project \footnote{\url{https://oscar-project.github.io/}} was chosen as a background corpus:
+Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which preprocessing steps such as HTML stripping and removal of boilerplate content have already been performed.
+It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
+There exist many versions of the Oscar dataset, but this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
+
+\todo{State number of documents used from Oscar corpus}
 
 \subsubsection{OpenSubtitles Parallel Corpus}
 This set of corpora contains parallel corpora:
