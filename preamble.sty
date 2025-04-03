@@ -29,6 +29,7 @@
 \usepackage{makecell}
 \pgfplotsset{compat=1.18}  % Use the latest version available
 \pagestyle{fancy}
+
 \graphicspath{ {images/} }
 
 \rowcolors{3}{white}{lightgray!20}
@@ -36,6 +37,7 @@
 \fancyhf{}                              % delete the current header and footer
 \fancyhead[LO]{\parbox[t]{0.9\textwidth}{\rightmark}} %<--- use [t] for parbox.
 % \fancyhead[RO]{\parbox[t]{0.02\textwidth}{\textbf{\thepage}}} %<-
+\fancyfoot[C]{\thepage}
 \setlength{\headheight}{25pt}
 
 \newcommand{\tss}{\textsubscript}
@@ -60,8 +62,6 @@
 \newcommand\XAI{Explainable AI}
 \newcommand\Rosetta{\textit{Rosetta Stone}}
 
-\AddToHook{cmd/section/before}{\clearpage}
-
 % set the default code style
 \lstset{
 	frame=tb, % draw a frame at the top and bottom of the code block
@@ -80,6 +80,7 @@
 	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 
+\pagenumbering{arabic}
 % \titleformat*{\section}{\LARGE\bfseries}
 % \titleformat*{\subsection}{\Large\bfseries}
 % \titleformat*{\subsubsection}{\large\bfseries}

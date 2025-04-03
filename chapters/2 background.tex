@@ -1,20 +1,16 @@
 This chapter gives context to estimating the utility of vocabulary.
-
-We first go over how this work connects to research about vocabulary acquisition for second language learners in chapter \ref{sec:context-of-work}.
-
-After this, we defining the exact aim of the work in chapter \ref{sec:statement-of-goal}.
-
+We first discuss how this work connects to research about vocabulary acquisition for second language learners in chapter \ref{sec:context-of-work}.
+After this, we define the exact aim of the work in chapter \ref{sec:statement-of-goal}.
 The following three chapters explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in chapter \ref{ch:approach}.
-
-Finally, we examine current approaches for selecting vocabulary for language learners in chapter \ref{sec:ordering-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
+Finally, we examine current approaches for selecting vocabulary for language learners in chapter \ref{sec:ranking-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
 
 
 \section{Context of the Work} \label{sec:context-of-work}
 \contentdescription{language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
 
-\subsection{Linguistic motivation} \label{sec:linguistic-motivation}
+\subsection{Linguistic Motivation} \label{sec:linguistic-motivation}
 The issue of which words to learn when setting out to acquire a language is not a new one.
-Every textbook on language which does not focus exclusively on grammar must ask address the issue, and proactive learners will doubtless find themselves finding ways to optimize the return on their invested studying time.
+Every textbook on language which does not focus exclusively on grammar must address the issue, and proactive learners will doubtless find themselves looking for ways to optimize the return on their invested studying time.
 
 The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookSecond2022} gives three criteria for deciding the order in which words are taught to beginners:
 
@@ -25,7 +21,7 @@ The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookS
 \end{enumerate}
 
 The first criterion, frequency, is easy to justify:
-Learning words that appear with great frequency will allow the learner to understand the maximum percentage of wrods in texts, and should thus be among the most relevant.
+Learning words that appear with great frequency will allow the learner to understand the maximum percentage of words in texts, and should thus be among the most relevant.
 The \textit{easiness}, or \textit{learnability} of a word is defined as how easy it is for a learner to acquire the word.
 The authors define it with respect to an individual learner since it is posited that the various linguistic backgrounds of learners will influence which words they can acquire with ease.
 Apart from learner-independent factors influencing the learnability of a word such as word length, is sure to have an impact whether the learners already knows a cognate of the word:
@@ -70,10 +66,10 @@ The context could even determine the complexity of sentences that a learner must
 Some contexts, like everyday conversation, can be navigated fairly well with short sentences, but political speeches often feature long and structurally complex sentences, with various relative clauses, multiple negations, etc. \missingcitation{Complexity differing across contexts}
 Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
 
-In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else few contexts are available \missingcitation{investigage current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
+In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else only a small number of contexts is available \missingcitation{investigate current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
 
 \subsubsection{Utility}
-In this work, \textit{utility} is defined as the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
+In this work, the \textit{utility} of a word is defined as the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
 Here, language ability refers to being able to understand more of texts they read in the given context, being able to speak about the subject, etc.
 It is easy to see that some words will be more useful than others given a context:
 In the context of international news, learning the word "war" will bring more understanding to the learner than "pear" or "polymorphism".
@@ -89,16 +85,14 @@ For example, as a proxy measure for a person's general spelling ability, we coul
 
 This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
 
-\subsection{Summary}
-With the concepts above defined more precisely, let us state the goal more accurately:
-
-To find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
+\subsubsection{Summary}
+With the concepts above defined more precisely, we can state the goal more accurately, namely, creating computational methods which can find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 
 With the words in cursive filled in, this translates to:
 Finding words that provide a language learner with the most language understanding in the specific situations they are interested in, requiring them to learn the least possible amount of words.
 Since the understanding of a learner cannot be directly measured, we use tasks that check the learner's understanding as an imperfect but necessary approximation.
 
-The following chapters will go over the fields addressed in achieving this aim, and highlight relevant aspects from them that contribute in later chapters to conceptualizing and implementing a solution.
+The following chapters will discuss the fields addressed in achieving this aim, and highlight relevant aspects from them that contribute in later chapters to conceptualizing and implementing a solution.
 
 
 \section{Natural Language Processing} \label{sec:natural-language-processing}
@@ -125,7 +119,7 @@ Typical NLP tasks include \cite{jurafskySpeechLanguageProcessing2025}
 
 \begin{itemize}
 	\item Sentiment Detection: Given a text, estimate the emotional state of the author.
-	\item Masked Language modeling: Given a text with a word blanked out, estimate what the word should be.
+	\item Masked Language Modeling: Given a text with a word blanked out, estimate what the word should be.
 	\item Machine Translation: Given a text, translate the meaning into another language while preserving meaning as faithfully as possible.
 \end{itemize}
 
@@ -155,7 +149,7 @@ Splitting continuous text into distinct words will be required for this work and
 	\item Being able to remove individual words in text inputs to AI models, in order to test what effect removing a particular word has on the output.
 \end{itemize}
 
-In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle differently language of different syntactic structures.
+In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle language of different syntactic structures.
 
 In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
 As this work makes extensive use of AI models, the next section therefore briefly introduces the field of \AI.
@@ -168,7 +162,7 @@ And this
 This is opposed to traditional algorithms which can only follow algorithms which have been explicitly programmed.
 
 \subsection{AI Models}
-The building block of Artificial Intelligence is called an \textbf{AI Model}, which is a stochastic model using training data to learn patterns, and then used on inputs that were not identically present in the training dataset.
+The building block of Artificial Intelligence is called an \textbf{AI Model}, which is a model using training data to learn patterns, and then used on inputs that were not identically present in the training dataset.
 
 AI models are used in this work to simulate an agent interacting with language.
 The (pre-trained) AI model is thought of as a test subject in possession of linguistic skills that can be studied.
@@ -190,6 +184,7 @@ This helps the model find patterns in noisy input.
 This attention is one possible way to attribute importance to inputs, and thus utility to words in our case.
 This use will be discussed in chapter \ref{sec:xai-methods}.
 
+\subsection{Summary}
 This section has introduced the important AI models used in this thesis, namely the Neural Network and one of its most effective subtypes, the transformer.
 While these types of AI model have driven many recent improvements in performing common NLP tasks, deep neural networks stop being readily understandable to humans rather quickly once the number of neurons and layers is increased.
 We are interested in how the inputs (words) influence the outputs of AI models when performing NLP tasks.
@@ -201,13 +196,13 @@ This can be useful to check if the decision process contains social biases, or i
 By analyzing the decision process of high-performing AI models, this work attempts to extract useful information about how the language is processed by them which may be useful to humans as well.
 For this analysis, XAI is used a tool to find out which inputs influence the performance of AI models the most.
 
-\subsection{Distinctions between XAI methods}
+\subsection{Distinctions between XAI Methods}
 There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
 This chapter will go into some of distinctions and argue why some types are more appropriate to the aim of this thesis than others.
 
 As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
 The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with the question: \textit{"how does each feature affect the model?"} \footnote{\url{https://courses.cs.washington.edu/courses/csep590b/22sp/files/lectures/lecture2_part1.pdf}, last accessed on February 27, 2025.}.
-Thus, all XAI methods in this paper belong to this group.
+Thus, all XAI methods in this work belong to this group.
 
 Feature importance explanations can be further subdivided into two groups:
 \textbf{Feature selection} methods explain the model's decisions by trying to predict a subset of all input features which are deemed "important".
@@ -228,7 +223,7 @@ Another feature of XAI methods is the scope of its explanations:
 \textbf{Local} XAI methods explain why a model output was generated for one particular input.
 A \textbf{global} method attempts to reason about the model's behavior in general, independent of any particular input data.
 This work is interested in observing the interaction of the AI model with a particular corpus, not only the AI model.
-For this reason, all methods used in this paper will be local methods.
+For this reason, all methods used in this work will be local methods.
 However, while local explanations only explain a single decision of the model (which, in the work, will be the interaction of the model with a single sentence), we will aggregate the individual decisions across the corpus to get a bigger picture about this interaction.
 
 The transformer attention mechanism introduced in chapter \ref{sec:transformer} has been used as a model-specific XAI method
@@ -256,7 +251,7 @@ Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
 	\label{table:XAi-method-criteria}
 \end{table}
 
-\section{Ordering Lists of Vocabulary} \label{sec:ordering-lists-of-vocabulary}
+\section{Ranking Vocabulary Lists} \label{sec:ranking-lists-of-vocabulary}
 
 % \contentdescription{{
 % 		\begin{itemize}
@@ -382,19 +377,32 @@ The KELLY project was a project by multiple European universities aimed at "deve
 KELLY employed ARF along with the raw frequency and relative frequency of a word in corpora to find useful words and thus generate lists of vocabulary \cite{kokkinakisCorpusbasedApproachesCreation2011}.
 
 \subsubsection {TF-IDF}
-The previous sections have introduces frequency measures that takes as their input a single corpus.
-To the best of our knowledge, all algorithmic methods for vocabulary list compilation have henceforth been limited to such approaches.
-However, when trying to characterize a document by only a few keywords, a metric called TF-IDF is often employed:
+The previous sections have introduced proxy metrics for word utility based on often a word appears in a (single) large corpus.
+To the best of our knowledge, all current algorithmic methods used for vocabulary list compilation are of this type.
+The issue with these approaches is that they tend to rate stop words the highest, as these are very high frequency words in any language.
+Because we are concerned with context-specific language learning, we could attempt to normalize the frequency of a word in a context-specific corpus with its frequency in a more generic background corpus.
+This is the idea of the \textbf{TF-IDF} (\textbf{T}erm \textbf{F}requency - \textbf{I}nverse \textbf{D}ocument \textbf{F}requency)
+ \cite{qaiserTextMiningUse2018} metric:
+
+It is calculated on a document level:
+Given a collection of documents, we calculate the TF-IDF of a word by taking the number of occurrences of the word in a document (Term Frequency), but discounting words that appear in a large number of documents overall (multiplying by the Inverse Document Frequency).
+There are various formulas for calculating the TF-IDF, but for this work, we will use the formula in equation \ref{eq:tfidf}, as it is a standard version where the discounting of a word is independent of the length of the other documents in the collection.
+
+Given a collection containing $N$ documents, a term $t$, and a document $t$, we define $\text{tf}_{t,d}$ as the number of occurrences of term $t$ in document $d$, and $\text{df}_{t}$ as the number of documents in which term $t$ appears. Then our TF-IDF is defined as:
+
+\begin{equation}\label{eq:tfidf}
+	\text{tf-idf}_{t,d} = \text{tf}_{t,d} \times \log \frac{N}{\text{df}_{t,d}}
+\end{equation}
+
+(formula taken from \cite{qaiserTextMiningUse2018})
 
 
+The TF-IDF metric is usually employed for finding keywords in a document, i.e., a small number of words that characterize its contents \cite{qaiserTextMiningUse2018}.
 
+The calculated "keyness" can be seen as a proxy for how important a word is for the overall meaning of the document .
 
-How often the words appear in a target document but divided by their frequency in a more generic corpus.
-This metric is typically used to employ the most relevant words in documents for identifying keywords that express best its core topic.
-
-The TF-IDF metric \cite{qaiserTextMiningUse2018} is often employed for finding the keywords in a document and thus a proxy for how important a word is for the overall meaning of the document.
-It is a frequency that is normalized against a larger, background corpus and thus expresses not how frequently the word appears, but how disproportionate its number of occurrences is compared to other documents in the corpus.
-Using TF-IDF as a measure for utility of a word in a given context is possible, but it suppresses words that may be generally useful.
+We can see that there is a generally frequent words achieve a high rank for the raw frequency metric, but a low rank for TF-IDF.
+Because of this somewhat contradictory nature of the metrics, we are left to wonder if either of them are good proxy metrics for word utility.
 
 
 \subsection{Summary}

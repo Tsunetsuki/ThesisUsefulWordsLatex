@@ -146,8 +146,8 @@ Both the NLP tasks and the kind of data is considered.
 	      Summarizing texts seems to require a high level of "understanding" of the text and would thus seem to be good choice for testing whether ablating certain words from the text would have detrimental effect on the model performance.
 	      Unfortunately, this task requires hand-labeled datasets and is thus not a good candidate if we aim to find approaches which can be implemented in many different languages, as there is a dearth in data in many of the less-studied languages of the world.
 
-	\item[Masked language modeling (aka. "cloze task")]
-	\item[Causal language modeling (aka. Next token prediction)]
+	\item[Masked language Modeling (aka. "cloze task")]
+	\item[Causal Manguage Modeling (aka. Next token prediction)]
 	\item[Sentence order prediction]
 	\item[Sentence embeddings]
 	      Sentence embeddings take the approach of transforming words into meaningful vectors and extend it to whole sentences.
@@ -198,7 +198,7 @@ We will then introduce some publicly available corpora which are suitable for ou
 
 \contentdescription{
 	{
-			For the purposes of this paper, it was desirable that the corpora used be:
+			For the purposes of this work, it was desirable that the corpora used be:
 			\begin{itemize}
 				\item representative of what language learners strive for
 				\item freely available in many languages
@@ -239,6 +239,12 @@ Such corpora are especially efficient for generating multiple contexts, hence we
 
 
 \subsection{Corpora Used}
+
+\subsubsection{Background Corpus: mOscar}
+
+
+\cite{futeralMOSCARLargescaleMultilingual2024}
+
 \subsubsection{OpenSubtitles Parallel Corpus}
 This set of corpora contains parallel corpora:
 Corpora which has text segments in one language aligned with the presumed translation of the segment in a second language.
@@ -341,7 +347,7 @@ But: data quality issues, methodology might be outdated
 
 % \subsection{Data Augmentation}
 % Data Augmentation was not used to gain additional data.
-% While in recent years data augmentation methods have become popular for training AI models in NLP, most of these would have either no or a detrimental effect on the methods employed in this paper:
+% While in recent years data augmentation methods have become popular for training AI models in NLP, most of these would have either no or a detrimental effect on the methods employed in this work
 % Some of these methods include \cite{pellicerDataAugmentationTechniques2023}:
 % \begin{description}
 % 	\item[Character level]
