@@ -1,12 +1,12 @@
 This chapter gives context to estimating the utility of vocabulary.
-We first discuss how this work connects to research about vocabulary acquisition for second language learners in chapter \ref{sec:context-of-work}.
-After this, we define the exact aim of the work in chapter \ref{sec:statement-of-goal}.
-The following three chapters explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in chapter \ref{ch:approach}.
-Finally, we examine current approaches for selecting vocabulary for language learners in chapter \ref{sec:ranking-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
+We first discuss how this work connects to research about vocabulary acquisition for second language learners in Section \ref{sec:context-of-work}.
+After this, we define the exact aim of the work in Section \ref{sec:statement-of-goal}.
+The following three chapters explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in Chapter \ref{ch:approach}.
+Finally, we examine current approaches for selecting vocabulary for language learners in Section \ref{sec:ranking-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
 
 
 \section{Context of the Work} \label{sec:context-of-work}
-\contentdescription{language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
+\contentdescription{Language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
 
 \subsection{Linguistic Motivation} \label{sec:linguistic-motivation}
 The issue of which words to learn when setting out to acquire a language is not a new one.
@@ -24,7 +24,7 @@ The first criterion, frequency, is easy to justify:
 Learning words that appear with great frequency will allow the learner to understand the maximum percentage of words in texts, and should thus be among the most relevant.
 The \textit{easiness}, or \textit{learnability} of a word is defined as how easy it is for a learner to acquire the word.
 The authors define it with respect to an individual learner since it is posited that the various linguistic backgrounds of learners will influence which words they can acquire with ease.
-Apart from learner-independent factors influencing the learnability of a word such as word length, is sure to have an impact whether the learners already knows a cognate of the word:
+Apart from learner-independent factors influencing the learnability of a word such as word length, whether the learner already knows a cognate of the word will certainly also have an impact:
 
 We can imagine a native German speaker attempting to learn English:
 The word "internationalization" may not be a particularly frequent word in most contexts and thus not seem too important to teach, but the German will likely recognize the word as a cognate of the German equivalent "Internationalisierung", and acquire the word with ease, giving a justification for teaching the word early if we wish to impart the most language knowledge as quickly as possible.
@@ -46,7 +46,7 @@ This helps us in generating ordered lists of vocabulary to learn which aid the l
 Since different language learners learn languages for different reasons \missingcitation{Statistics on motivations of language learners}, we attempt to take into account the learner's motivation to tailor vocabulary specifically to the individual.
 
 To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
-These concepts are used to throughout this work.
+These concepts are used throughout this work.
 
 \subsubsection{Linguistic Context}
 By a linguistic context or just \textit{context}, a subset of situations is meant in which a person interacts with language.
@@ -66,7 +66,7 @@ The context could even determine the complexity of sentences that a learner must
 Some contexts, like everyday conversation, can be navigated fairly well with short sentences, but political speeches often feature long and structurally complex sentences, with various relative clauses, multiple negations, etc. \missingcitation{Complexity differing across contexts}
 Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
 
-In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else only a small number of contexts is available \missingcitation{investigate current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
+In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else only a small number of contexts is available \missingcitation{Investigate current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
 
 \subsubsection{Utility}
 In this work, the \textit{utility} of a word is defined as the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
@@ -99,7 +99,7 @@ The following chapters will discuss the fields addressed in achieving this aim, 
 While the aim of the work is to make vocabulary lists that serve human learners, the technical implementation of this necessarily will process human language with the use of computers.
 This domain is called \textit{Natural Language Processing}, a field defined in The Handbook of Computational Linguistics and Natural Language Processing as the engineering domain of Computational Linguistics \cite{alexanderclarkHandbookComputationalLinguistics2010}.
 Natural Language Processing, often abbreviated as \textit{NLP}, is both used in Computational Linguistics (the field concerned with analyzing natural language through language data) and as well as in practical applications such as Chatbots, Machine Translation, Speech Recognition etc. \cite{jurafskySpeechLanguageProcessing2025}.
-This work addresses of these both aspects, as it is an undertaking of Computational Linguistics through the analysis of how AI models perform typical \textbf{NLP tasks}.
+This work addresses both aspects, as it is an undertaking of Computational Linguistics through the analysis of how AI models perform typical \textbf{NLP tasks}.
 
 \subsection{Corpus}
 The typical way Computational Linguistics empirically analyzes language is through the use of \textbf{corpora}.
@@ -120,7 +120,7 @@ Typical NLP tasks include \cite{jurafskySpeechLanguageProcessing2025}
 \begin{itemize}
 	\item Sentiment Detection: Given a text, estimate the emotional state of the author.
 	\item Masked Language Modeling: Given a text with a word blanked out, estimate what the word should be.
-	\item Machine Translation: Given a text, translate the meaning into another language while preserving meaning as faithfully as possible.
+	\item Machine Translation: Given a text, translate it another language while preserving meaning as faithfully as possible.
 \end{itemize}
 
 
@@ -129,7 +129,7 @@ They can have conversations, answer questions about things they have seen, etc.
 In contrast, the interaction of computers is usually more rigidly defined by specific NLP tasks, and AI models are trained to perform one or several of these tasks.
 
 For the purposes of this work, an \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
-NLP tasks will serve as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in chapter \ref{ch:approach}.
+NLP tasks will serve as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in Chapter \ref{ch:approach}.
 
 
 \subsection{NLP Preprocessing: Tokenization}
@@ -138,7 +138,7 @@ When listening to spoken language, it is not obvious where one word ends and ano
 Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
 While words in the written English language are mostly separated by spaces, a writer may choose to create a new hyphenated word sequence on the spot as necessity demands.
 
-Further complicating the issue of where to separate words is the fact that many non-European language do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
+Further complicating the issue of where to separate words is the fact that many non-European languages do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
 For these reasons, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into individual words \cite{jurafskySpeechLanguageProcessing2025}.
 \todo{Explain various types of tokenization: Sub-word, word etc.}
 
@@ -152,13 +152,12 @@ Splitting continuous text into distinct words will be required for this work and
 In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle language of different syntactic structures.
 
 In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
-As this work makes extensive use of AI models, the next section therefore briefly introduces the field of \AI.
+As this work makes extensive use of AI models, the next section therefore briefly introduces the field of Artificial Intelligence.
 
 \section{Artificial Intelligence}
 % \tocite{Wolfgang Ertel: Introduction to Artificial Intelligence} defines \AI\ as ""
 Elaine Rich, in her 1983 work "Artificial Intelligence", defines \AI\ as "the study of how to make computers do things at which, at the moment, people are better" \cite{rich1983artificial}.
-An introductory article by IBM describes it as "a technology that enables computers and machines to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy" \footnote{\url{https://www.ibm.com/think/topics/artificial-intelligence}, last accessed February 26th, 2025}.
-And this
+An introductory article by IBM describes it as "a technology that enables computers and machines to simulate human learning, comprehension, problem-solving, decision-making, creativity and autonomy"\footnote{\url{https://www.ibm.com/think/topics/artificial-intelligence}, last accessed February 26th, 2025}.
 This is opposed to traditional algorithms which can only follow algorithms which have been explicitly programmed.
 
 \subsection{AI Models}
@@ -168,10 +167,10 @@ AI models are used in this work to simulate an agent interacting with language.
 The (pre-trained) AI model is thought of as a test subject in possession of linguistic skills that can be studied.
 Through its training process, AI models learn patterns that are generalizable across the problem domain.
 If these patterns resemble the knowledge that humans gain when they learn a new ability, it may be possible to analyze the interaction of AI models with data so that a human learner can learn from their behavior, similar to how humans can observe experts in their domain and learn from their behavior.
-The field which provides theses methods of analysis is Explainable AI, which is explained in chapter \ref{sec:explainable-ai}.
+The field which provides these methods of analysis is Explainable AI, which is explained in Section \ref{sec:explainable-ai}.
 
 The current de facto standard for recent AI models is the \textit{Neural Network} architecture \cite{jurafskySpeechLanguageProcessing2025}, which attempts to imitate the neural makeup of the human brain.
-Such models achieve state-of-the-art results on most NLP tasks \missingcitation{neural networks performing NLP task} and all models used in this work are Neural Networks for this reason.
+Such models achieve state-of-the-art results on most NLP tasks \missingcitation{neural networks performing NLP task}, and all models used in this work are Neural Networks for this reason.
 However, within this architecture there exist further subtypes of AI models, the most important for this work is the \textbf{transformer model}.
 
 
@@ -181,8 +180,8 @@ Since their invention in 2017 \cite{vaswani2017attention}, \textit{transformer} 
 They are a particular type of deep neural network characterized by an attention layer before the fully connected neural layers.
 Said attention layer makes the model "focus" on important parts of the important, while "ignoring" less important ones.
 This helps the model find patterns in noisy input.
-This attention is one possible way to attribute importance to inputs, and thus utility to words in our case.
-This use will be discussed in chapter \ref{sec:xai-methods}.
+Attention is one possible way to attribute importance to inputs, and thus utility to words in our case.
+This use will be discussed in Section \ref{sec:xai-methods}.
 
 \subsection{Summary}
 This section has introduced the important AI models used in this thesis, namely the Neural Network and one of its most effective subtypes, the transformer.
@@ -191,14 +190,14 @@ We are interested in how the inputs (words) influence the outputs of AI models w
 This kind of analysis is the domain of \textbf{Explainable AI}, which is why the next section briefly introduces this last necessary field for the approach put forward in this work.
 
 \section{Explainable AI} \label{sec:explainable-ai}
-Explainable AI is the field of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions \cite{viloneNotionsExplainabilityEvaluation2021}.
+Explainable AI (abbreviated: XAI) is the fields of research focused on making the decision-making progress of AI models more transparent and understandable to humans, to enable us to reason about the AI model's decisions \cite{viloneNotionsExplainabilityEvaluation2021}.
 This can be useful to check if the decision process contains social biases, or if it is based on wrong patterns learned from skewed training and test data (overfitting).
 By analyzing the decision process of high-performing AI models, this work attempts to extract useful information about how the language is processed by them which may be useful to humans as well.
 For this analysis, XAI is used a tool to find out which inputs influence the performance of AI models the most.
 
 \subsection{Distinctions between XAI Methods}
 There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
-This chapter will go into some of distinctions and argue why some types are more appropriate to the aim of this thesis than others.
+This chapter will go into some of the distinctions and argue why some types are more appropriate to the aim of this thesis than others.
 
 As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
 The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with the question: \textit{"how does each feature affect the model?"} \footnote{\url{https://courses.cs.washington.edu/courses/csep590b/22sp/files/lectures/lecture2_part1.pdf}, last accessed on February 27, 2025.}.
@@ -212,7 +211,7 @@ This work uses feature attribution methods exclusively, as the scores will allow
 Another important characteristics of an XAI method is whether it is \textbf{model-agnostic} or \textbf{model-specific}.
 A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees \missingcitation{decision tree}, or neural networks.
 Model-agnostic models are also called black-box-approaches, as they do not look into the model (such as weights in neural networks) but only perturb the inputs and observe changes in the model output.
-A advantage of model agnostic explanations is that they can be used on any AI model
+An advantage of model agnostic explanations is that they can be used on any AI model
 However, many recent state-of-the-art AI models are build using the transformer architecture, hence methods specific to transformer models can also be fairly broadly applied.
 A major upshot of model-specific explanations is their efficiency:
 Black-box approaches require us to perturb the input to observe differences in the output, requiring us to run the model multiple times for a single explanation, which can constitute a great computational effort.
@@ -226,13 +225,13 @@ This work is interested in observing the interaction of the AI model with a part
 For this reason, all methods used in this work will be local methods.
 However, while local explanations only explain a single decision of the model (which, in the work, will be the interaction of the model with a single sentence), we will aggregate the individual decisions across the corpus to get a bigger picture about this interaction.
 
-The transformer attention mechanism introduced in chapter \ref{sec:transformer} has been used as a model-specific XAI method
+The transformer attention mechanism introduced in Section \ref{sec:transformer} has been used as a model-specific XAI method
 \cite{liUnderstandingNeuralNetworks2017}
 \cite{leiInterpretableNeuralModels2017}
 , and will be used in this work as one among several XAI methods employed to gauge the impact of words in the input to the output of (transformer) AI models.
-The use of attention as explanation, too, will be discussed in more detail when describing the implementation of our approach in chapter \ref{sec:xai-methods}.
+The use of attention as explanation, too, will be discussed in more detail when describing the implementation of our approach in Section \ref{sec:xai-methods}.
 
-Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
+Table \ref{table:XAi-method-criteria} summarizes the use of XAI in this work.
 
 \begin{table}[ht]
 	\centering
@@ -266,7 +265,7 @@ Table \ref{table:XAi-method-criteria} summarizes the used of XAI in this work.
 % 		\end{itemize}
 % 	} }
 
-As described in chapter \ref{sec:linguistic-motivation}, the Routledge Handbook of Second Language Acquisition cites the concepts of frequency, usefulness and difficulty as widely accepted criteria to decide when to teach which words.
+As described in Section \ref{sec:linguistic-motivation}, the Routledge Handbook of Second Language Acquisition cites the concepts of frequency, usefulness and difficulty as widely accepted criteria to decide when to teach which words.
 To the best of our knowledge, all previous methods for making lists of vocabulary for language learners use similar criteria.
 They can be classified roughly into two categories based on which of the previously named criteria they employ:
 Approaches which use frequency have the benefit of being easy to implement on a computer and putting a simple number on each word.
@@ -293,7 +292,7 @@ It is seen in the recommendations for vocabulary selection by the initiative Rea
 Reading Rockets \footnote{\url{https://www.readingrockets.org/}} is an American national public media literacy initiative by WETA Washington, D.C. \footnote{\url{https://weta.org/}}, a television station of the non-commercial public broadcaster Public Broadcasting Service \footnote{\url{https://www.pbs.org/}}.
 
 As such, one of its aims is to help find reading materials appropriate for teaching children of school age words they are not yet familiar with but which are useful and important, an aim similar to that of finding useful vocabulary for second language learners.
-Reading Rockets has made public several recommendation for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students.
+Reading Rockets has made public several recommendations for how to find useful vocabulary to teach children as well, with the intention of helping individual teachers select vocabulary for their students.
 For this purpose, Reading Rockets uses a tiered system to sort vocabulary items into three tiers:
 \footnote{\label{footnote:reading-rockets-choosing-words-to-teach} \url{https://www.readingrockets.org/topics/vocabulary/articles/choosing-words-teach}, last accessed on March 15, 2025.}
 Tier One items are words which most children know before even entering primary school and thus need not be taught.
@@ -302,7 +301,7 @@ This includes words such as \textit{happy} and \textit{baby}.
 Tier Three items are words which are useful mostly in one specific domain, such as \textit{peninsula} or \textit{lathe}.
 These are not high frequency words, and thus Reading Rockets conclude that these words are best learned not in isolation, but rather "when needed in a content area".
 
-Tier Two words are fairly high frequency words that are not so common as to be know by all children, but still useful across many domains, such as \textit{coincidence}, \textit{absurd}.
+Tier Two words are fairly high frequency words that are not so common as to be known by all children, but still useful across many domains, such as \textit{coincidence}, \textit{absurd}.
 For this reason, Reading Rockets deems that "instruction in these words can add productively to an individual’s language ability." \footnoteref{footnote:reading-rockets-choosing-words-to-teach}
 
 This system of triage can be useful and could be made to fit with the aim of teaching second-language learners too, by teaching Tier One words first, then moving on to Tier Two and Tier Three words.
@@ -333,7 +332,7 @@ In their 1997 paper "Vocabulary size, text coverage and word lists" \cite{nation
 Herein we can see the appeal of frequency as a basis for vocabulary selection:
 It gives the reader the highest \textit{coverage} of texts, i.e., the percentage of words in the texts they read.
 However, focusing on maximum-frequency words to achieve text coverage does not take into account that the most frequent words in the language are typically words with little meaning by themselves: 
-The following words are the most frequent ten words on Wikipedia according to a count by Leipzig University \footnote{see "Wikipedia" corpus 2016, https://wortschatz.uni-leipzig.de/en/download/English}:
+The following words are the most frequent ten words on Wikipedia according to a count by Leipzig University \footnote{See "Wikipedia" corpus 2016, \url{https://wortschatz.uni-leipzig.de/en/download/English}}:
 "the", "of", "and", "in", "to", "a", "is", "was", "the", "for".
 
 Herein, we can see can issue with using frequency as the exclusive criterion for vocabulary selection:
@@ -346,7 +345,7 @@ Thus, knowing only these words is not sufficient for comprehending most texts.
 
 \paragraph {Possible Improvement: Frequency with stopwords filtered out}
 Given the above issue, we can immediately of a way to remedy the issue:
-There exist stopword lists for many languages, such as the one provided by the NLTK library \footnote{\url{https://www.nltk.org/}}..
+There exist stopword lists for many languages, such as the one provided by the NLTK library \footnote{\url{https://www.nltk.org/}}.
 Therefore, we could make a more useful vocabulary list by first counting the frequency of words, and then deprioritizing stopwords by a constant factor, or dispersing them more evenly throughout the vocabulary list, such that the first words already contain nouns and verbs allowing for the construction of (though very limited) grammatically correct sentences.
 
 

@@ -4,11 +4,11 @@ The various utility extraction approaches produce ranked lists as outputs.
 To compare these, we employ both quantitative and qualitative comparison approaches, described in the following chapters.
 
 \subsection{NLP Task Performance}
-The primary metric for evaluating a vocabulary list's efficiency will be the approach explained in chapter \ref{sec:list-generation}: 
+The primary metric for evaluating a vocabulary list's efficiency will be the approach explained in Section \ref{sec:list-generation}: 
 We let an AI model perform an NLP task with a vocabulary consisting of the first $k$ elements of the list.
 The limited vocabulary is simulated by removing words outside the vocabulary from the inputs to the model.
 We then progressively increase the vocabulary by increasing index $k$ until we reach the end of the list.
-The increase of vocabulary size is exponential, as this will ensure a quick evaluation and performance is expected to not grow very much towards the end of the list, where the less useful words should be (this assumption can be confirmed in the evaluation results in chapter \ref{sec:results}).
+The increase of vocabulary size is exponential, as this will ensure a quick evaluation and performance is expected to not grow very much towards the end of the list, where the less useful words should be (this assumption can be confirmed in the evaluation results in Section \ref{sec:results}).
 
 Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup:
 
