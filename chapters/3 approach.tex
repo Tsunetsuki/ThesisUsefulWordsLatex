@@ -51,7 +51,6 @@ where $W$ is the set of all words in the language, and $V \in W$ is the vocabula
 \subsubsection{Vocabulary List Efficiency}
 We now have a function $t'$ from the vocabulary to the score in the proxy task (the proxy metric for language ability).
 Using this function, we can define a measure for the efficiency of an ordered list of vocabulary $l$ containing elements from $W$.
-
 A list of vocabulary is simply an ordered list whose elements are words of the target language, with no duplicates:
 
 \begin{equation*}
@@ -147,12 +146,10 @@ However, we have established that the experiment is not easy to set up consisten
 
 To circumvent this issue, this work proposes the following idea:
 To replace the human test subject in the experiment described in Section \ref{sec:human-efficiency-testing} with an AI model, facilitating a consistent and economical setup.
-
 The following paragraphs will lay out how, in such a setup, we can model the concepts from Section \ref{sec:statement-of-goal} such as linguistic context and utility with technological tools.
 
 \subsubsection{AI as a Test Subject} \label{sec:ai-as-test-subject}
 In recent years, AI models such as ChatGPT \tocite{cite ChatGPT} or BERT \tocite{cite BERT} have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition and Sentiment Detection.
-
 Such models possess as level of "understanding" that extends to the meaning of words:
 They can recognize that two words such as "building" and "apartment" are close to each other in meaning, even though the words are dissimilar on a character level (this work makes no claims as to whether this understanding is real to that of a human, only that the models behaves as though it were).
 Thanks to this semantic language "understanding", AI models surpass the purely statistical approaches that were the paradigm of NLP until recently \tocite{paper contrasting traditional with AI approaches}.
@@ -175,8 +172,6 @@ A quickly increasing performance will correspond to an efficient vocabulary list
 
 The modified experiment addresses the two issues proposed with the original setup:
 It is cheap when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
-
-
 Next, let us see how the components in this setup interact with each other to model the concepts introduces in Section \ref{sec:statement-of-goal}:
 
 \subsubsection{Influence of Components on Result}
@@ -192,12 +187,9 @@ We have already addressed the role of the AI model in Section \ref{sec:ai-as-tes
 The corpus and the NLP task performed by the model will also influence how quickly the AI model's performance increases with a given vocabulary list:
 
 For example, when performing Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than if for an Information Retrieval task such as Temporal Tagging.
-
 The corpus will have a more obvious influence on the performance, since corpora differ in many aspects such as formality, topic, and format of the text, all of which are components of a linguistic context.
-
 Thus, by using diverse corpora, we can model various language contexts, and test word utility in those contexts.
 Once we have efficient vocabulary lists across those contexts, a language learners could choose one or several of these lists, based on what linguistic context is closest to their language learning goals.
-
 
 Table \ref{table:concept-implementation-correspondence} summarizes the correspondences between the concept and the technical component.
 
@@ -226,7 +218,6 @@ The next section will tackle the problem of how to not only test list efficiency
 The previous section describes an approach for evaluating the efficiency of vocabulary lists, which measures how quickly the list lets a learner improve their understanding in a specific context.
 While it can be seen as an improvement on the human setup because of its improved consistency and economy, it describes only the process of evaluation, not generation.
 Actually finding optimal vocabulary lists is theoretically possible by testing every possible vocabulary list with all words in the language.
-
 In practice, however, this would require an enormous amount of computational resources, as can be seen on a simple example:
 
 Let us suppose we wish to find the most efficient vocabulary list of 1,000 words for some context.

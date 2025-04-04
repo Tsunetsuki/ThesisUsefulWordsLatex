@@ -1,4 +1,4 @@
-This chapter gives context to estimating the utility of vocabulary.
+This chapter gives describes the theoretical background to estimating the utility of vocabulary.
 We first discuss how this work connects to research about vocabulary acquisition for second language learners in Section \ref{sec:context-of-work}.
 After this, we define the exact aim of the work in Section \ref{sec:statement-of-goal}.
 The following three sections explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in Chapter \ref{ch:approach}.
@@ -14,7 +14,8 @@ This will serve to motivate our research, and make clear what it does and does n
 The issue of which words to learn when setting out to acquire a language is not a new one.
 Every textbook on language which does not focus exclusively on grammar must address the issue, and proactive learners will doubtless find themselves looking for ways to optimize the return on their invested studying time.
 
-The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookSecond2022} gives three criteria for deciding the order in which words are taught to beginners:
+The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookSecond2022} is a textbook which attempts to comprehensively tackle the various challenges in second language acquisition, including the role of feedback in language learning, the setting for learning and individual differences between learners.
+The chapter concerned with vocabulary acquisition gives three criteria for deciding the order in which words are taught to beginners:
 
 \begin{enumerate}
 	\item Frequency
@@ -24,6 +25,10 @@ The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookS
 
 The first criterion, frequency, is easy to justify:
 Learning words that appear with great frequency will allow the learner to understand the maximum percentage of words in texts, and should thus be among the most relevant.
+
+Secondly, there is the criterion of "\textit{usefulness}".
+While it is acknowledged as a separate criterion from frequency, the authors do not define what constitutes usefulness, or how it might be measured.
+
 The \textit{easiness}, or \textit{learnability} of a word is defined as how easy it is for a learner to acquire the word.
 The authors define it with respect to an individual learner since it is posited that the various linguistic backgrounds of learners will influence which words they can acquire with ease.
 Apart from learner-independent factors influencing the learnability of a word such as word length, whether the learner already knows a cognate of the word will certainly also have an impact:
@@ -31,22 +36,18 @@ Apart from learner-independent factors influencing the learnability of a word su
 We can imagine a native German speaker attempting to learn English:
 The word "internationalization" may not be a particularly frequent word in most contexts and thus not seem too important to teach, but the German will likely recognize the word as a cognate of the German equivalent "Internationalisierung", and acquire the word with ease, giving a justification for teaching the word early if we wish to impart the most language knowledge as quickly as possible.
 
-Finally, there is the criterion of "\textit{usefulness}".
-While it is distinguished from frequency, the authors do not define what constitutes usefulness, or how it might be measured.
-
 In their 2019 paper \cite{heChoosingWordsTeach2019}, He and Godfroid pick up the above three criteria in order to group words into clusters which should help determine their priority in vocabulary learning.
 However, again it is not defined what constitutes usefulness and no way to measure it is suggested beyond "human intuition".
 In fact, it is put in contrast with frequency, which may be derived from corpus data, whereas usefulness cannot.
 
-As the aim of this work is to find ways to evaluate word utility automatically, the following section will attempt to define utility and related concepts more carefully, in order to state the aim of this work more formally.
+It can be seen from the previous examples that a concept of \textit{usefulness} exists in discussions about what the best order in which to teach vocabulary might be, but that it has hitherto not been examined empirically.
+The aim of this work is to find ways to evaluate word usefulness, or utility, automatically.
+Therefore, the following section will attempt to define utility and related concepts more carefully, in order to state the aim of this work more formally.
 
 \subsection{Statement of Goal} \label{sec:statement-of-goal}
-\contentdescription{Statement of goal, definition of "utility", context }
-
 Generally speaking, this work addresses the problem of evaluating how useful it is to learn a given word in the target language of a language learner.
 This helps us in generating ordered lists of vocabulary to learn which aid the learner in gaining competency in their target language quickly.
 Since different language learners learn languages for different reasons \missingcitation{Statistics on motivations of language learners}, we attempt to take into account the learner's motivation to tailor vocabulary specifically to the individual.
-
 To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
 These concepts are used throughout this work.
 
@@ -84,7 +85,6 @@ The above section defines word utility as an increase in "language ability", but
 To circumvent this issue, so-called \textit{proxy tasks} will be used:
 Proxy tasks are tasks that test subjects can perform, where the test result (the \textit{proxy measure}) is used to capture the abstract quantity under study \missingcitation{Proxy task definition}.
 For example, as a proxy measure for a person's general spelling ability, we could make them choose from multiple spelling variants of a word, and use the accuracy with which they select the correct answers.
-
 This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
 
 \subsubsection{Summary}
@@ -123,7 +123,6 @@ Typical NLP tasks include \cite{jurafskySpeechLanguageProcessing2025}
 	\item Machine Translation: Given a text, translate it another language while preserving meaning as faithfully as possible.
 \end{itemize}
 
-
 Humans are not trained from childhood to do any one language "task":
 They can have conversations, answer questions about things they have seen, etc.
 In contrast, the interaction of computers is usually more rigidly defined by specific NLP tasks, and AI models are trained to perform one or several of these tasks.
@@ -150,7 +149,6 @@ Splitting continuous text into distinct words will be required for this work and
 \end{itemize}
 
 In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle language of different syntactic structures.
-
 In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
 As this work makes extensive use of AI models, the next section therefore briefly introduces the field of Artificial Intelligence.
 
@@ -162,7 +160,6 @@ This is opposed to traditional algorithms which can only follow algorithms which
 
 \subsection{AI Models}
 The building block of Artificial Intelligence is called an \textbf{AI Model}, which is a model using training data to learn patterns, and then used on inputs that were not identically present in the training dataset.
-
 AI models are used in this work to simulate an agent interacting with language.
 The (pre-trained) AI model is thought of as a test subject in possession of linguistic skills that can be studied.
 Through its training process, AI models learn patterns that are generalizable across the problem domain.
@@ -176,7 +173,6 @@ However, within this architecture there exist further subtypes of AI models, the
 
 \subsection{Transformer Model} \label{sec:transformer}
 Since their invention in 2017 \cite{vaswani2017attention}, \textit{transformer} models have brought impressive gains in performance to many fields, including \NLP.
-
 They are a particular type of deep neural network characterized by an attention layer before the fully connected neural layers.
 Said attention layer makes the model "focus" on important parts of the important, while "ignoring" less important ones.
 This helps the model find patterns in noisy input.
@@ -209,8 +205,8 @@ Feature importance explanations can be further subdivided into two groups:
 This work uses feature attribution methods exclusively, as the scores will allow us to rank words in a list by their importance.
 
 Another important characteristics of an XAI method is whether it is \textbf{model-agnostic} or \textbf{model-specific}.
-A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees \missingcitation{decision tree}, or neural networks.
-Model-agnostic models are also called black-box-approaches, as they do not look into the model (such as weights in neural networks) but only perturb the inputs and observe changes in the model output.
+A model-agnostic XAI method can be used no matter what AI model is used, whereas a model-specific method is limited to being used to a specific type of AI model, such as transformers, decision trees, or neural networks.
+Model-agnostic models do not look inside the model (e.g., they do not examine weights in neural networks) but only perturb the inputs and observe changes in the model output.
 An advantage of model agnostic explanations is that they can be used on any AI model
 However, many recent state-of-the-art AI models are built using the transformer architecture, hence methods specific to transformer models can also be fairly broadly applied.
 A major upshot of model-specific explanations is their efficiency:
@@ -306,7 +302,6 @@ For this reason, Reading Rockets deems that "instruction in these words can add 
 
 This system of triage can be useful and could be made to fit with the aim of teaching second-language learners too, by teaching Tier One words first, then moving on to Tier Two and Tier Three words.
 Because the system proposed by Reading Rockets is a manual one, it requires some effort on the side of a teacher who would like to apply the system to their classroom.
-
 In the next section, we will discuss various vocabulary selection methods that utilize analysis of existing textual data to arrive at vocabulary lists.
 
 \subsection{Frequency-Based Methods}
@@ -399,7 +394,6 @@ Given a collection containing $N$ documents, a term $t$, and a document $t$, we 
 The TF-IDF metric is usually employed for finding keywords in a document, i.e., a small number of words that characterize its contents \cite{qaiserTextMiningUse2018}.
 
 The calculated "keyness" can be seen as a proxy for how important a word is for the overall meaning of the document .
-
 We can see that there is a generally frequent words achieve a high rank for the raw frequency metric, but a low rank for TF-IDF.
 Because of this somewhat contradictory nature of the metrics, we are left to wonder if either of them are good proxy metrics for word utility.
 

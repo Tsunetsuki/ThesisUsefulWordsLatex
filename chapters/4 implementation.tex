@@ -1,7 +1,6 @@
 Chapter \ref{ch:approach} has formalized the problem and put forward a novel framework for finding useful words, consisting of two major functionalities:
 Vocabulary list generation, and vocabulary list evaluation.
 The list evaluation approach, described in Section \ref{sec:experimental-setup-with-ai}, utilizes the performance of an AI model, corpus, proxy task as a proxy metric for language ability, in order to estimate how efficiently the vocabulary list may help a human language learner acquire competency.
-
 The list generation approach, proposed in Section \ref{sec:list-generation}, additionally uses Explainable AI as a tool for analyzing the interaction of the AI model with the corpus to compile vocabulary lists that approach maximal efficiency.
 
 In this chapter, we will describe our implementation, mostly of the list generation approach.
@@ -16,7 +15,6 @@ The choice of components in the system is then argued in the following sections,
 \section{Data Pipeline}
 
 This section will give a top-level overview of our implementation for the list generation approach described in Chapter \ref{ch:evaluation}.
-
 As mentioned before, the main components of this approach are:
 
 \begin{itemize}
@@ -28,7 +26,6 @@ As mentioned before, the main components of this approach are:
 \end{itemize}
 
 Thus, the implementation of the approach will consist of determining how exactly these components interact, as well as deciding which model, which XAI method, etc., will be used.
-
 The interaction of these components can be seen in pseudocode in Algorithm \ref{alg:efficient-list-generation}.
 
 \input{listings/efficient_list_generation_pseudocode.tex}
@@ -37,7 +34,6 @@ The choice of individual components will be tackled by the following sections.
 Because of some dependencies between the components, not all of these components have their own sections
 The NLP task performed depends on the AI model that we use, as most AI models are trained on only one task.
 Therefore, the choice of AI model is discussed together with the NLP task in the next section.
-
 
 \section{NLP Tasks and AI Models}
 The NLP task and the corpus used for list generation
@@ -59,7 +55,7 @@ Therefore, the selection of corpora will be discussed in the next section.
 				\item $\rightarrow$ task should show general language understanding
 				\item data is easy to acquire
 				\item $\rightarrow$ data should be freely available for lots of contexts
-				\item $\rightarrow$ no need for manual labeling data
+				\item $\rightarrow$ no need for manual labeling of data
 			\end{itemize}
 		}}
 
@@ -278,7 +274,6 @@ One advantageous aspect of this corpus is that it contains many sentences that a
 This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
 While it is possible to reconstruct which movies the subtitle lines came from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
 
-
 The full process, as illustrated by the authors, can be seen in Figure \ref{fig:opensubs pipeline}
 As of 2025, the latest version of the corpus (v2018) contains aligned subtitles of 62 languages between each other.
 
@@ -485,7 +480,7 @@ As hinted at before, this method uses one model call for one input line, and thu
 
 \paragraph{Disadvantages:}
 One disadvantage of Attention as our attention mechanism is that attentions are attributed to input tokens of the model.
-Unlike the black-box methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
+Unlike the model-agnostic methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
 AI models are trained with some tokenizer as preprocessing the input, and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
 This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
 Additionally, many tokenizers which are used in the preprocessing of models tokenize on a \textit{sub-word} level:
@@ -496,10 +491,10 @@ In addition to this technical downside, Attention is controversial as a mechanis
 \paragraph{Summary:}
 
 
-\subsubsection{Layer-wise Relevance Propagation (not yet implemented $\rightarrow$ may be deleted)}
-\paragraph{Approach:}
-\paragraph{Advantages:}
-\paragraph{Disadvantages:}
-\paragraph{Summary:}
-
-
+% \subsubsection{Layer-wise Relevance Propagation (not yet implemented $\rightarrow$ may be deleted)}
+% \paragraph{Approach:}
+% \paragraph{Advantages:}
+% \paragraph{Disadvantages:}
+% \paragraph{Summary:}
+%
+%
