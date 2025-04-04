@@ -1,12 +1,14 @@
 This chapter gives context to estimating the utility of vocabulary.
 We first discuss how this work connects to research about vocabulary acquisition for second language learners in Section \ref{sec:context-of-work}.
 After this, we define the exact aim of the work in Section \ref{sec:statement-of-goal}.
-The following three chapters explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in Chapter \ref{ch:approach}.
+The following three sections explain the (partially overlapping) fields of Natural Language Processing, Machine Learning, and Explainable AI, tools from all of which will be employed in our word utility evaluation approach laid out in Chapter \ref{ch:approach}.
 Finally, we examine current approaches for selecting vocabulary for language learners in Section \ref{sec:ranking-lists-of-vocabulary}, to show what methods are currently employed and how they could be improved.
 
 
 \section{Context of the Work} \label{sec:context-of-work}
-\contentdescription{Language learning in general, cite reference works and textbooks. Maybe mention context-specific learning resources too, such as academic English}
+
+This section contextualizes the contents of this work by introducing theoretical considerations by linguistic researchers on the point of vocabulary lists.
+This will serve to motivate our research, and make clear what it does and does not aim to achieve, which is explicitly laid out in the second half of the section.
 
 \subsection{Linguistic Motivation} \label{sec:linguistic-motivation}
 The issue of which words to learn when setting out to acquire a language is not a new one.
@@ -36,7 +38,7 @@ In their 2019 paper \cite{heChoosingWordsTeach2019}, He and Godfroid pick up the
 However, again it is not defined what constitutes usefulness and no way to measure it is suggested beyond "human intuition".
 In fact, it is put in contrast with frequency, which may be derived from corpus data, whereas usefulness cannot.
 
-As the aim of this work is to find ways to evaluate word utility automatically, the following chapter will attempt to define utility and related concepts more carefully, in order to state the aim of this work more formally.
+As the aim of this work is to find ways to evaluate word utility automatically, the following section will attempt to define utility and related concepts more carefully, in order to state the aim of this work more formally.
 
 \subsection{Statement of Goal} \label{sec:statement-of-goal}
 \contentdescription{Statement of goal, definition of "utility", context }
@@ -87,12 +89,10 @@ This work employs AI models solving NLP tasks as an economic and repeatable subs
 
 \subsubsection{Summary}
 With the concepts above defined more precisely, we can state the goal more accurately, namely, creating computational methods which can find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
-
 With the words in cursive filled in, this translates to:
 Finding words that provide a language learner with the most language understanding in the specific situations they are interested in, requiring them to learn the least possible amount of words.
 Since the understanding of a learner cannot be directly measured, we use tasks that check the learner's understanding as an imperfect but necessary approximation.
-
-The following chapters will discuss the fields addressed in achieving this aim, and highlight relevant aspects from them that contribute in later chapters to conceptualizing and implementing a solution.
+The following sections will discuss the fields addressed in achieving this aim, and highlight relevant aspects from them that contribute in later chapters to conceptualizing and implementing a solution.
 
 
 \section{Natural Language Processing} \label{sec:natural-language-processing}
@@ -197,7 +197,7 @@ For this analysis, XAI is used as a tool to find out which inputs influence the 
 
 \subsection{Distinctions between XAI Methods}
 There are several categories of XAI methods that will be relevant in this work, because they determine not only the purpose of the method, but also which XAI method can be used on which AI model.
-This chapter will go into some of the distinctions and argue why some types are more appropriate to the aim of this thesis than others.
+This section will go into some of the distinctions and argue why some types are more appropriate to the aim of this thesis than others.
 
 As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
 The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with the question: \textit{"how does each feature affect the model?"} \footnote{\url{https://courses.cs.washington.edu/courses/csep590b/22sp/files/lectures/lecture2_part1.pdf}, last accessed on February 27, 2025.}.
@@ -271,7 +271,7 @@ They can be classified roughly into two categories based on which of the previou
 Approaches which use frequency have the benefit of being easy to implement on a computer and putting a simple number on each word.
 
 Previous approaches which have aimed at generating lists by a utility concept outside of frequency have relied on human experts.
-This chapter will introduce concrete methods from both categories, and examine each method's strong and weak points.
+This section will introduce concrete methods from both categories, and examine each method's strong and weak points.
 It is this work's contention that AI models make it possible to mechanistically calculate utility in addition to frequency, and that this could be a possible point of attack for refining previously accepted approaches for vocabulary list compilation.
 
 
@@ -285,7 +285,7 @@ It is this work's contention that AI models make it possible to mechanistically 
 % \end{itemize}
 
 \subsection{Expert Judgement: Reading Rockets Tier System}
-This chapter will introduce a traditional approach to vocabulary list generation.
+This section will introduce a traditional approach to vocabulary list generation.
 While it does put forth criteria for vocabulary selection, they are not considered possible to calculate mechanistically, and thus it relies on the judgement of individual language experts (teachers) to find useful words for their students.
 
 It is seen in the recommendations for vocabulary selection by the initiative Reading Rockets:
@@ -307,7 +307,7 @@ For this reason, Reading Rockets deems that "instruction in these words can add 
 This system of triage can be useful and could be made to fit with the aim of teaching second-language learners too, by teaching Tier One words first, then moving on to Tier Two and Tier Three words.
 Because the system proposed by Reading Rockets is a manual one, it requires some effort on the side of a teacher who would like to apply the system to their classroom.
 
-In the next chapter, we will discuss various vocabulary selection methods that utilize analysis of existing textual data to arrive at vocabulary lists.
+In the next section, we will discuss various vocabulary selection methods that utilize analysis of existing textual data to arrive at vocabulary lists.
 
 \subsection{Frequency-Based Methods}
 To the best of our knowledge, current algorithmic approaches for vocabulary list generation all rely on frequency as their main criterion for list ordering.

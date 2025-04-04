@@ -115,7 +115,7 @@ Finding vocabulary lists that approximate an optimal list according to formula \
 
 With the formula \ref{eq:optimal-vocab-list}, we now have set our goal more concretely.
 We are left with the question of how to design an actual experiment to test vocabulary list efficiency, and also how to generate one that is approximates an optimal list.
-Hence, this chapter lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will, however, be found to suffer from problems of feasibility, which the following chapters will set out to solve.
+Hence, this section lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will, however, be found to suffer from problems of feasibility, which the following section will set out to solve.
 
 \subsubsection{Experimental Setup}
 Let us first consider an example scenario, where we wish to measure the efficiency of one vocabulary list $l_A$ at $k=200$, $k=500$ and $k=2000$ words:
@@ -135,7 +135,7 @@ To make up for these inconsistencies, we might boost the number of test subjects
 
 However, this theoretical test setup could be feasible using a non-human test subject:
 Using AI models and Explainable AI to analyze their interaction with language, we could not only evaluate, but even compile lists with drastically reduced costs.
-This approach is laid out in the following chapters.
+This approach is laid out in the following sections.
 
 \section{Experimental Setup with AI Model} \label{sec:experimental-setup-with-ai}
 \contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
@@ -220,10 +220,10 @@ Table \ref{table:concept-implementation-correspondence} summarizes the correspon
 	\label{table:concept-implementation-correspondence}
 \end{table}
 
-The next chapters will tackle the problem of how to not only test list efficiency, but make lists that approach an optimally efficient list.
+The next section will tackle the problem of how to not only test list efficiency, but make lists that approach an optimally efficient list.
 
 \section{Evaluating vs. Making Lists of Useful Vocabulary} \label{sec:eval-vs-creation}
-The previous chapter describes an approach for evaluating the efficiency of vocabulary lists, which measures how quickly the list lets a learner improve their understanding in a specific context.
+The previous section describes an approach for evaluating the efficiency of vocabulary lists, which measures how quickly the list lets a learner improve their understanding in a specific context.
 While it can be seen as an improvement on the human setup because of its improved consistency and economy, it describes only the process of evaluation, not generation.
 Actually finding optimal vocabulary lists is theoretically possible by testing every possible vocabulary list with all words in the language.
 
@@ -241,13 +241,13 @@ $
 $ runs of the proxy task. Clearly, this is still an unfeasible amount of computation.
 
 It can thus be seen that finding optimal vocabulary list is much too expensive when performed with a brute-force approach.
-For this reason, the next chapter will introduce an alternative method for finding efficient lists of vocabulary, based on XAI as a tool which extracts information about the linguistic skills of AI models.
+For this reason, the next section will introduce an alternative method for finding efficient lists of vocabulary, based on XAI as a tool which extracts information about the linguistic skills of AI models.
 
 \section{Generating Efficient Lists of Vocabulary} \label{sec:list-generation}
 
-The previous chapters have shown the challenges in evaluating the efficiency of vocabulary lists with human test subjects, and suggested a repeatable approach utilizing AI models, NLP tasks and corpora to overcome these challenges.
+The previous sections have shown the challenges in evaluating the efficiency of vocabulary lists with human test subjects, and suggested a repeatable approach utilizing AI models, NLP tasks and corpora to overcome these challenges.
 We have seen, however, that this approach does not suffice to generate efficient vocabulary.
-Therefore, to achieve cost-efficient list generation, this chapter advocates for adding a final component to our experimental setup, namely Explainable AI.
+Therefore, to achieve cost-efficient list generation, this section advocates for adding a final component to our experimental setup, namely Explainable AI.
 
 \subsubsection{Explainable AI as a Tool of Analysis} \label{sec:xai-as-tools-of-analysis}
 The guiding question of this thesis is:
@@ -275,7 +275,7 @@ By adding XAI as a tool for analyzing the interaction of the AI model with the c
 This is not a replacement of the approach described in Section \ref{sec:ai-as-test-subject}.
 Rather, this work will use the generation approach to make lists (Chapter \ref{ch:implementation}), and the evaluation approach for testing which method leads to the most efficient lists (Chapter \ref{ch:evaluation}).
 
-In the next chapter, we will tackle the implementation of this approach.
+In the next section, we will tackle the implementation of this approach.
 We will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
 
 %
