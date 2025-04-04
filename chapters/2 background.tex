@@ -48,11 +48,13 @@ Therefore, the following section will attempt to define utility and related conc
 Generally speaking, this work addresses the problem of evaluating how useful it is to learn a given word in the target language of a language learner.
 This helps us in generating ordered lists of vocabulary to learn which aid the learner in gaining competency in their target language quickly.
 Since different language learners learn languages for different reasons \missingcitation{Statistics on motivations of language learners}, we attempt to take into account the learner's motivation to tailor vocabulary specifically to the individual.
+This stands in contrast to traditional learning resources such as textbooks, which, by their linear and static structure, cannot take individual differences in interests of learners into account.
 To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
 These concepts are used throughout this work.
 
 \subsubsection{Linguistic Context}
-By a linguistic context or just \textit{context}, a subset of situations is meant in which a person interacts with language.
+The ways in which people interact with language (a "context") can be described from many different perspectives and along different dimensions (formality, topic, setting of the interaction etc.).
+In this work, a \textit{linguistic context} or just \textit{context} refers to one particular such way of linguistic interaction.
 Examples of language contexts by topic are:
 News, football, crocheting.
 
@@ -87,7 +89,7 @@ Proxy tasks are tasks that test subjects can perform, where the test result (the
 For example, as a proxy measure for a person's general spelling ability, we could make them choose from multiple spelling variants of a word, and use the accuracy with which they select the correct answers.
 This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
 
-\subsubsection{Summary}
+\subsubsection{Revised Statement of Aim}
 With the concepts above defined more precisely, we can state the goal more accurately, namely, creating computational methods which can find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 With the words in cursive filled in, this translates to:
 Finding words that provide a language learner with the most language understanding in the specific situations they are interested in, requiring them to learn the least possible amount of words.
@@ -96,7 +98,7 @@ The following sections will discuss the fields addressed in achieving this aim, 
 
 
 \section{Natural Language Processing} \label{sec:natural-language-processing}
-While the aim of the work is to make vocabulary lists that serve human learners, the technical implementation of this necessarily will process human language with the use of computers.
+While the aim of the work is to develop methods to automatically compile vocabulary lists that serve human learners, the technical implementation of this necessarily will process human language with the use of computers.
 This domain is called \textit{Natural Language Processing}, a field defined in The Handbook of Computational Linguistics and Natural Language Processing as the engineering domain of Computational Linguistics \cite{alexanderclarkHandbookComputationalLinguistics2010}.
 Natural Language Processing, often abbreviated as \textit{NLP}, is both used in Computational Linguistics (the field concerned with analyzing natural language through language data) and as well as in practical applications such as Chatbots, Machine Translation, Speech Recognition etc. \cite{jurafskySpeechLanguageProcessing2025}.
 This work addresses both aspects, as it is an undertaking of Computational Linguistics through the analysis of how AI models perform typical \textbf{NLP tasks}.
@@ -149,11 +151,14 @@ Splitting continuous text into distinct words will be required for this work and
 \end{itemize}
 
 In order to provide utility evaluation for words in a wide range of languages, this work will employ tokenizers which can handle language of different syntactic structures.
-In recent years, major advances have been made in the field of Natural Language Processing through the use of AI models.
-As this work makes extensive use of AI models, the next section therefore briefly introduces the field of Artificial Intelligence.
+
+The domain of \NLP\ has in the past been dominated by rule-based methods for processing language.
+However, natural language is a very complex subject which is not easily captured by a priori rules \cite{jurafskySpeechLanguageProcessing2025a}.
+For this reason, methods based on statistical reasoning on large amounts of linguistic data handle many problems better than manually fixed rules.
+Beyond statistical methods, still further advances have been made in the field of Natural Language Processing through the use of AI models such as Neural Networks \cite{jurafskySpeechLanguageProcessing2025a}.
+In order to exploit the state-of-the-art tools from the realm of \NLP, this work makes extensive use of such AI models, and therefore the next section therefore briefly introduces the field of Artificial Intelligence.
 
 \section{Artificial Intelligence}
-% \tocite{Wolfgang Ertel: Introduction to Artificial Intelligence} defines \AI\ as ""
 Elaine Rich, in her 1983 work "Artificial Intelligence", defines \AI\ as "the study of how to make computers do things at which, at the moment, people are better" \cite{rich1983artificial}.
 An introductory article by IBM describes it as "a technology that enables computers and machines to simulate human learning, comprehension, problem-solving, decision-making, creativity and autonomy"\footnote{\url{https://www.ibm.com/think/topics/artificial-intelligence}, last accessed February 26th, 2025}.
 This is opposed to traditional algorithms which can only follow algorithms which have been explicitly programmed.
@@ -196,7 +201,7 @@ There are several categories of XAI methods that will be relevant in this work, 
 This section will go into some of the distinctions and argue why some types are more appropriate to the aim of this thesis than others.
 
 As was mentioned before, this work is interested in analyzing the influence of words in AI model input on its output for the purpose of finding out which words might be the most useful for human learners as well.
-The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with the question: \textit{"how does each feature affect the model?"} \footnote{\url{https://courses.cs.washington.edu/courses/csep590b/22sp/files/lectures/lecture2_part1.pdf}, last accessed on February 27, 2025.}.
+The question of which inputs are the most important for a model to reach its output is the domain of \textbf{feature importance explanations}, a sub-field of XAI concerned with "ranking the features by importance" \cite{molnarChapter4Methods2025}.
 Thus, all XAI methods in this work belong to this group.
 
 Feature importance explanations can be further subdivided into two groups:
