@@ -177,12 +177,35 @@ However, within this architecture there exist further subtypes of AI models, the
 
 
 \subsection{Transformer Model} \label{sec:transformer}
-Since their invention in 2017 \cite{vaswani2017attention}, \textit{transformer} models have brought impressive gains in performance to many fields, including \NLP.
-They are a particular type of deep neural network characterized by an attention layer before the fully connected neural layers.
-Said attention layer makes the model "focus" on important parts of the important, while "ignoring" less important ones.
-This helps the model find patterns in noisy input.
+Since their invention in 2017 \cite{vaswani2017attention}, transformer models have brought impressive gains in performance to many fields, including \NLP.
+They are a particular type of deep neural network characterized by a mechanism called \textit{attention}.
+This chapter briefly introduces this mechanism and how it is used in this work as one way to assign utility to words.
+
+Typically, a transformer model features an encoder and decoder, each of which consist of an attention layer and feed-forward (i.e, non-recursive) neural network.
+Figure \ref{fig:transformer-architecture} shows the transformer architecture (featuring both an encoder and decoder).
+Due to their lack of recursion seen in networks such as LSTMs and GRUs, transformers are highly parallelizable.
+
+The encoder consists of a so-called \textit{self-attention} layer and a feed-forward neural network.
+The self-attention layer assigns weights to relationships between tokens, which contain information about how much the tokens are related to one another.
+This information helps the transformers to "focus" on important tokens, or important relationships between tokens.
+For generative transformers, there is also a decoder, which takes as inputs the outputs from the encoder network.
+It then uses another attention layer (using \textit{cross-attention}) to assign weights to the embeddings before feeding them into another feed-forward network.
+
+Many transformers feature a mechanism called \textit{multi-head} attention.
+This means that the relationships between tokens are given weights from multiple \textit{heads}.
+These individual heads "learn to perform different tasks", the combination of which helps create a more nuanced understanding of the token relationships \cite{vaswani2017attention}.
 Attention is one possible way to attribute importance to inputs, and thus utility to words in our case.
-This use will be discussed in Section \ref{sec:xai-methods}.
+How exactly this proxy metric is calculated will be discussed in Section \ref{sec:xai-methods}.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{transformer_architecture.png}
+	\caption{The Transformer Architecture. (Source: \textit{Attention is All You Need} \cite{vaswani2017attention})}
+	\label{fig:transformer-architecture}
+\end{figure}
+
+
 
 \subsection{Summary}
 This section has introduced the important AI models used in this thesis, namely the Neural Network and one of its most effective subtypes, the transformer.
