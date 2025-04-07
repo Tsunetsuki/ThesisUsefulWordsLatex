@@ -41,9 +41,10 @@ The NLP task and the corpus used for list generation
 There are many NLP tasks we could choose from \tocite{huggingface NLP task list or something}.
 But not all are equally suitable.
 This section will first put forward criteria for selecting NLP tasks in Section \ref{sec:nlp-tasks-desiderata} for word utility evaluation.
-After this, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
-The NLP tasks we choose will dictate the format of our input data, i.e., the corpora we can use.
-Therefore, the selection of corpora will be discussed in the next section.
+% After this, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
+After the final selection, we will be left with two tasks which, in the estimation of the author of this work, are the most suitable for our word utility evaluation approach, namely \textit{Next Sentence Prediction} and \textit{Sentence Embedding}.
+These NLP tasks we choose dictate the format of our input data, i.e., the corpora we can use.
+Therefore, the selection of corpora will be discussed after the choice of NLP is finalized.
 
 \subsection{Desiderata} \label{sec:nlp-tasks-desiderata}
 
@@ -99,15 +100,17 @@ The next section will present several tasks which fulfill the above criteria, an
 The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
 Since we are trying to estimate utility by measuring the impact of a word on language understanding, the NLP tasks should reflect language understanding as much as possible.
 
-\subsection{Task Selection} \label{sec:nlp-tasks-selection}
-A good place to start looking for such tasks are those which are typically employed for pre-training NLP models:
-Pre-training tasks are used to first endow the AI model with a general understanding of the language, before using transfer learning to specialize it for a more specific downstream task.
+\subsection{Survey of Candidate NLP Tasks}
+This chapter introduces some NLP tasks that might work for our purposes.
+We will describe first the process of how candidate tasks were found, and then go into detail for each candidate as to why it was or was not selected in the following subsections.
+
+Candidates were first compiled by surveying common pre-training tasks which are of state-of-the-art NLP models:
+This is because the purpose of a pre-training task is to endow the AI model with a general understanding of the language, before either using transfer learning to specialize it for a more specific downstream task, or using it before another downstream AI model to pre-process input \missingcitation{definition of pre-training task}.
 Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
 Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
-\todo{Look at various pre-training tasks, preferably those used by state-of-the-art AI models}
-\todo{include free availability for AI models in their justification}
+Their widespread use in \NLP also means that pre-trained models are widely and freely available.
 
-\subsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
+\subsubsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
 This section takes a look at the pre-training process of recent state-of-the-art LLM models which have made public their training process.
 Both the NLP tasks and the kind of data is considered.
 
@@ -132,7 +135,7 @@ Both the NLP tasks and the kind of data is considered.
 	      Data: "data from publicly available sources"
 \end{description}
 
-\subsection{Tasks Considered}
+\subsubsection{List of Candidates}
 \begin{description}
 	\item[Next Sentence Prediction]
 	      In this task, the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text.
@@ -144,7 +147,7 @@ Both the NLP tasks and the kind of data is considered.
 	      Unfortunately, this task requires hand-labeled datasets and is thus not a good candidate if we aim to find approaches which can be implemented in many different languages, as there is a dearth in data in many of the less-studied languages of the world.
 
 	\item[Masked language Modeling (aka. "cloze task")]
-	\item[Causal Manguage Modeling (aka. Next token prediction)]
+	\item[Causal Language Modeling (aka. Next token prediction)]
 	\item[Sentence order prediction]
 	\item[Sentence embeddings]
 	      Sentence embeddings take the approach of transforming words into meaningful vectors and extend it to whole sentences.
@@ -156,29 +159,26 @@ Both the NLP tasks and the kind of data is considered.
 	      To make this a task on which XAI methods can be applied, we can define a distance from the original token
 \end{description}
 
-\subsection{Sentence Embedding Methods}
+
+\section{Next Sentence Prediction}
 
 \begin{description}
 	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
 	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
 \end{description}
 
-\subsection{Data Required for Each NLP Task}
-The various NLP tasks employed require certain types of corpora to be employed properly:
+\subsection{Choice of Model}
+\subsection{Data Required}
 
-\begin{itemize}
-	\item[Next sentence prediction]
-	      Requires a corpus that contains consecutive sentences.
-	      Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
-	      This excludes movie subtitles from the possible corpora for this task.
+Requires a corpus that contains consecutive sentences.
+Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
+This excludes movie subtitles from the possible corpora for this task.
 
-\end{itemize}
 
-\subsection{AI Models}
-\begin{itemize}
-	\item NSP-model ABC
-	\item LLAMA?
-\end{itemize}
+\section{Sentence Embedding}
+\subsection{Choice of Model}
+\subsection{Data Required}
+
 
 \todo{tests of performance tests of models used with corpora used (e.g., if NSP prediction model is reliable)}
 
@@ -465,30 +465,42 @@ We will therefore try two model-specific methods for analyzing word utility as w
 
 \subsubsection{Attention as Explanation}
 One XAI method which has been proposed to explain the decision of transformer models specifically is the transformer's own attention mechanism:
-As stated in Section \ref{sec:transformer}, transformer model use attention to focus on some inputs over others.
-This may be used as a kind of explanation, as the inputs which receive more attention presumably contribute more to the model's decision than those with less attention.
+As stated in Section \ref{sec:transformer}, transformer model (if their input is in text format) use self-attention to assign importance to the connections between tokens in the input.
+This may be used as a kind of explanation, as words which have strong connections to many words in the sentences presumably are more important than those receiving less self-attention.
+
+An important difference to the model-agnostic methods explained before is that we do not control word masking with a tokenizer \textit{independent of the model}, thus the splitting of words is not under our direct control.
+The tokenizers used are \texttt{bert-base-uncased} and \texttt{sentence-transformers/paraphrase-MiniLM-L6-v2}.
+These produce tokens on a sub-word level, which means that we must perform post-processing on the attentions to acquire values on the word level and make vocabulary lists than contain full words.
+For BERT tokens, this is a simple process as sub-tokens which are not at the beginning of a word start with "\#\#".
+\todo{Insert sub-word tokenization example from BERT}
+The estimated utility for the reconstructed token is calculated by taking the sum of the attention values of each sub-token.
 
 \paragraph{Approach:}
-Let a transformer model run on an input line.
-The transformer will attribute an attention value to each token in the input.
-Normalize the attentions such that the attention for all words in the line sums up to one.
+A transformer model is run with one line as input.
+The transformer will output an attention tensor, which attributes a value to each pair of tokens in the input (this includes special tokens from the tokenizer, such as and \texttt{[SEP]} and punctuation).
+We then aggregate the attention of each token by summing over one axis of the attention tensor of all connections each token has, and over all the attention heads, resulting in one scalar value per token.
+The original tokens of the tokenizer are merged
+Next, special tokens and punctuation are filtered
+Finally, we normalize the attentions such that the attention for all words in the line sums up to one.
 The attributed attention to a word is its estimated utility.
 
 \paragraph{Advantages:}
 As hinted at before, this method uses one model call for one input line, and thus has a time complexity of $\mathcal{O}(1)$.
-
 
 \paragraph{Disadvantages:}
 One disadvantage of Attention as our attention mechanism is that attentions are attributed to input tokens of the model.
 Unlike the model-agnostic methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
 AI models are trained with some tokenizer as preprocessing the input, and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
 This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
-Additionally, many tokenizers which are used in the preprocessing of models tokenize on a \textit{sub-word} level:
 
 In addition to this technical downside, Attention is controversial as a mechanism to explain model decisions.
 \tocite{Attention is not Explanation}
 
 \paragraph{Summary:}
+Among the XAI methods used in this work, Attention as Explanation requires the least resources, and it is not restricted to any one NLP task (although the model must be of transformer type).
+However, we do not control the tokenizer used directly.
+While the NSP model uses the same tokenizer that is also used for token masking in the model-agnostic XAI methods, the sentences embedding model uses a different tokenizer.
+
 
 
 % \subsubsection{Layer-wise Relevance Propagation (not yet implemented $\rightarrow$ may be deleted)}

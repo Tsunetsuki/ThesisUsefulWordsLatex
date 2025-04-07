@@ -1,10 +1,36 @@
+Evaluation of the vocabulary list generation approaches is challenging:
+The accuracy of the approaches is evaluated by evaluating the efficiency of the vocabulary lists.
+We have described in detail our approach to vocabulary efficiency evaluation in Section \ref{sec:experimental-setup-with-ai}, which involves running an AI model on a context-specific corpus with a given vocabulary, where the vocabulary is given by taking the first n $k$ words from the vocabulary list in question.
+However, this approach is very similar to our approach for list generation, which involves analyzing AI interaction of AI models with corpora through the use of XAI methods.
+Therefore, it is natural to assume that our evaluation approach is biased towards the lists stemming from our list generation approach.
+This concern is especially pertinent as it has been shown that AI models do not reliably respond comparably to humans when the inputs to NLP tasks are perturbed \cite{tjuatjaLLMsExhibitHumanlike2024}.
+
+To the best of our knowledge, there has not yet been a proposed evaluation metric for vocabulary lists that can be done automatically and which outputs a simple numeric result.
+For this reason, in addition to our own evaluation approach utilizing AI models, we take some sample vocabulary lists, use our evaluation approach, and check whether the results align with human intuition.
+
+For this reason, our evaluation is not only concerned with analyzing statistics of measured efficiency, but also with whether the calculated efficiency values are reliable.
+The questions examined in this chapter can be summed up as:
+\begin{enumerate}
+	\item Does the efficiency evaluation of our list correspond with human intuition?
+	\item Does our generation approach outperform frequency-based approaches?
+	\item What are the upsides/downsides of each list generation approach (accuracy, speed, free choice of corpora)?
+	\item How can the various approaches be combined to supplement each other's weaknesses?
+\end{enumerate}
+
+\todo{Add section references when chapter structure is fixed}
+The following sections will first describe the (numeric) metrics used in the evaluation.
+We then introduce several baselines against which we compare our list generation approach.
+The baselines include both publicly available vocabulary lists from online language learning tools, and existing list compilation methods introduced in Section \ref{sec:frequency-based-list-generation-methods} in connection with the corpora used for our own lists for a more direct comparison.
+
+We then present the results of the evaluation, as well as discuss their implications. 
+
 \section{Evaluation Measures}
 
 The various utility extraction approaches produce ranked lists as outputs.
 To compare these, we employ both quantitative and qualitative comparison approaches, described in the following sections.
 
 \subsection{NLP Task Performance}
-The primary metric for evaluating a vocabulary list's efficiency will be the approach explained in Section \ref{sec:list-generation}: 
+The primary metric for evaluating a vocabulary list's efficiency will be the approach explained in Section \ref{sec:list-generation}:
 We let an AI model perform an NLP task with a vocabulary consisting of the first $k$ elements of the list.
 The limited vocabulary is simulated by removing words outside the vocabulary from the inputs to the model.
 We then progressively increase the vocabulary by increasing index $k$ until we reach the end of the list.
@@ -13,14 +39,23 @@ The increase of vocabulary size is exponential, as this will ensure a quick eval
 Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup:
 
 \todo{Edit surrounding descriptions of efficiency to be in line with pseudocode}
+
+\todo{
+	Explain that a performance score between 0 (worst input) and 1 (unaltered input) is used for normalization.
+}
 \input{listings/efficiency_evaluation_pseudocode.tex}
 
 This approach gives us a direct, quantitative metric for the efficiency of a vocabulary list.
 
+\todo{Say on which corpora the above approach is performed, and how the results are aggregated. Describe train/test splitting}
+When we find two approaches for list generation produces vocabulary lists of similar efficiencies, we might ask ourselves if these lists are similar:
+Can two lists which differ substantially in their ordering produce similar performance?
+To answer this question, the next section will introduce additional evaluation metrics which measure the similarity of two lists.
+
 \subsection{List Similarities}
-In order to compare the results provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
+In order to compare the resulting vocabulary lists provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
 While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
-A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered descendingly by supposed relevance, and outputs a real number giving either a distance or similarity between the lists.
+A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered in descending order by supposed utility, and outputs a real number giving either a distance or similarity between the lists.
 
 Considerations of the choice of metric are:
 
@@ -30,7 +65,7 @@ Considerations of the choice of metric are:
 	      Thus, a metric which solely compares ranks of elements is not viable.
 	\item [Start of lists is more impactful than end.]
 	      Since the beginning of lists contains the words which are ranked as most important, changes at the top should impact the metric more than changes at the bottom. This includes (1) Equal differences in rank should be counted as more important if they occur further up the list.
-	      A word that is rank 1 in list A but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
+	      A word that is rank 1 in list A, but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A, but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
 \end{description}
 
 \subsubsection{Metrics Used}
@@ -106,6 +141,17 @@ Considerations of the choice of metric are:
 \subsubsection{Tests of Applicability}
 [Results of preliminary tests of various metrics on own lists such as rank switching ,replacement at bottom and top of list etc.]
 
+\subsection{Sample text}
+\todo{Show a sample paragraph with first n words from each list. Can be used to intuitively evaluate utilities}
+In addition to the above automatic measures of list efficiency, we can also use human intuition to evaluate the various vocabulary lists:
+To compare vocabulary list up to some index $k$, we use a sample paragraph, and take the vocabulary $V_{l, k}$ of each of the lists.
+Then, we compare how the paragraph appears for each vocabulary if we blot out all words not in the vocabulary, in order to simulate the perspective of someone who only knows the words from the vocabulary.
+
+
+
+
+
+
 
 \section{Baselines}
 It may be useful to compare the lists generated by the various approaches with existing word lists from educational materials:
@@ -143,7 +189,7 @@ The next section will introduce some of these methods, which we will use to gene
 
 
 \subsection{Existing List Generation Methods}
-To get an impression of how well our XAI-based method for vocabulary list generation performs, it will be informative to test established methods for extracting important words from texts. 
+To get an impression of how well our XAI-based method for vocabulary list generation performs, it will be informative to test established methods for extracting important words from texts.
 
 \subsubsection{Raw Frequency}
 
@@ -151,19 +197,19 @@ Raw word frequency has been used as a criterion for which words to teach to lang
 Frequency is much less computationally intensive than any of the XAI-based approaches, as it only requires a tokenizer to be run on a corpus, without involving model calls.
 
 \subsubsection{Frequency, Without Stopwords}
-One drawback of using raw frequency the criterion by which to order vocabulary lists is that he most frequent words in most corpora will consist of stopwords.
-This can be seen in the following frequency word list from corpus [x]. 
+One drawback of using raw frequency the criterion by which to order vocabulary lists is that the most frequent words in most corpora will consist of stopwords.
+This can be seen in the following frequency word list from corpus [x].
 \todo{insert sample from raw frequency word list from corpora used in experiments }
 
 These words, while being the most generally useful, have very little meaning by themselves \cite{rajaraman2011data}.
 For this reason, they are often filtered out in the inputs of NLP tasks.
-Removing from the raw frequency-based word lists could be a way boost the lists's  efficiency, especially at the top of the list.
+Removing from the raw frequency-based word lists could be a way boost the list's  efficiency, especially at the top of the list.
 We therefore filter out known stop words, based on a list from the popular NLP library \textit{NLTK} \footnote{\url{https://www.nltk.org/}}.
 \footnote{The NLTK stopword list can be downloaded by following the instructions on \url{https://www.nltk.org/howto/corpus.html\#word-lists-and-lexicons}.}
 
 
 \subsubsection{TF-IDF}
-\todo{either finish this section or replace with collection frequency normalization}
+\todo{Either finish this section or replace with collection frequency normalization}
 To characterize the contents of a document, \cite{qaiserTextMiningUse2018}.
 TF-IDF has, to the best of our knowledge, not been considered for vocabulary list generation.
 However, it is often employed to find key terms in a document, which characterize the document's contents with a small number of words.
@@ -173,17 +219,42 @@ TF-IDF: The frequency of a word in the context-specific corpus, normalized again
 \subsection{LLM Prompts}
 In recent years, Large Language Models have become a popular tools for language learners to find new words to learn about specific areas.
 For this purpose, we run the following prompt to ChatGPT 3 for each context to get a sense of how well my method performs against this easy method.
-\todo{Prompt and results}
 
-\subsection{Sample text}
-\todo{Show a sample paragraph with first n words from each list. Can be used to intuitively evaluate utilities}
+Prompt:
 
+\begin{lstlisting}[caption={Prompt given to the language model.}, label={lst:blade_runner_prompt}, captionpos=b]
+	Given a learner of English who knows no English words so far:
+Give me a list of 50 words from the script of the movie "Blade Runner" that they can learn, such that when reading the full script, they have the best understanding of what they are reading.
+Order the list such that the most useful words appear at the top.
+Do not group the words, just generate a raw list.
+Do not number the bullet points. Do not put hyperlinks in the list.
+
+\end{lstlisting}
+\todo{results}
 
 \section{Results} \label{sec:results}
 \contentdescription{
-Discussion/Analysis [Interpretation of the results]
-Could you combine approaches with each other or baselines to  combine strength, what are the strengths/weakness of each approach
+	Pure Description of results without deep interpretations
 }
+
+\subsection{Correspondence of Efficiency Evaluation with Human Intuition}
+As mentioned in the introduction to this chapter, we will use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
+Before we present the results of these tests, however, we first establish that the performance of AI models is a reliable indicator that the list will be useful to humans as well.
+This section therefore examines several vocabulary lists tested on a corpus that should be familiar to most readers.
+
+We will compare the performances of the following lists:
+\begin{enumerate}
+	\item A list randomly selected from words in the corpus.
+	\item A list compiled from raw frequency.
+	\item A list compiled by single-token ablation.
+\end{enumerate}
+
+The full lists can be seen in the following table.
+
+\subsection{Performance Results}
+
 
 \section{Discussion}
 
+\contentdescription{Interpretation,
+	Could you combine approaches with each other or baselines to  combine strength, what are the strengths/weakness of each approach}
