@@ -1,22 +1,49 @@
 \begin{tabular}{llrrrrrrrr}
 \toprule
- &  & \multicolumn{4}{r}{performance} & \multicolumn{4}{r}{performance\_std} \\
- & vocab\_size & 10 & 40 & 160 & 640 & 10 & 40 & 160 & 640 \\
-generation\_method & generation\_model &  &  &  &  &  &  &  &  \\
+ &  & \multicolumn{4}{r}{Performance} & \multicolumn{4}{r}{Performance (σ)} \\
+ & Vocabulary Size & 10 & 40 & 160 & 640 & 10 & 40 & 160 & 640 \\
+Generation Method & Generation Model &  &  &  &  &  &  &  &  \\
 \midrule
-frequency & - & 0.14 & 0.29 & 0.59 & 0.88 & 0.15 & 0.25 & 0.31 & 0.21 \\
+Raw Frequency & - & 0.14 & 0.30 & 0.60 & 0.88 & 0.14 & 0.25 & 0.31 & 0.21 \\
 \cline{1-10}
-average-reduced-frequency & - & 0.14 & 0.28 & 0.58 & 0.88 & 0.14 & 0.24 & 0.31 & 0.21 \\
+Average Reduced Frequency & - & 0.14 & 0.29 & 0.58 & 0.88 & 0.14 & 0.24 & 0.31 & 0.21 \\
 \cline{1-10}
-tf-idf & - & 0.18 & 0.32 & 0.59 & 0.89 & 0.23 & 0.30 & 0.32 & 0.19 \\
+TF-IDF & - & 0.18 & 0.33 & 0.60 & 0.89 & 0.23 & 0.30 & 0.31 & 0.19 \\
 \cline{1-10}
-attention & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.17 & 0.33 & 0.62 & 0.92 & 0.20 & 0.29 & 0.31 & 0.16 \\
+Attention & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.17 & 0.33 & 0.62 & 0.92 & 0.20 & 0.29 & 0.31 & 0.16 \\
 \cline{1-10}
-single-token-ablation & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.19 & 0.35 & 0.64 & 0.94 & 0.23 & 0.30 & 0.31 & 0.12 \\
+Single Token Ablation & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.19 & 0.35 & 0.64 & 0.94 & 0.23 & 0.30 & 0.31 & 0.12 \\
 \cline{1-10}
-single-token-summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.14 & 0.27 & 0.56 & 0.84 & 0.14 & 0.23 & 0.31 & 0.25 \\
+Single Token Summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.14 & 0.27 & 0.56 & 0.84 & 0.14 & 0.23 & 0.31 & 0.25 \\
 \cline{1-10}
-summaries & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.17 & 0.29 & 0.61 & 0.93 & 0.24 & 0.30 & 0.32 & 0.12 \\
+Progressive Summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.18 & 0.31 & 0.63 & 0.93 & 0.24 & 0.30 & 0.31 & 0.12 \\
+\cline{1-10}
+\midrule
+\textbf{Mean} & \textbf{-} & \textbf{0.16} & \textbf{0.31} & \textbf{0.60} & \textbf{0.90} & \textbf{0.19} & \textbf{0.27} & \textbf{0.31} & \textbf{0.1} \\
 \cline{1-10}
 \bottomrule
 \end{tabular}
+
+
+% \begin{tabular}{llrrrrrrrr}
+% \toprule
+%  &  & \multicolumn{4}{r}{performance} & \multicolumn{4}{r}{performance\_std} \\
+%  & vocab\_size & 10 & 40 & 160 & 640 & 10 & 40 & 160 & 640 \\
+% generation\_method & generation\_model &  &  &  &  &  &  &  &  \\
+% \midrule
+% frequency & - & 0.14 & 0.29 & 0.59 & 0.88 & 0.15 & 0.25 & 0.31 & 0.21 \\
+% \cline{1-10}
+% average-reduced-frequency & - & 0.14 & 0.28 & 0.58 & 0.88 & 0.14 & 0.24 & 0.31 & 0.21 \\
+% \cline{1-10}
+% tf-idf & - & 0.18 & 0.32 & 0.59 & 0.89 & 0.23 & 0.30 & 0.32 & 0.19 \\
+% \cline{1-10}
+% attention & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.17 & 0.33 & 0.62 & 0.92 & 0.20 & 0.29 & 0.31 & 0.16 \\
+% \cline{1-10}
+% single-token-ablation & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.19 & 0.35 & 0.64 & 0.94 & 0.23 & 0.30 & 0.31 & 0.12 \\
+% \cline{1-10}
+% single-token-summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.14 & 0.27 & 0.56 & 0.84 & 0.14 & 0.23 & 0.31 & 0.25 \\
+% \cline{1-10}
+% summaries & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.17 & 0.29 & 0.61 & 0.93 & 0.24 & 0.30 & 0.32 & 0.12 \\
+% \cline{1-10}
+% \bottomrule
+% \end{tabular}
