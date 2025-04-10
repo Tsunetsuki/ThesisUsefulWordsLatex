@@ -209,7 +209,7 @@ This section will put forward our general criteria for corpus selection, followi
 \todo{when actual corpora are decided: Mention them in throughout this section too}
 
 
-\subsubsection{Document-Level Corpus}
+\subsubsection{Document-Level Corpus} \label{sec:document-level-corpus}
 The first desideratum for our corpora stems from our choice to use Next Sentence Prediction as one of our NLP tasks:
 As Next Sentence Prediction predicts whether one sentence is likely the continuation of another, it requires continuous sentences pairs to work.
 To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
@@ -234,10 +234,16 @@ For instance, while we can use a corpus such as \textit{Wikipedia} as a whole, t
 Such corpora are especially efficient for generating multiple contexts, hence we will make use of such corpora.
 
 
+\subsubsection{Rejected Corpora}
+\todo{Leipzig, Common Crawl}
+\subsubsection{Leipzig Wortschatz Corpora}
+Available in x languages
 
-\subsection{Corpora Used}
+But: data quality issues, methodology might be outdated
 
-\subsubsection{Background Corpus: mOscar}
+\cite{goldhahnBuildingLargeMonolingual2012}
+
+\subsection{Background Corpus: Oscar}
 For the implementation of TF-IDF, we require a generic background corpus to normalize raw word frequencies found in context-specific corpora (that is, to calculate the IDF part of TF-IDF).
 For this purpose, corpora crawled from the internet offer themselves as a diverse option:
 While we cannot be certain if some kinds of web pages will feature disproportionately in the final corpus, web content is diverse in that it encompassed both formal and informal content on many different topics.
@@ -255,7 +261,7 @@ There exist many versions of the Oscar dataset, but this work, the \textit{mOsca
 
 \todo{State number of documents used from Oscar corpus}
 
-\subsubsection{OpenSubtitles Parallel Corpus}
+\subsection{OPUS OpenSubtitles Parallel Corpus}
 This set of corpora contains parallel corpora:
 Corpora which has text segments in one language aligned with the presumed translation of the segment in a second language.
 Its sentences are generated from subtitles from the popular subtitle sharing platform \textit{OpenSubtitles} (https://www.opensubtitles.org/) and undergo various preprocessing and filtering steps as described in \cite{lisonOpensubtitles2016ExtractingLarge2016}.
@@ -284,7 +290,7 @@ As of 2025, the latest version of the corpus (v2018) contains aligned subtitles 
 	\label{fig:opensubs pipeline}
 \end{figure}
 
-\subsubsection{Wikipedia}
+\subsection{Wikipedia}
 \contentdescription{{
 			\begin{itemize}
 				\item advantages: diversity of topics, document level corpus which is not copyrighted, regularly updates dumps
@@ -293,11 +299,11 @@ As of 2025, the latest version of the corpus (v2018) contains aligned subtitles 
 			\end{itemize}
 		}}
 
+
 Wikipedia offers a large amount of data which can be downloaded in the form of dumps at \url{https://dumps.wikimedia.org/}.
 In this work, these dumps will be valuable in modeling various linguistic contexts that a language learner might be interested in.
 
 \paragraph{Advantages:}
-
 Wikipedia is a valuable resource for several reasons:
 It contains a vast number of articles, from a diverse set of topics.
 Wikipedia articles have categories assigned to them, which we can use to group articles into linguistic contexts.
@@ -322,7 +328,7 @@ Thus, we can see that texts on Wikipedia are of limited use to model linguistic 
 
 With these advantages and disadvantages in mind, this work uses Wikipedia articles and their associated metadata to make corpora of various sizes, as will be seen in the next section.
 
-\paragraph{Modeling Linguistic Contexts}
+\paragraph{Modeling Linguistic Contexts:}
 
 One of the chief advantages of Wikipedia as a corpus its diversity of covered topics.
 A language learner who is interested in a particular topic will likely find a matching article category on Wikipedia:
@@ -344,31 +350,64 @@ Therefore, in the single-article approach, both the list generation and evaluati
 % Categories therefore not not follow a tree structure, thus most articles belong to more than one top-level category.
 
 
+\paragraph{Pre-Processing:}
+In order to use Wikipedia articles as inputs to our word utility extraction approach, we perform pre-processing on the raw data to filter out source code, as well as chapter that we do not consider to be part of the article text.
+This section shortly describes this process.
 
-\subsubsection{Leipzig Wortschatz Corpora}
-Available in x languages
+In their raw form, Wikipedia dumps are written in a markup language called \textit{WikiCode}.
+To filter this code and obtain only natural language, we employ the \textit{mwparserfromhell} package \footnote{\url{https://github.com/earwig/mwparserfromhell}} to first strip the text of hyperlinks and markup, and also manually remove metadata such as article categories from the article text.
+Next, we filter out the text those sections under headings from a hard-coded list.
+This list was compiled by the author and can be seen in Table \ref{tbl:wikipedia-ignored-headings}.
+The reason for their exclusion is that these chapters are pure lists which do not contain full sentences, and thus unlikely to contribute to modeling a linguistic context.
 
-But: data quality issues, methodology might be outdated
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|}
+		\hline
+		\textbf{Section Titles} \\
+		\hline
+		References              \\
+		See also                \\
+		External links          \\
+		Further reading         \\
+		Notes                   \\
+		Bibliography            \\
+		Filmography             \\
+		Discography             \\
+		Published works         \\
+		Sources                 \\
+		Citations               \\
+		\hline
+	\end{tabular}
+	\caption{Common non-article sections in Wikipedia articles}
+	\label{tbl:wikipedia-ignored-headings}
+\end{table}
 
-\cite{goldhahnBuildingLargeMonolingual2012}
+Finally, we split the article into individual sentences with the \textit{NLTK} python library \footnote{\url{https://www.nltk.org/}}.
+Which these pre-processing steps, we attain a corpus which mostly contains full	sentences which describe the article's topic.
 
-\subsubsection{CCMatrix / NLLB}
 
-% \subsection{Data Augmentation}
-% Data Augmentation was not used to gain additional data.
-% While in recent years data augmentation methods have become popular for training AI models in NLP, most of these would have either no or a detrimental effect on the methods employed in this work
-% Some of these methods include \cite{pellicerDataAugmentationTechniques2023}:
-% \begin{description}
-% 	\item[Character level]
-% 	      Introducing character swaps to data is a method used to train the model to noise in the data, but in our case, would only add noise to the results.
-% 	\item[Word level]
-% 	      There exist techniques to switch words for synonyms or swap words in the sentences to create noise.
-% 	      As with noise on the word level, adding words in inappropriate places is undesired for our use case.
-% 	      Swapping words for synonyms would also prove detrimental, as this would skew the statistics away from the natural word distribution found in the human-generated source texts.
-% \end{description}
-% Higher level techniques suffer from the same issues.
-% For this reason, the data is left in its "natural state" for our purposes.
-%
+\subsection{Construction of NSP Corpora}
+As mentioned in Section {sec:document-level-corpus}, the Next Sentence Prediction task requires consecutive sentences in order to be performed.
+Out of the two context-specific corpus types which we employ, only Wikipedia articles consist of such consecutive sentences.
+This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubs corpora was essentially equal to that of random guessing.
+Thus, the NSP task is only performed on Wikipedia articles.
+The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
+We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
+
+\subsection{Corpus Characteristics}
+We have described the sources of the corpora used in the implementation of our approach, but to gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
+It can readily be seen that, while the corpora taken from the OpenSubs subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (20.2 vs. 6.1 words per line).
+This makes sense, as Wikipedia articles are written in an academic style, while movie subtitles tend to be more informal.
+Wikipedia articles also contain a higher number of unique words on average, despite containing a lower number of words in total.
+This may hint at a higher diversity of vocabulary employed in articles, although a higher number of named entities may also contribute to the higher count of unique words.
+
+\begin{table}[ht]
+	\centering
+	\input{data/corpus_sizes.tex}
+	\caption{General statistics on corpora.}
+	\label{tbl:corpus-sizes}
+\end{table}
 
 \section{XAI Methods} \label{sec:xai-methods}
 In order to appraise the influence of words in a corpus on the performance of the AI model performing and NLP task, this work employs Explainable AI methods, as explained in Section \ref{sec:xai-as-tools-of-analysis}.
@@ -379,18 +418,27 @@ We will employ local, feature attribution XAI methods of both model-specific and
 Model-specific methods have an advantage in that they typically do not require many model calls to attribute importances to features, and take the model structure into account.
 On the other hand, model-agnostic methods are useful in that they can be used on any model and gauge the input-output relationship by performing actual experiments on the model, by observing the way changes to input change the output of the model.
 
-In addition to these taxonomical specifications, an ideal XAI method for word extraction should be both accurate in its feature attributions and should not require extensive computation.
+In addition to these taxonomic specifications, an ideal XAI method for word extraction should be both accurate in its feature attributions and should not require extensive computation.
 Apart from the benefit of attaining faster results, a computationally lightweight approach allows the model to process more data in less time, presumably boosting the accuracy of the resulting utility evaluation.
 
+There is one further desideratum which we impose for XAI methods:
+The XAI method should allow for processing the input sentences in its original form and not, as is common with many XAI methods, as a \textit{bag of words}:
+Some methods, such as SHAP and LIME \missingcitation{SHAP, LIME}, can only operate on tasks with a fixed number of features.
+When they are employed to explain the decisions of AI models taking whose input is in text format, the words of the sentences are first converted to vector form and provided as mutually independent vectors the model, destroying the information of word order and thus of syntactic relations between words.
+This may lead the methods to attribute low importance to words such as "not", which only have an effect in combination with other words.
+For this reason, we did not employ popular XAI methods SHAP and LIME in this work.
+
+
 In the following sections, we will propose several concrete XAI methods for use with the described list generation approach.
-The relationship of the XAI methods to the NLP tasks will also be discussed, as not every XAI method is feasible with every task, either because of unrealistic amount of computation or because the results of the combination are difficult to evaluate.
+The relationship of the XAI methods to the NLP tasks will also be discussed, as not every combination of XAI method - NLP task is feasible, either because of unrealistic amount of computation or because the results of the combination are difficult to evaluate.
 The results of the experiments with these methods will be seen in Chapter \ref{ch:evaluation}.
-\todo{argue against approaches where the input is reduced to BOW, such as SHAP}
 
 \subsection{Model-Agnostic Approaches}
-\contentdescription{
-	Single Token Ablation, Progressive Summary with
-}
+This section will introduce three model-agnostic XAI methods which we used in the implementation to generate vocabulary lists:
+All of them work by perturbing the inputs to the model and analyzing the changes in output.
+The difference between them is how the perturbation is done:
+Single Token Ablation removes single tokens from the inputs, whereas Single Token Summary works by setting the input to a single token.
+The third method, Progressive Summary, attempts to find the most important words in sentences by iteratively building up the input sentence, one token at a time.
 
 \subsubsection{Single Token Ablation}
 Our aim in using XAI methods is to find out which words, if known, improve the model's performance the most, when compared to not knowing the word.

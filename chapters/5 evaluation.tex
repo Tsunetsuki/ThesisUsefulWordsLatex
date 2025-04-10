@@ -47,7 +47,22 @@ Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup
 
 This approach gives us a direct, quantitative metric for the efficiency of a vocabulary list.
 
-\todo{Say on which corpora the above approach is performed, and how the results are aggregated. Describe train/test splitting}
+As an illustration, we present the results of one such efficiency evaluation run on a corpus can be seen in Figure \ref{fig:marlon-brando-eval}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{marlon-brando-eval.png}
+	\caption{Efficiency evaluation results on vocabulary lists for the Wikipedia Article of American actor Marlon Brando \url{https://en.wikipedia.org/wiki/Marlon_Brando}.}
+	\label{fig:marlon-brando-eval}
+\end{figure}
+
+To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the Sentence Embedding model.
+The vocabularies are evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
+The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
+
+To compare the results on a broader scale, we aggregate the results of the evaluation runs for each corpus type, word utility extraction method and AI model (where applicable) by taking the average performance of the generated vocabulary list, with vocabulary sizes 10, 40, 160, and 640.
+
+
+\todo{Describe train/test splitting}
 When we find two approaches for list generation produces vocabulary lists of similar efficiencies, we might ask ourselves if these lists are similar:
 Can two lists which differ substantially in their ordering produce similar performance?
 To answer this question, the next section will introduce additional evaluation metrics which measure the similarity of two lists.
