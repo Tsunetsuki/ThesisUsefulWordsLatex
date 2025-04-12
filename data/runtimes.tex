@@ -1,0 +1,24 @@
+\begin{tabular}{lllr}
+\toprule
+ &  & \multicolumn{2}{r}{Runtime [s]} \\
+ & Corpus Type & OpenSubs Subtitle & Wikipedia Article \\
+Generation Method & Generation Model &  &  \\
+\midrule
+Raw Frequency & - & 0.3 & 0.4 \\
+\cline{1-4}
+Average Reduced Frequency & - & 0.4 & 0.5 \\
+\cline{1-4}
+TF-IDF & - & 5.4 & 5.5 \\
+\cline{1-4}
+\multirow[t]{2}{*}{Attention} & NSP & - & 244.7 \\
+ & Sent. Embedding & 62.5 & 28.3 \\
+\cline{1-4}
+\multirow[t]{2}{*}{Single Token Ablation} & NSP & - & 575.0 \\
+ & Sent. Embedding & 120.0 & 99.2 \\
+\cline{1-4}
+Single Token Summary & Sent. Embedding & 115.9 & 90.8 \\
+\cline{1-4}
+Progressive Summary & Sent. Embedding & 838.4 & 1278.8 \\
+\cline{1-4}
+\bottomrule
+\end{tabular}

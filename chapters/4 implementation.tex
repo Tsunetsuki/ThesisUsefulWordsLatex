@@ -397,7 +397,7 @@ We do not construct negative examples, for the reason that the most words with t
 
 \subsection{Corpus Characteristics}
 We have described the sources of the corpora used in the implementation of our approach, but to gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
-It can readily be seen that, while the corpora taken from the OpenSubs subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (20.2 vs. 6.1 words per line).
+It can readily be seen that, while the corpora taken from the OpenSubs subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (over three times longer on average than the sentences in subtitles).
 This makes sense, as Wikipedia articles are written in an academic style, while movie subtitles tend to be more informal.
 Wikipedia articles also contain a higher number of unique words on average, despite containing a lower number of words in total.
 This may hint at a higher diversity of vocabulary employed in articles, although a higher number of named entities may also contribute to the higher count of unique words.
@@ -405,8 +405,21 @@ This may hint at a higher diversity of vocabulary employed in articles, although
 \begin{table}[ht]
 	\centering
 	\input{data/corpus_sizes.tex}
-	\caption{General statistics on corpora.}
+	\caption{General statistics on corpora, per corpus type.}
 	\label{tbl:corpus-sizes}
+\end{table}
+
+
+For a more granular overview, we also show these metrics for individual categories in Table \ref{tbl:corpus-sizes-per-wiki-category}.
+Most obvious is the fact that the articles of World War II political leaders are, on average, much longer than those films or actors of either gender.
+Another notable pattern is that the articles of male actors tend to be longer than those of their female counterparts.
+
+
+\begin{table}[ht]
+	\centering
+	\input{data/corpus_sizes_wikipedia_categories.tex}
+	\caption{General statistics on corpora, per Wikipedia article category.}
+	\label{tbl:corpus-sizes-per-wiki-category}
 \end{table}
 
 \section{XAI Methods} \label{sec:xai-methods}

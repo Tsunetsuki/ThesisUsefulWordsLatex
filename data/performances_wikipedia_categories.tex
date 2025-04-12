@@ -1,0 +1,28 @@
+\begin{tabular}{llrrrrrrrrrrrr}
+\toprule
+ &  & \multicolumn{6}{r}{Performance} & \multicolumn{6}{r}{Performance ($\sigma$)} \\
+ & Vocabulary Size & 10 & 40 & 160 & 640 & 2560 & 10240 & 10 & 40 & 160 & 640 & 2560 & 10240 \\
+Generation Method & Generation Model &  &  &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+Raw Frequency & - & 0.20 & 0.25 & 0.39 & 0.57 & 0.76 & 0.89 & 0.16 & 0.17 & 0.20 & 0.20 & 0.16 & 0.12 \\
+\cline{1-14}
+Average Reduced Frequency & - & 0.20 & 0.25 & 0.38 & 0.56 & 0.74 & 0.88 & 0.16 & 0.17 & 0.19 & 0.20 & 0.17 & 0.12 \\
+\cline{1-14}
+TF-IDF & - & 0.22 & 0.28 & 0.40 & 0.58 & 0.77 & 0.89 & 0.17 & 0.19 & 0.20 & 0.20 & 0.17 & 0.12 \\
+\cline{1-14}
+\multirow[t]{2}{*}{Attention} & nsp-bert & 0.20 & 0.27 & 0.39 & 0.56 & 0.71 & 0.85 & 0.16 & 0.18 & 0.20 & 0.20 & 0.17 & 0.13 \\
+ & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.20 & 0.26 & 0.38 & 0.55 & 0.71 & 0.85 & 0.16 & 0.18 & 0.20 & 0.20 & 0.17 & 0.13 \\
+\cline{1-14}
+\multirow[t]{2}{*}{Single Token Ablation} & nsp-bert & 0.20 & 0.26 & 0.39 & 0.55 & 0.72 & 0.86 & 0.16 & 0.17 & 0.19 & 0.20 & 0.17 & 0.12 \\
+ & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.21 & 0.24 & 0.39 & 0.55 & 0.72 & 0.86 & 0.17 & 0.18 & 0.20 & 0.20 & 0.17 & 0.12 \\
+\cline{1-14}
+Single Token Summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.20 & 0.26 & 0.38 & 0.55 & 0.71 & 0.86 & 0.16 & 0.17 & 0.19 & 0.20 & 0.17 & 0.12 \\
+\cline{1-14}
+Progressive Summary & sent-transform\_paraphrase-MiniLM-L6-v2 & 0.19 & 0.25 & 0.37 & 0.53 & 0.70 & 0.86 & 0.17 & 0.19 & 0.20 & 0.20 & 0.18 & 0.12 \\
+\cline{1-14}
+\midrule
+\textbf{[Mean]} & \textbf{-} & \textbf{0.20} & \textbf{0.26} & \textbf{0.39} & \textbf{0.56} & \textbf{0.73} & \textbf{0.87} & \textbf{0.16} & \textbf{0.18} & \textbf{0.20} & \textbf{0.20} & \textbf{0.17} & \textbf{0.1} \\
+\cline{1-14}
+\bottomrule
+\end{tabular}
+
