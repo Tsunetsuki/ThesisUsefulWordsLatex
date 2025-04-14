@@ -78,9 +78,7 @@ For this reason, we do not consider tasks such as part-of-speech tagging and tex
 
 \subsubsection{Ease of Evaluation} \label{sec:ease-of-evaluation}
 To ensure we can measure task performance, we must also choose a task whose results can be easily compared with each other:
-Some tasks, such as text summarization, present a challenge for automatic evaluation:
-It is difficult to put a number on how similar two summaries of a text are.
-While evaluation measures, such as BLEU scores\tocite{BLEU}, exist, it is questionable how well they capture the similarity between texts, because they do not recognize the semantic similarity of synonyms, and a different sentence structure will result in a low BLEU score even if the actual meaning of the sentences may be very close.
+Some tasks are difficult to evaluate objectively, or the evaluation takes an inordinate amount of computation (see Section \ref{sec:text-summarization} on text summarization).
 It follows that if we have the freedom to choose NLP tasks whose results can be automatically evaluated with good accuracy, we should choose them.
 
 
@@ -137,12 +135,17 @@ While predicting whether two sentences are consecutive may not seem like a trans
 For these reasons, we use the NSP task in our word evaluation approach.
 
 
-\subsubsection{Text Summarization}
-This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible.
+\subsubsection{Text Summarization} \label{sec:text-summarization}
+This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible \cite{radevIntroductionSpecialIssue2002}.
 Summarizing texts accurately would seem to require a high level of understanding of the text, and thus be good choice for testing whether ablating certain words from the text has detrimental effect on the model performance.
-Unfortunately, this tasks is not appropriate for our purposes with respect to our other desiderata:
-Firstly, it requires hand-crafted "ground truth" summary datasets, making its use for low-resource languages problematic.
-Secondly, even where datasets exist, evaluating the quality of a summary with respect to another is rather subjective (see Section \ref{sec:ease-of-evaluation}).
+Unfortunately, this tasks is not appropriate for our purposes with respect to our other desiderata, because evaluating the quality of a summary is a very challenging task:
+It involves a ground truth summary which is usually manually created, against which another summary is compared.
+This already makes the use of this task problematic for low-resource languages, as there exist fewer text summarization datasets for them.
+However, even assuming sufficient data, the comparison of two summaries is difficult:
+A standard way of evaluating summaries are ROUGE scores \cite{allahyariTextSummarizationTechniques2017}:
+
+These measure the overlap of n-grams (word sequences) between two texts.
+However, it is questionable how well they capture the similarity between texts, because they do not recognize the semantic similarity of synonyms, and a different sentence structure will result in a low ROUGE score even if the actual meaning of the sentences may be very close.
 For these reasons, we do not use text summarization in our implementation.
 
 \missingcitation{Popular text summarization dataset}
