@@ -28,7 +28,7 @@ We can subdivide the overarching goal of word utility evaluation into three rela
 	\item Generating maximally efficient lists of words to learn.
 \end{itemize}
 
-This section will put utility and efficiency into mathematical terms, to provide a clearer explanation of the variables involved in these tasks and their relationship.
+This section puts utility and efficiency into mathematical terms, to provide a clearer explanation of the variables involved in these tasks and their relationship.
 
 \subsubsection{Proxy Task}
 Since utility is defined in terms of language ability, we first need a way to put a number on the language ability of a test subject. This is done by means of a proxy task: We can imagine a human test subject taking a language exam as a proxy task to find out their language ability:
@@ -114,7 +114,7 @@ Finding vocabulary lists that approximate an optimal list according to formula \
 
 With the formula \ref{eq:optimal-vocab-list}, we now have set our goal more concretely.
 We are left with the question of how to design an actual experiment to test vocabulary list efficiency, and also how to generate one that is approximates an optimal list.
-Hence, this section lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will, however, be found to suffer from problems of feasibility, which the following section will set out to solve.
+Hence, this section lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will, however, be found to suffer from problems of feasibility, our solution to which is explained in Section \ref{sec:experimental-setup-with-ai}.
 
 \subsubsection{Experimental Setup}
 Let us first consider an example scenario, where we wish to measure the efficiency of one vocabulary list $l_A$ at $k=200$, $k=500$ and $k=2000$ words:
@@ -146,7 +146,7 @@ However, we have established that the experiment is not easy to set up consisten
 
 To circumvent this issue, this work proposes the following idea:
 To replace the human test subject in the experiment described in Section \ref{sec:human-efficiency-testing} with an AI model, facilitating a consistent and economical setup.
-The following paragraphs will lay out how, in such a setup, we can model the concepts from Section \ref{sec:statement-of-goal} such as linguistic context and utility with technological tools.
+The following paragraphs discuss how, in such a setup, we can model the concepts from Section \ref{sec:statement-of-goal} such as linguistic context and utility with technological tools.
 
 \subsubsection{AI as a Test Subject} \label{sec:ai-as-test-subject}
 In recent years, AI models such as ChatGPT \tocite{cite ChatGPT} or BERT \tocite{cite BERT} have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition and Sentiment Detection.
@@ -167,8 +167,8 @@ Let a pre-trained AI model perform its NLP task on a corpus.
 At the start, we mask all the tokens in the input to simulate a language learner who is a complete beginner and thus knows no words in their target language.
 We then progressively unmask the words from the vocabulary list in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
 
-This will yield a plot of performance over unmasked words which will tell us how quickly the performance improves with unmasked words, similar to Figure \ref{fig:voc-list-efficiency}.
-A quickly increasing performance will correspond to an efficient vocabulary list, whereas an inefficient list will create a plot with low initial gains in performance.
+This yields a plot of performance over unmasked words which shows how quickly the performance improves with unmasked words, similar to Figure \ref{fig:voc-list-efficiency}.
+A quickly increasing performance corresponds to an efficient vocabulary list, whereas an inefficient list creates a plot with low initial gains in performance.
 
 The modified experiment addresses the two issues proposed with the original setup:
 It is cheap when compared to using a human test subject and unlike the human, the AI model has no memory of previous tests, meaning we can run the experiment consistently every time.
@@ -186,8 +186,8 @@ The evaluation of the vocabulary list efficiency in the experiment will depend o
 We have already addressed the role of the AI model in Section \ref{sec:ai-as-test-subject}.
 The corpus and the NLP task performed by the model will also influence how quickly the AI model's performance increases with a given vocabulary list:
 
-For example, when performing Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than if for an Information Retrieval task such as Temporal Tagging.
-The corpus will have a more obvious influence on the performance, since corpora differ in many aspects such as formality, topic, and format of the text, all of which are components of a linguistic context.
+For example, when performing Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than for an Information Retrieval task such as Temporal Tagging.
+The corpus has a more obvious influence on the performance, since corpora differ in many aspects such as formality, topic, and format of the text, all of which are components of a linguistic context.
 Thus, by using diverse corpora, we can model various language contexts, and test word utility in those contexts.
 Once we have efficient vocabulary lists across those contexts, a language learners could choose one or several of these lists, based on what linguistic context is closest to their language learning goals.
 
@@ -212,7 +212,7 @@ Table \ref{table:concept-implementation-correspondence} summarizes the correspon
 	\label{table:concept-implementation-correspondence}
 \end{table}
 
-The next section will tackle the problem of how to not only test list efficiency, but make lists that approach an optimally efficient list.
+The next section discusses the problem of how to not only test list efficiency, but make lists that approach an optimally efficient list.
 
 \section{Evaluating vs. Making Lists of Useful Vocabulary} \label{sec:eval-vs-creation}
 The previous section describes an approach for evaluating the efficiency of vocabulary lists, which measures how quickly the list lets a learner improve their understanding in a specific context.
@@ -224,7 +224,7 @@ Let us suppose we wish to find the most efficient vocabulary list of 1,000 words
 To speed up list generation, we can make a preselection by allowing only the most frequent 20,000 words in the context as candidate members of this list.
 This would yield a total number of $P(20000, 1000) = \frac{20000!}{19000!}$ possible vocabulary lists, all of which would need to be tested for efficiency to find the most efficient one.
 
-We can optimize the evaluation process, however, since these tests consist of running the proxy task with a gradually increasing vocabulary, and each vocabulary will be used in the evaluation for many vocabulary lists.
+We can optimize the evaluation process, however, since these tests consist of running the proxy task with a gradually increasing vocabulary, and each vocabulary is used in the evaluation for many vocabulary lists.
 For our example, a vocabulary is a set of words formed by taking the first $n$ elements of the vocabulary list where $n \in [0, 1000]$.
 If we only consider the number of possible vocabularies with a cardinality between 0 and 1,000, we get
 $
@@ -232,7 +232,7 @@ $
 $ runs of the proxy task. Clearly, this is still an unfeasible amount of computation.
 
 It can thus be seen that finding optimal vocabulary list is much too expensive when performed with a brute-force approach.
-For this reason, the next section will introduce an alternative method for finding efficient lists of vocabulary, based on XAI as a tool which extracts information about the linguistic skills of AI models.
+For this reason, the next section introduces an alternative method for finding efficient lists of vocabulary, based on XAI as a tool which extracts information about the linguistic skills of AI models.
 
 \section{Generating Efficient Lists of Vocabulary} \label{sec:list-generation}
 
@@ -251,7 +251,7 @@ Put like this, the question is very close to the questions that the field of Exp
 A typical question of Explainable AI would be:
 \textit{Why, for a given input, does the model arrive at its output?}. \tocite{Definition of XAI. How to not make this seem like a direct quote?}
 To be more precise, this is a question for a \textit{local} explanation (see Section \ref{sec:xai-methods}).
-As mentioned in Section \ref{sec:xai-methods}, we will use Feature Attribution methods, which for an NLP task transform the question into:
+As mentioned in Section \ref{sec:xai-methods}, we use feature importance attribution methods, which, for an NLP task, transforms the question into:
 \textit{Which words in the input have the most influence on the model arriving at its output?}
 
 By answering this question on a statistically relevant sample of individual inputs from a corpus, we can find out which words are the most essential for the AI model to perform its task in the corpus overall.
@@ -264,10 +264,9 @@ In other words, our approach ignores possible synergistic effects between words.
 
 By adding XAI as a tool for analyzing the interaction of the AI model with the corpus, we finally have an experimental setup for generating efficient vocabulary lists.
 This is not a replacement of the approach described in Section \ref{sec:ai-as-test-subject}.
-Rather, this work will use the generation approach to make lists (Chapter \ref{ch:implementation}), and the evaluation approach for testing which of these lists are the most efficient (Chapter \ref{ch:evaluation}).
-
-In the next section, we will tackle the implementation of this approach.
-We will present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
+Rather, this work uses the generation approach to make lists (Chapter \ref{ch:implementation}), and the evaluation approach for testing which of these lists are the most efficient (Chapter \ref{ch:evaluation}).
+In the next section, we discuss the implementation of this approach.
+We present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
 
 %
 % It is readily seen that these components are not independent of each other.

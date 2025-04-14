@@ -18,7 +18,7 @@ The questions examined in this chapter can be summed up as:
 \end{enumerate}
 
 \todo{Add section references when chapter structure is fixed}
-The following sections will first describe the (numeric) metrics used in the evaluation.
+The following sections first describe the (numeric) metrics used in the evaluation.
 We then introduce several baselines against which we compare our list generation approach.
 The baselines include both publicly available vocabulary lists from online language learning tools, and existing list compilation methods introduced in Section \ref{sec:frequency-based-list-generation-methods} in connection with the corpora used for our own lists for a more direct comparison.
 
@@ -30,11 +30,11 @@ The various utility extraction approaches produce ranked lists as outputs.
 To compare these, we employ both quantitative and qualitative comparison approaches, described in the following sections.
 
 \subsection{NLP Task Performance}
-The primary metric for evaluating a vocabulary list's efficiency will be the approach explained in Section \ref{sec:list-generation}:
+Our primary metric for evaluating a vocabulary list's efficiency is the approach explained in Section \ref{sec:list-generation}:
 We let an AI model perform an NLP task with a vocabulary consisting of the first $k$ elements of the list.
 The limited vocabulary is simulated by removing words outside the vocabulary from the inputs to the model.
 We then progressively increase the vocabulary by increasing index $k$ until we reach the end of the list.
-The increase of vocabulary size is exponential, as this will ensure a quick evaluation and performance is expected to not grow very much towards the end of the list, where the less useful words should be (this assumption can be confirmed in the evaluation results in Section \ref{sec:results}).
+The increase of vocabulary size is exponential, as this ensures a quick evaluation and performance is expected to not grow very much towards the end of the list, where the less useful words should be (this assumption can be confirmed in the evaluation results in Section \ref{sec:results}).
 
 Listing \ref{alg:efficiency-evaluation} shows pseudocode for the described setup:
 
@@ -65,7 +65,7 @@ To compare the results on a broader scale, we aggregate the results of the evalu
 \todo{Describe train/test splitting}
 When we find two approaches for list generation produces vocabulary lists of similar efficiencies, we might ask ourselves if these lists are similar:
 Can two lists which differ substantially in their ordering produce similar performance?
-To answer this question, the next section will introduce additional evaluation metrics which measure the similarity of two lists.
+To answer this question, the next section introduces additional evaluation metrics which measure the similarity of two lists.
 
 \subsection{List Similarities}
 In order to compare the resulting vocabulary lists provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
@@ -200,11 +200,11 @@ While the context specificity of this work's utility extraction method is a majo
 
 However, apart from pre-existing lists, there also exist pre-existing \textbf{methods} of finding important words in texts, which we can also use as baselines to compare with our method.
 These also use corpora, but not AI models or XAI methods to find important words.
-The next section will introduce some of these methods, which we will use to generate comparison lists to our own.
+The next section introduces some of these methods, which we use to generate comparison lists to our own.
 
 
 \subsection{Existing List Generation Methods}
-To get an impression of how well our XAI-based method for vocabulary list generation performs, it will be informative to test established methods for extracting important words from texts.
+To get an impression of how well our XAI-based method for vocabulary list generation performs, it is informative to test established methods for extracting important words from texts.
 
 \subsubsection{Raw Frequency}
 
@@ -212,7 +212,7 @@ Raw word frequency has been used as a criterion for which words to teach to lang
 Frequency is much less computationally intensive than any of the XAI-based approaches, as it only requires a tokenizer to be run on a corpus, without involving model calls.
 
 \subsubsection{Frequency, Without Stopwords}
-One drawback of using raw frequency the criterion by which to order vocabulary lists is that the most frequent words in most corpora will consist of stopwords.
+One drawback of using raw frequency as the criterion by which to order vocabulary lists is that the most frequent words in most corpora consist of stopwords.
 This can be seen in the following frequency word list from corpus [x].
 \todo{insert sample from raw frequency word list from corpora used in experiments }
 
@@ -253,11 +253,11 @@ Do not number the bullet points. Do not put hyperlinks in the list.
 }
 
 \subsection{Correspondence of Efficiency Evaluation with Human Intuition}
-As mentioned in the introduction to this chapter, we will use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
-Before we present the results of these tests, however, we first establish that the performance of AI models is a reliable indicator that the list will be useful to humans as well.
+As mentioned in the introduction to this chapter, we use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
+Before we present the results of these tests, however, we must first establish that the performance of AI models is a reliable indicator that the list is useful to humans as well.
 This section therefore examines several vocabulary lists tested on a corpus that should be familiar to most readers.
 
-We will compare the performances of the following lists:
+We compare the performances of the following lists:
 \begin{enumerate}
 	\item A list randomly selected from words in the corpus.
 	\item A list compiled from raw frequency.
