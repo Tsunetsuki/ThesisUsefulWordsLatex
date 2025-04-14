@@ -1,6 +1,6 @@
 Chapter \ref{ch:approach} has formalized the problem and put forward a novel framework for finding useful words, consisting of two major functionalities:
 Vocabulary list generation, and vocabulary list evaluation.
-The list evaluation approach, described in Section \ref{sec:experimental-setup-with-ai}, utilizes the performance of an AI model, corpus, proxy task as a proxy metric for language ability, in order to estimate how efficiently the vocabulary list may help a human language learner acquire competency.
+The list evaluation approach, described in Section \ref{sec:experimental-setup-with-ai}, utilizes the performance of an AI model on an NLP task with a context-specific corpus as input as a proxy metric for language ability, in order to estimate how efficiently the vocabulary list may help a human language learner acquire competency.
 The list generation approach, proposed in Section \ref{sec:list-generation}, additionally uses Explainable AI as a tool for analyzing the interaction of the AI model with the corpus to compile vocabulary lists that approach maximal efficiency.
 
 In this chapter, we will describe our implementation, mostly of the list generation approach.
@@ -9,7 +9,7 @@ However, the evaluation with our approach will use the same components as the li
 
 The first section describes the implementation of the list generation approach from a system design perspective, describing the interaction between the individual components.
 
-The choice of components in the system is then argued in the following sections, each of which will feature section describing the desiderata of the component choice are and why, followed by the selection of concrete components.
+The choice of components in the system is then argued in the following sections, each of which will feature a section where we argue for the desiderata of the specific component on the basis of our aim as stated in Section \ref{sec:formal-problem-statement}, followed by the selection of concrete components.
 \todo{Write rest of introduction when chapter structure stands. }
 
 \section{Data Pipeline}
@@ -18,8 +18,8 @@ This section will give a top-level overview of our implementation for the list g
 As mentioned before, the main components of this approach are:
 
 \begin{itemize}
-	\item An NLP task, which models a language ability of a language learner.
 	\item An AI model, used as a test subject.
+	\item An NLP task, the score in which is used as a proxy metric for the language ability of the test subject.
 	\item A context-specific corpus, to model a language context.
 	\item An XAI method, which analyzes the interaction of the AI model with the corpus to determine word utilities.
 	\item If the XAI method allows: A tokenizer, determining the words to be analyzed.
@@ -30,37 +30,30 @@ The interaction of these components can be seen in pseudocode in Algorithm \ref{
 
 \input{listings/efficient_list_generation_pseudocode.tex}
 
-The choice of individual components will be tackled by the following sections.
-Because of some dependencies between the components, not all of these components have their own sections
+The XAI method outputs the importance attributions in the form of one number for each unique word in each input line.
+The results are aggregated by taking the sum across all lines in the corpus, resulting in a list of word-utility pairs, which reflect the estimated utility of the word with respect to the entire corpus.
+To make a vocabulary list from these words, we simply order the words by their estimated corpus utility in descending order.
+
+With this basic structure established, the following sections address the selection of individual components.
+Due to the interdependencies between certain components, not all are presented in separate sections.
 The NLP task performed depends on the AI model that we use, as most AI models are trained on only one task.
 Therefore, the choice of AI model is discussed together with the NLP task in the next section.
 
 \section{NLP Tasks and AI Models}
-The NLP task and the corpus used for list generation
+Our approaches for list efficiency evaluation and for efficient list generation use an AI model with an NLP task to simulate a test subject performing a language exam.
+Because of this, the AI model and task chosen are a crucial component of these approaches, and their selection is among the most important in the implementation.
+The NLP tasks we choose also influence what corpora we can use for their execution:
+The NLP task of next sentence prediction requires continuous texts as input data, necessitating input corpora containing whole documents, not just individual sentences.
 
-There are many NLP tasks we could choose from \tocite{huggingface NLP task list or something}.
-But not all are equally suitable.
-This section will first put forward criteria for selecting NLP tasks in Section \ref{sec:nlp-tasks-desiderata} for word utility evaluation.
+This section first puts forward criteria for selecting NLP tasks in Section \ref{sec:nlp-tasks-desiderata} for word utility evaluation.
 % After this, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
-After the final selection, we will be left with two tasks which, in the estimation of the author of this work, are the most suitable for our word utility evaluation approach, namely \textit{Next Sentence Prediction} and \textit{Sentence Embedding}.
+After the final selection, we will be left with two tasks which, in the estimation of the author of this work, are suitable for our word utility evaluation approach, namely \textit{next sentence prediction} and \textit{sentence embedding}.
 These NLP tasks we choose dictate the format of our input data, i.e., the corpora we can use.
 Therefore, the selection of corpora will be discussed after the choice of NLP is finalized.
 
 \subsection{Desiderata} \label{sec:nlp-tasks-desiderata}
 
-\contentdescription{
-	{
-			\begin{itemize}
-				\item Support many languages
-				\item Be as close to human need as possible
-				\item $\rightarrow$ task should show general language understanding
-				\item data is easy to acquire
-				\item $\rightarrow$ data should be freely available for lots of contexts
-				\item $\rightarrow$ no need for manual labeling of data
-			\end{itemize}
-		}}
-
-This section will put forward four criteria for selecting NLP tasks for word utility extraction:
+This section will put forward four criteria for selecting NLP tasks for word utility extraction, arising from our underlying goal of using the task as a proxy for real language interaction of a human being:
 The availability of many multilingual AI models and corpora usable as input for the task, generality of the task and ease of evaluation.
 These criteria will be used in the next section to select concrete tasks for our implementation.
 
@@ -68,40 +61,38 @@ These criteria will be used in the next section to select concrete tasks for our
 The goal of this work is to find approaches to find useful words for the purpose of language learning.
 Much research in Natural Language Processing is dedicated to improving NLP performance in English and other high-resource languages such as Spanish, French or Mandarin Chinese \tocite{resource availability in various languages}.
 This has the consequence that many AI models and other NLP methods achieve high levels of performance only in these languages, and many AI models are only available in English or only a small number of languages.
-However, there are over 7,000 languages in the world \tocite{Ethnologue}, and for many of these there exist corpora, or online digital texts which could hypothetically be used as inputs for our word utility extraction approach.
-For this reason, our implementation strives to realize word utility extraction in \textbf{as many languages as possible}.
+However, there are over 7,000 languages in the world \tocite{Ethnologue}, and for many of these there exist corpora, or online digital texts which can be used as inputs for our word utility extraction approach \missingcitation{corpora in many languages}.
+For this reason, in order to realize word utility extraction in \textbf{as many languages as possible}, we will only consider NLP tasks for which pre-trained models exist which can process a high number of languages.
 
 \subsubsection{Corpus Availability in Many Languages}
 The second point of consideration for task selection is \textbf{how much data is available for performing the task}.
 Ideally, we would like tasks for which suitable corpora are freely available or can be trivially generated from available corpora.
-This is for the reason that, with a larger amount of usable data, we not only improve the accuracy of our approach, but also increase the diversity of input data.
-With diverse input data available, we have a larger amount of linguistic contexts for we can find utilities, and the context-specific language learning is a central motivation of this work.
+This is because, with a larger amount of usable data, we not only improve the accuracy of our approach, but also increase the diversity of input data.
+Because context-specific language learning is a central motivation of this work, diverse training data is desirable, as it provides a broader range of linguistic contexts to model and from which to identify useful words.
 
 \subsubsection{Generality of Skill Required}
 Another important point to consider when selecting an NLP task is \textbf{how general the linguistic skills} are that the task requires:
 We use the performance in the NLP task as a proxy metric for the test subject's language ability.
 As such, we must ensure that task reflects a general level of semantic understanding, not only a narrow mechanistic skill that can be accomplished by using only a small part of the input.
+For this reason, we do not consider tasks such as part-of-speech tagging and text classification appropriate, as they do not reflect skills of language speakers used in everyday life.
 
-\subsubsection{Ease of Evaluation}
-To ensure we can measure the performance, we must also choose a task whose results can be easily compared with each other:
+\subsubsection{Ease of Evaluation} \label{sec:ease-of-evaluation}
+To ensure we can measure task performance, we must also choose a task whose results can be easily compared with each other:
 Some tasks, such as text summarization, present a challenge for automatic evaluation:
 It is difficult to put a number on how similar two summaries of a text are.
-While evaluation measures, such as BLUE scores\tocite{BLEU}, exist, it is questionable how well they capture the similarity between texts, because they do not recognize the semantic similarity of synonyms, and a different sentence structure will result in a low BLEU score even if the actual meaning of the sentences may be very close.
-It follows that if we have the freedom to choose NLP tasks whose results can be automatically evaluated with a fair degree of accuracy, we should choose them.
+While evaluation measures, such as BLEU scores\tocite{BLEU}, exist, it is questionable how well they capture the similarity between texts, because they do not recognize the semantic similarity of synonyms, and a different sentence structure will result in a low BLEU score even if the actual meaning of the sentences may be very close.
+It follows that if we have the freedom to choose NLP tasks whose results can be automatically evaluated with good accuracy, we should choose them.
 
 
-\subsubsection{Summary}
+\subsubsection{Summary of Desiderata}
 To summarize our desiderata for NLP tasks:
-Our implementation seeks to use NLP tasks for which both AI models and corpora exist in a large number of languages, to maximize accuracy and diversity of linguistic contexts which can be modeled.
+Our implementation seeks to use NLP tasks for which AI models and Corpora exist in a large number of languages, to make our approach for finding useful vocabulary usable in the greatest number of languages.
 We prefer tasks that demonstrate general language understanding over tasks that only require a narrow skill set to perform or that are too technical, because general tasks are expected to align more with human linguistic skills.
 Finally, the task must be easily scorable, since the task score is the metric by which we gauge how useful words are.
-
-The next section will present several tasks which fulfill the above criteria, and explain what consequences their selection has on the other components of vocabulary list generation.
-The choice of NLP tasks employed to test a XAI-based approach for word utility estimation is a crucial step:
-Since we are trying to estimate utility by measuring the impact of a word on language understanding, the NLP tasks should reflect language understanding as much as possible.
+The next section introduces several candidates, primarily by surveying which tasks are commonly used as pre-training tasks for state-of-the-art language models, as these must fulfill similar requirements to those stated in this section.
 
 \subsection{Survey of Candidate NLP Tasks}
-This chapter introduces some NLP tasks that might work for our purposes.
+This section introduces some NLP tasks that might work for our purposes.
 We will describe first the process of how candidate tasks were found, and then go into detail for each candidate as to why it was or was not selected in the following subsections.
 
 Candidates were first compiled by surveying common pre-training tasks which are of state-of-the-art NLP models:
@@ -110,74 +101,86 @@ Such tasks must necessarily be general and require general language understandin
 Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
 Their widespread use in \NLP also means that pre-trained models are widely and freely available.
 
-\subsubsection{NLP Pre-Training Tasks Used by State-of-the-Art AI Models}
-This section takes a look at the pre-training process of recent state-of-the-art LLM models which have made public their training process.
-Both the NLP tasks and the kind of data is considered.
+\subsubsection{Language Modeling}
+
+Language modeling is the basis of many recent developments in Large Language Models \cite{brownLanguageModelsAre2020} \cite{openaiGPT4TechnicalReport2024} .
+Is describes the task of predicting the next token in a text, given the sequence of previous tokens.
+While its training data can be trivially generated from corpora and does not pose great challenges in evaluation, we did not consider language modeling an appropriate NLP task for the purpose of finding useful vocabulary.
+This is because generating the task's training data already involves removing tokens from the input, resulting in training data with word distributions which do not correspond to language found in real texts.
+Another issue arises to the nature of model-agnostic, feature importance attribution XAI methods:
+These methods perturb the input to determine which tokens in the input are the most relevant.
+However, whether or not a token is appropriate as the next token in a document is sure to change with even slight perturbations:
+Consider the sentence:
+
+\begin{quote}
+	\textit{The sky is blue.}
+\end{quote}
+
+A language model, given the input datum \textit{The sky is}, may be able to predict that \textit{blue} is a probable next word to this sentence.
+
+However, if we mask the unimportant word  \textit{is} in the sentence to find out if the model's can predict the last word of the sentence even when \textit{is} is missing, we are left with the sentence:
+
+\begin{quote}
+	\textit{The sky}
+\end{quote}
+
+For this variation, \textit{blue} is no longer an appropriate next word to predict, as this would result in a grammatically incorrect sentence.
+This would lead a feature importance attribution method to evaluate \textit{is} as a very important word in the sentence, because its absence leads to a loss of accuracy, despite it being unimportant to the overall meaning of the sentence.
+These complications make it difficult to use feature importance attribution methods on language modeling, which is why we decided against the use of this task for our implementation.
 
 
-\begin{description}
-	\item[GPT-4] \cite{openaiGPT4TechnicalReport2024}
-
-	      Task: Language modeling (see next section).
-
-	      Data: Not disclosed in detail, according to the original paper, the model was trained "using both publicly available data (such as internet data) and data licensed from third-party providers".
-	\item[GPT-3] \cite{brownLanguageModelsAre2020}
-	      GPT-3 is a model that does not rely on transfer learning to apply its linguistic understanding to new tasks; instead, it uses zero-shot and few-shot learning to perform tasks it was not specifically trained for.
-
-	      Task: Language modeling (same as GPT-2 \cite{radfordLanguageModelsAre2019})
-
-	      Data: Common Crawl, WebText2, Books1, Books2, Wikipedia \todo{link sources?}
-	\item[LLama 3.3] \cite{LlamamodelsModelsLlama3_3}
+\subsubsection{Next Sentence Prediction}
+In Next Sentence Prediction (NSP for short), the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text \cite{kentonBertPretrainingDeep2019}.
+Input data for this task, including labels, is trivial to generate from document-level corpora, as it merely requires a corpus of sentences that follow from each other, which is easily obtained from Wikipedia articles, film subtitles, or any other continuous text.
+As the output of next sentence prediction is one number expressing the predicted probability of the input sentences following each other, its performance is also easy to calculate, using cross-entropy.
+While predicting whether two sentences are consecutive may not seem like a transferable skill, it is used as one of two pre-training tasks for BERT models \cite{kentonBertPretrainingDeep2019}, which suggests that using this task in pre-training imbues the model with transferable language skills.
+For these reasons, we use the NSP task in our word evaluation approach.
 
 
-	      Task: Meta did not make public the training process for Llama 3.3.
+\subsubsection{Text Summarization}
+This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible.
+Summarizing texts accurately would seem to require a high level of understanding of the text, and thus be good choice for testing whether ablating certain words from the text has detrimental effect on the model performance.
+Unfortunately, this tasks is not appropriate for our purposes with respect to our other desiderata:
+Firstly, it requires hand-crafted "ground truth" summary datasets, making its use for low-resource languages problematic.
+Secondly, even where datasets exist, evaluating the quality of a summary with respect to another is rather subjective (see Section \ref{sec:ease-of-evaluation}).
+For these reasons, we do not use text summarization in our implementation.
 
-	      Data: "data from publicly available sources"
-\end{description}
+\missingcitation{Popular text summarization dataset}
 
-\subsubsection{List of Candidates}
-\begin{description}
-	\item[Next Sentence Prediction]
-	      In this task, the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text.
-	      Advantages for this task for our purposes is that such a dataset is easy to generate, as it merely requires a corpus of sentences that follow from each other, which is easily obtained from Wikipedia articles, film subtitles, or any other continuous text.
+\subsubsection{Sentence Embedding}
+Sentence embedding takes sentences as inputs and outputs vectors of numbers, which are typically used as inputs for a downstream task such gauging the similarity between two sentences, which can be used to find similar sentences across languages for making training data for a translation model \cite{artetxeMassivelyMultilingualSentence2019} \cite{reimersMakingMonolingualSentence2020}.
+This approach can be performed on any corpus containing distinct sentences, meaning the corpus does not have to be document-level, and sentences need not be consecutive.
 
-	\item[Text summarization]
-	      This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible.
-	      Summarizing texts seems to require a high level of "understanding" of the text and would thus seem to be good choice for testing whether ablating certain words from the text would have detrimental effect on the model performance.
-	      Unfortunately, this task requires hand-labeled datasets and is thus not a good candidate if we aim to find approaches which can be implemented in many different languages, as there is a dearth in data in many of the less-studied languages of the world.
+An important characteristic of this task is that it has no ground truth labels, and therefore, when using feature importance attribution XAI methods, we cannot measure differences in performance of the downstream task when the input is perturbed
+Instead, we embed an input sentence in its original form (the baseline embedding), then embed variations of the sentences where some words have been ablated, and measure the distance between the baseline embedding and the embedding of each variation.
+We believe these distances are a valid metric for determining how much a word contributes to the meaning of the sentence, as the embedded vector is already a semantic representation of the input.
+In our estimation, the ease of evaluation and of finding input data, as well as its generality make sentence embedding an ideal task for word utility evaluation, which is why we use it not only for the generation of vocabulary lists, but also for the evaluation of their efficiency.
 
-	\item[Masked language Modeling (aka. "cloze task")]
-	\item[Causal Language Modeling (aka. Next token prediction)]
-	\item[Sentence order prediction]
-	\item[Sentence embeddings]
-	      Sentence embeddings take the approach of transforming words into meaningful vectors and extend it to whole sentences.
-	      This "task" differs from the others in that we do not measure differences in performance when the input is perturbed; but rather a distance between the embedding vectors themselves.
-	      This justification for such an approach is that sentences whose meaning is very different should end up further apart from each other in the vector space once embedded.
-	      This brings several advantages:
-	      This approach can be performed on any corpus containing distinct sentences.
-	      These corpus does not have to be document-level, and sentences need not be consecutive.
-	      To make this a task on which XAI methods can be applied, we can define a distance from the original token
-\end{description}
+\subsection{Summary}
+We have put forth desiderata for the NLP tasks to make our approach to vocabulary list generation and evaluation accurate, as well as applicable to many languages and language contexts.
+As a result of these desiderata, we have chosen the two tasks of next sentence prediction and sentence embedding, for the general language skill they require, because they are easy to evaluate automatically, and because input data for them is trivial to acquire in many languages.
+The next section will discuss the choice of corpora which are used as input data for these tasks.
 
 
-\subsection{Next Sentence Prediction}
-
-\begin{description}
-	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
-	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
-\end{description}
-
-\subsubsection{Choice of Model}
-\subsubsection{Data Required}
-
-Requires a corpus that contains consecutive sentences.
-Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
-This excludes movie subtitles from the possible corpora for this task.
-
-
-\subsection{Sentence Embedding}
-\subsubsection{Choice of Model}
-\subsubsection{Data Required}
+% \subsection{Use of Selected Tasks in this Work}
+% \subsection{Next Sentence Prediction}
+%
+% \begin{description}
+% 	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
+% 	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
+% \end{description}
+%
+% \subsubsection{Choice of Model}
+% \subsubsection{Data Required}
+%
+% Requires a corpus that contains consecutive sentences.
+% Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
+% This excludes movie subtitles from the possible corpora for this task.
+%
+%
+% \subsection{Sentence Embedding}
+% \subsubsection{Choice of Model}
+% \subsubsection{Data Required}
 
 
 \todo{tests of performance tests of models used with corpora used (e.g., if NSP prediction model is reliable)}
@@ -192,17 +195,6 @@ We will then introduce some publicly available corpora which are suitable for ou
 
 
 \subsection{Desiderata}
-
-\contentdescription{
-	{
-			For the purposes of this work, it was desirable that the corpora used be:
-			\begin{itemize}
-				\item representative of what language learners strive for
-				\item freely available in many languages
-				\item can be split up into diverse linguistic contexts
-				\item for NSP: must be comprised of documents for continuous sentences
-			\end{itemize}
-		}}
 
 This section will put forward our general criteria for corpus selection, following from our overarching goal of using the model to model linguistic contexts for the purpose of language learning.
 \todo{when the following subsection stand, summarize here}
@@ -351,7 +343,7 @@ Therefore, in the single-article approach, both the list generation and evaluati
 
 
 \paragraph{Pre-Processing:}
-In order to use Wikipedia articles as inputs to our word utility extraction approach, we perform pre-processing on the raw data to filter out source code, as well as chapter that we do not consider to be part of the article text.
+In order to use Wikipedia articles as inputs to our word utility extraction approach, we perform pre-processing on the raw data to filter out source code, as well as chapters that we do not consider to be part of the article text.
 This section shortly describes this process.
 
 In their raw form, Wikipedia dumps are written in a markup language called \textit{WikiCode}.

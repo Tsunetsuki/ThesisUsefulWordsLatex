@@ -1,9 +1,36 @@
+\contentdescription{{ \begin{itemize}
+				\item Sentence importance evaluation
+				\item Capturing text as coherent unit instead of sentences which are independent of each other
+				\item Active vs passive utility: Ideas for active utility estimation
+				\item Compound splitting
+				\item Lemmatization
+				\item n-grams
+				\item Multilinguality
+			\end{itemize}
+		} }
 
-\begin{itemize}
-    \item Sentence importance evaluation
-    \item Capturing text as coherent unit instead of sentences which are independent from each other
-    \item Active vs passive utility: Ideas for active utility estimation
-    \item Compound splitting
-    \item Lemmatization
-    \item n-grams
-\end{itemize}
+We have seen in the previous chapter that our approach to list generation outperforms frequency-based metrics when \todo{insert exact circumstances}.
+This final chapter discusses several possible improvements to our approach and the research around it, which were not possible within the scope of this work due to time constraints.
+
+\section{Lemmatization}
+The vocabulary lists we compiled were dictated by the tokens provided by the tokenizer.
+With this approach, each unique combination of letters is regarded as an independent word, including variations of a particular word such as "house" and "houses", "look", "looks", "looked".
+However, in textbooks, vocabulary lists are usually organized by headwords or \textit{lemmas}, that is, the variations as seen above are considered as a single word.
+To compile more useful vocabulary lists, we recommend that words which derive from the same lemma be treated as the same word.
+"Treating" here includes the masking of tokens for model-agnostic XAI methods, as well grouping words together by their lemma in the post-processing of vocabulary lists which are produced by model-specific approaches.
+
+
+\section{Filtering of Named Entities from Vocabulary List}
+In the vocabulary lists produced by the approaches compared in this thesis, all tokens consisting of letters were treated as a potential vocabulary word to learn.
+However, this also includes many names, which may skew the test results.
+
+names are regarded as very important for small corpora, but have little use across corpora
+
+Thus, further analyses should pay due consideration to distinguishing names from regular vocabulary.
+It is important to note that named entities should not be discarded from vocabulary lists:
+Names of countries, for instance, are usually included in vocabulary lists of textbooks, which is justified by the fact that they tend to differ between languages.
+
+\section{Active vs. Passive Utility}
+This work has exclusively focused on the utility of words for understanding existing texts, however, one can also consider the utility of a word for active speaking and writing:
+One obvious difference is that, when there are two synonyms, it suffices to know one of the two for active speaking, but for passive understanding, both must be learned.
+

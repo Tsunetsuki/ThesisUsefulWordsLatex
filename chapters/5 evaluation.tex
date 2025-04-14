@@ -55,7 +55,7 @@ As an illustration, we present the results of one such efficiency evaluation run
 	\label{fig:marlon-brando-eval}
 \end{figure}
 
-To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the Sentence Embedding model.
+To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the Sentence embedding model.
 The vocabularies are evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
 The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
 
@@ -285,7 +285,7 @@ For small corpora, there is no train-test-data distinction, thus for each corpus
 
 We can observe several points in the data:
 
-Single Token Ablation with the Sentence Embeddings achieves the highest results across corpus types.
+Single Token Ablation with sentence embeddings achieves the highest results across corpus types.
 It is also among the approaches with the least spread of performance, as seen by the standard deviation of the corpora scores.
 Since the model used for list generation and list evaluation is the same,
 What we can gleam from this fact is that the utilities calculated from individual lines, when aggregated over the dataset, approach the word utilities with respect to the entire corpus better than frequency-based approaches.
@@ -304,7 +304,7 @@ TF-IDF, while usually used to capture words characteristics of documents, also s
 This could be seen as evidence to the effect that, while learning words by their general frequency provides the best coverage of texts, the coverage is not a good proxy for measuring the understanding of a text.
 
 
-For the transformer attention approach, both the model for Next Sentence Prediction and the model for Sentence Embeddings produce very similar results.
+For the transformer attention approach, both the model for next sentence prediction and the model for sentence embedding produce very similar results.
 Because both models function with a BERT model at their core, this result is within the realm of expectation.
 The slightly better performance of the NSP model may be due to its greater size (12 attention heads vs. 6 heads), but the difference is too slight to make a definitive judgement.
 
