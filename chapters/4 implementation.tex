@@ -205,8 +205,8 @@ This section puts forward our general criteria for corpus selection, following f
 
 
 \subsubsection{Document-Level Corpus} \label{sec:document-level-corpus}
-The first desideratum for our corpora stems from our choice to use Next Sentence Prediction as one of our NLP tasks:
-As Next Sentence Prediction predicts whether one sentence is likely the continuation of another, it requires continuous sentences pairs to work.
+The first desideratum for our corpora stems from our choice to use next sentence prediction as one of our NLP tasks:
+As next sentence prediction predicts whether one sentence is likely the continuation of another, it requires continuous sentences pairs to work.
 To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
 This presents a challenge, as many corpora which are compiled from Web Crawls, such as the Common Crawl dataset \footnote{\url{https://commoncrawl.org/}}, present independent single lines, mostly because single sentences cannot be put under copyright in many states \tocite{copyright being the reason for non-document level corpora}
 One solution to this would be make a dataset from crawling various news pages ourselves.
@@ -252,7 +252,7 @@ The original paper for the \textit{Wortschatz} corpus also mentions political co
 Finally, a corpus from the \textit{Oscar} project \footnote{\url{https://oscar-project.github.io/}} was chosen as a background corpus:
 Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which preprocessing steps such as HTML stripping and removal of boilerplate content have already been performed.
 It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
-There exist many versions of the Oscar dataset, but this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
+There exist many versions of the Oscar dataset, but for this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
 
 \todo{State number of documents used from Oscar corpus}
 
@@ -271,7 +271,7 @@ These include:
 	\item From available subtitles, identifying the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as user ratings of subtitles.
 
 \end{enumerate}
-One advantageous aspect of this corpus is that it contains many sentences that are sequential, which means we can generate a Next Sentence Prediction dataset from it \todo{add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs}.
+One advantageous aspect of this corpus is that it contains many sentences that are sequential, which means we can generate a next sentence prediction dataset from it \todo{add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs}.
 This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
 While it is possible to reconstruct which movies the subtitle lines came from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
 
@@ -307,7 +307,7 @@ The characteristics of the article category system on Wikipedia is discussed in 
 
 Another upshot of Wikipedia is that its articles are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (\textit{CC BY-SA}).
 Because of this, Wikipedia can provide dumps of its entire article database ready for download, with the articles in continuous form and with category metadata attached to them.
-This enables us to use the articles as a source for Next Sentence Prediction NSP task.
+This enables us to use the articles as a source for the next sentence prediction NSP task.
 
 \paragraph{Disadvantages:}
 While Wikipedia offers a large diversity of articles and article topics, the language of the articles follows an academic style of writing.
@@ -383,7 +383,7 @@ Which these pre-processing steps, we attain a corpus which mostly contains full	
 
 
 \subsection{Construction of NSP Corpora}
-As mentioned in Section {sec:document-level-corpus}, the Next Sentence Prediction task requires consecutive sentences in order to be performed.
+As mentioned in Section \ref{sec:document-level-corpus}, the next sentence prediction task requires consecutive sentences in order to be performed.
 Out of the two context-specific corpus types which we employ, only Wikipedia articles consist of such consecutive sentences.
 This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubs corpora was essentially equal to that of random guessing.
 Thus, the NSP task is only performed on Wikipedia articles.
@@ -498,12 +498,12 @@ Because of its iterative approach, for a sentence with 10 words, Progressive Sum
 
 
 \paragraph{Compatibility with NLP tasks}
-As Progressive Summary starts from a set of one words and then progresses to larger sets, it is difficulty to meaningfully employ in combination with an NLP task whose input is not a single line, e.g., Next Sentence Prediction.
+As Progressive Summary starts from a set of one words and then progresses to larger sets, it is difficulty to meaningfully employ in combination with an NLP task whose input is not a single line, e.g., next sentence prediction.
 One could circumvent the issue by leaving one of the sentences in its original form and only perturbing the other, but this can hardly be seen as a modeling of natural language ability.
 
 \todo{Maybe: Describe issues of using PS with models whose output is single number: Approximating with single words may not be meaningful approximation at all. But should test empirically.}
 
-As such, our implementation Progressive Summary is not used with Next Sentence Prediction.
+As such, our implementation Progressive Summary is not used with next sentence prediction.
 
 \paragraph{Summary:}
 Progressive Summary attempts to find the most important words in a sentence one by one, by first reducing the sentence to one word, then two etc., and using a distance metric to compare the "summaries" to the original sentence.
