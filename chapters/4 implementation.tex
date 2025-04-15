@@ -42,7 +42,7 @@ Therefore, the choice of AI model is discussed together with the NLP task in the
 Our approaches for list efficiency evaluation and for efficient list generation use an AI model with an NLP task to simulate a test subject performing a language exam.
 Because of this, the AI model and task chosen are a crucial component of these approaches, and their selection is among the most important in the implementation.
 The NLP tasks we choose also influence what corpora we can use for their execution:
-The NLP task of next sentence prediction requires continuous texts as input data, necessitating input corpora containing whole documents, not just individual sentences.
+The task of next sentence prediction requires contiguous texts as input data, necessitating input corpora containing whole documents, not just individual sentences.
 
 This section first puts forward criteria for selecting NLP tasks in Section \ref{sec:nlp-tasks-desiderata} for word utility evaluation.
 % After this, we use these criteria to select a few NLP tasks as appropriate in Section \ref{sec:nlp-tasks-selection}.
@@ -186,31 +186,25 @@ The next section discusses the choice of corpora which are used as input data fo
 % \subsubsection{Data Required}
 
 
-\todo{tests of performance tests of models used with corpora used (e.g., if NSP prediction model is reliable)}
-
 
 \section{Corpora}
-The previous section has put forth criteria for which NLP tasks should be used in our word utility evaluation approach.
-The other core component of the approach is the input data used to perform the experiments, as it serves the purpose of modeling the language contexts in which the language learner is striving to achieve proficiency.
-This section therefore first puts states our general selection criteria for corpora.
-We then introduce some publicly available corpora which are suitable for our evaluation approach, as well as propose data augmentation methods to increase their usefulness further.
-
-
+In the previous section, we put forth criteria for which NLP tasks should be used in our word utility evaluation approach, and decided on the two tasks of next sentence prediction and sentence embedding.
+Having decided on these, we now require data, i.e., corpora, as inputs for the tasks.
+Which corpora we use is another important decision, as these serve the purpose of modeling the language contexts in which the language learner is striving to achieve proficiency.
+This section therefore first states our general selection criteria for corpora.
+We then introduce publicly available corpora which are suitable for our evaluation approach, and conclude by choosing Wikipedia and OPUS subtitle data as inputs for the NLP tasks.
+For the background corpus used to calculate the inverse document frequency in TD-IDF, we use a corpus from the \textit{Oscar} project (see Section \ref{sec:oscar}).
 
 \subsection{Desiderata}
-
 This section puts forward our general criteria for corpus selection, following from our overarching goal of using the model to model linguistic contexts for the purpose of language learning.
-\todo{when the following subsection stand, summarize here}
-\todo{when actual corpora are decided: Mention them in throughout this section too}
-
+In short, we use corpora which are available in many languages, allow for the modeling of different linguistic contexts, and consist of continuous texts to provide data for the NLP tasks.
 
 \subsubsection{Document-Level Corpus} \label{sec:document-level-corpus}
 The first desideratum for our corpora stems from our choice to use next sentence prediction as one of our NLP tasks:
-As next sentence prediction predicts whether one sentence is likely the continuation of another, it requires continuous sentences pairs to work.
+As next sentence prediction predicts whether one sentence is likely the continuation of another, it requires contiguous sentences pairs to work.
 To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
-This presents a challenge, as many corpora which are compiled from Web Crawls, such as the Common Crawl dataset \footnote{\url{https://commoncrawl.org/}}, present independent single lines, mostly because single sentences cannot be put under copyright in many states \tocite{copyright being the reason for non-document level corpora}
-One solution to this would be make a dataset from crawling various news pages ourselves.
-However, Wikipedia contains articles on many different topics which do not underlie strict copyright license (see the section on Wikipedia), thus for this work, we opted not to compile our own document-level corpus.
+This presents a challenge, as many corpora which are compiled from Web Crawls, such as the corpora from \textit{Wortschatz Leipzig} \footnote{\url{https://wortschatz.uni-leipzig.de/}}, contain only scrambled, single lines to avoid copyright infringements (single sentences cannot be put under copyright in certain states \cite{goldhahnBuildingLargeMonolingual2012}).
+However, Wikipedia contains articles on many different topics which do not underlie strict copyright license (see Section \ref{sec:wikipedia}), which makes it appropriate for our purposes.
 
 \subsubsection{Free Availability in Many Languages}
 In Section \ref{sec:nlp-tasks-desiderata} we put forward reasons for why freely available AI models which can handle a diverse pool of languages are desirable for our undertaking.
@@ -222,79 +216,82 @@ As mentioned before, the corpus in our word utility extraction approach serves t
 Typical situations would include reading the news, reading literature or watching movies in their target language.
 As such, corpora which are close to the materials which language learners are likely to engage with are desirable, since their use makes the AI model's performance on the task more reflective of skills that a language learner would like to acquire.
 
-\subsubsection{Diversity of Linguistic Contexts within Corpus}
+\subsubsection{Divisibility of Corpus into more Specific Corpora}
 Not only the relevance of the entire corpus's linguistic context is important:
 Some corpora enable us to further split them up into smaller corpora with more specific language contexts.
-For instance, while we can use a corpus such as \textit{Wikipedia} as a whole, the structure of Wikipedia enables us to group articles by the category they belong to (politics/sports etc.), as well as split them by subheading (History/Introduction/etc.) to find more specific contexts.
+For instance, while we can use a corpus such as \textit{Wikipedia} as a whole, the structure of Wikipedia enables us to group articles by the category they belong to (politics/sports etc.), or even use single articles, to find more specific contexts.
 Such corpora are especially efficient for generating multiple contexts, hence we make use of such corpora.
 
 
-\subsubsection{Rejected Corpora}
-\todo{Leipzig, Common Crawl}
-\subsubsection{Leipzig Wortschatz Corpora}
-Available in x languages
+\subsubsection{Rejected Corpora} \label{sec:rejected-corpora}
+This section briefly describes two corpora which may appear to be useful for our word utility evaluation approach, but which we do not believe are appropriate.
 
-But: data quality issues, methodology might be outdated
+\paragraph{Common Crawl:}
+A common choice for training large language models is the \textit{Common Crawl} dataset \footnote{\url{https://commoncrawl.org/}}.
+Its size and diversity could make it useful either as a corpus for modeling a "surfing the web" linguistic context, or as a background corpus to calculate TF-IDF on other corpora.
+However, we reject both uses of it:
+Firstly, in its raw form, it takes the form of HTML code and includes much boilerplate content such as cookie requests, necessitating much preprocessing.
+More importantly, speaking against its use as a context-modeling corpus, its data is not grouped by topic or language, which means we cannot trivially generate more topic-specific corpora from it, nor utilize it for different languages without a significant amount of pre-processing.
 
-\cite{goldhahnBuildingLargeMonolingual2012}
+\paragraph{Wortschatz Leipzig:}
+\textit{Wortschatz Leipzig} \footnote{\url{https://wortschatz.uni-leipzig.de/}} provides corpora in more than 100 languages, and groups these by their source such as "News", "Wikipedia", and "Web".
+We also rejected the Wortschatz Leipzig Corpora because, while these corpora are stripped of any HTML code, they are composed of single lines collected from websites, rather than whole documents.
+Although we considered using one of the "Web" corpora for calculating inverse document frequency for the TF-IDF metric, the original paper for the Wortschatz corpus also states that political content was utilized in bootstrapping the web searches for data gathering, including the \textit{Universal Declaration of Human Rights} and the Jehova's Witnesses magazine \textit{Watchtower} \footnote{Previously available at \url{watchtower.org}}, which may lead to a respective bias in the final corpus \cite{goldhahnBuildingLargeMonolingual2012}.
+Thus, we did not use Wortschatz corpora as a background corpus either.
 
-\subsection{Background Corpus: Oscar}
+\subsection{TF-IDF Background Corpus: Oscar} \label{sec:oscar}
 For the implementation of TF-IDF, we require a generic background corpus to normalize raw word frequencies found in context-specific corpora (that is, to calculate the IDF part of TF-IDF).
-For this purpose, corpora crawled from the internet offer themselves as a diverse option:
-While we cannot be certain if some kinds of web pages feature disproportionately in the final corpus, web content is diverse in that it encompassed both formal and informal content on many different topics.
+For this purpose, corpora crawled from the internet offer themselves as an attractive option, as web content is diverse in that it encompassed both formal and informal content on many different topics.
 
-A natural choice of diverse web content is the \textit{Common Crawl} dataset \footnote{\url{https://commoncrawl.org/}}.
-However, in its raw form, it takes the form of HTML code and includes much boilerplate content such as cookie requests, necessitating much preprocessing.
-Another major downsize of \textit{Common Crawl} is that its data is not categorized by language, meaning we would have to perform language categorization as an additional preprocessing step before using it for our purposes.
-We also rejected the \textit{Wortschatz Leipzig} Web Corpora because, while these corpora are stripped of any HTML code, they are lines taken randomly from websites, rather than whole documents.
-The original paper for the \textit{Wortschatz} corpus also mentions political content was utilized to bootstrap in the web searches for data gathering, including the \textit{Universal Declaration of Human Rights} and the Jehova's Witnesses magazine \textit{Watchtower} \footnote{Previously available at \url{watchtower.org}}, which may lead to a respective bias in the final corpus.
-
-Finally, a corpus from the \textit{Oscar} project \footnote{\url{https://oscar-project.github.io/}} was chosen as a background corpus:
+We reject the Common Crawl and Wortschatz Leipzig datasets for the reasons already stated in Section \ref{sec:rejected-corpora}.
+Instead, we use a corpus from the \textit{Oscar} project \footnote{\url{https://oscar-project.github.io/}} as a background corpus:
 Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which preprocessing steps such as HTML stripping and removal of boilerplate content have already been performed.
 It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
 There exist many versions of the Oscar dataset, but for this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
-
-\todo{State number of documents used from Oscar corpus}
+Due to its vast size, we did not use the entire corpus, but a random sample of 53,179 documents from this dataset to calculate inverse document frequency.
 
 \subsection{OPUS OpenSubtitles Parallel Corpus}
-This set of corpora contains parallel corpora:
-Corpora which has text segments in one language aligned with the presumed translation of the segment in a second language.
-Its sentences are generated from subtitles from the popular subtitle sharing platform \textit{OpenSubtitles} (https://www.opensubtitles.org/) and undergo various preprocessing and filtering steps as described in \cite{lisonOpensubtitles2016ExtractingLarge2016}.
-These include:
-\begin{enumerate}
-	\item Enforcing universal UTF-8 character encoding.
+The OPUS collection \footnote{\url{https://opus.nlpl.eu/}} is a collection of so-called parallel corpora:
+Corpora which have text segments in one language aligned with the presumed translation of the segment in a second language.
+OPUS corpora have been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages.
+In this work, we make use of only the English sentences in one such parallel corpus, as we do not require their translations.
+Rather, our reason for using corpora the OPUS collection is that one of its corpora collections uses movie subtitles as its source and can thus model the linguistic context of watching movies, a popular pastime:
+
+One of the largest collections of corpora inside OPUS is the OpenSubtitles dataset \footnote{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}:
+Its sentences are generated from subtitles from the popular subtitle sharing platform \textit{OpenSubtitles} \footnote{\url{https://www.opensubtitles.org/} }, but are pre-processed in numerous ways to ensure their integrity and usability as parallel sentences \cite{lisonOpensubtitles2016ExtractingLarge2016}:
+
+\begin{itemize}
 	\item
-	      Splitting and joining of sentences from their original subtitles blocks (the segments which appear on-screen when watching the movie with its subtitle).
-	      One such block may contain multiple sentences, or only a partial one.
-	      There is thus an n-to-m-relationship between the blocks and sentences.
-	\item Checking and correcting possible spelling issues, especially ones arising from OCR (Optical character recognition) errors.
-	\item From available subtitles, identifying the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as user ratings of subtitles.
+	      In their original form, movie subtitles are stored in SRT format, which does not save sentences, but so-called subtitles blocks.
+	      These are the segments which appear on-screen when watching the movie with its subtitle, including both text and start and end time of the block appearing on-screen.
+	      One such block may contain multiple sentences, or only a partial one, meaning there is an n-to-m-relationship between subtitle blocks and sentences.
+	      However, the lines which make up the OPUS OpenSubtitles dataset are split and joined such that each line (ideally) contains one sentence.
+	      We found that this is not always the case, but exceptions are sufficiently rare to not necessitate further pre-processing.
+	\item The SRT files may contain spelling errors.
+	      These are due in part to human errors, but may also occur when a subtitle file is generated from scanning a paper document and performing Optical character recognition.
+	      Spelling errors are checked and corrected to some extent in the OPUS OpenSubtitles dataset.
+	\item
+	      A movie may have different subtitles in one language associated with them on OpenSubtitles.
+	      In the OPUS OpenSubs dataset, available subtitles are compared in order to identify the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as user ratings of subtitles.
+	      Then, the subtitle pair which aligns the best is chosen to appear in the OPUS dataset.
+	      This corrects for issues which would otherwise be found in the dataset, such as poor translations.
+\end{itemize}
 
-\end{enumerate}
-One advantageous aspect of this corpus is that it contains many sentences that are sequential, which means we can generate a next sentence prediction dataset from it \todo{add hedging here since not all lines in corpus are sequential and even within the same movies there may will be pauses in the subs}.
-This corpus has been used to train machine translation models such as OPUS-MT \cite{tiedemannOPUSMTbuildingOpenTranslation2020}, a freely available set of transformer models for translation, including between low-resource languages. \todo{Not completely correct, the pipeline uses data from OPUS, not necessarily or specifically from OpenSubs}
-While it is possible to reconstruct which movies the subtitle lines came from information contained in the corpus, it is unfortunately not clear how these movies were selected in the first place.
-
-The full process, as illustrated by the authors, can be seen in Figure \ref{fig:opensubs pipeline}
+The full process, as illustrated by the authors, can be seen in Figure \ref{fig:opensubtitles-pipeline}
 As of 2025, the latest version of the corpus (v2018) contains aligned subtitles of 62 languages between each other.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{opensubs_corpus_processing.png}
 	\caption{The pipeline producing the OpenSubtitles parallel corpus}
-	\label{fig:opensubs pipeline}
+	\label{fig:opensubtitles-pipeline}
 \end{figure}
 
-\subsection{Wikipedia}
-\contentdescription{{
-			\begin{itemize}
-				\item advantages: diversity of topics, document level corpus which is not copyrighted, regularly updates dumps
-				\item disadvantages: language is technical, does not resemble spoken conversation
-				\item describe grouping intro multiple scope corpora: describe category structure of Wikipedia
-			\end{itemize}
-		}}
+The OPUS Subtitles dataset contains not only the parallel sentences, but also movie identifiers from the Internet Movie Database (\textit{IMDB}) \footnote{\url{https://www.imdb.com/}}, which enables us to reconstruct the movie from whose script each sentence originates.
+While this dataset contains contiguous subtitles, these are not appropriate input data for the NSP task, as film subtitles consist of dialogue instead of continuous text.
+Our preliminary tests showed this, as our NSP model showed very low performance when given contiguous subtitle sentences pairs as inputs.
 
-
+\subsection{Wikipedia} \label{sec:wikipedia}
 Wikipedia offers a large amount of data which can be downloaded in the form of dumps at \url{https://dumps.wikimedia.org/}.
 In this work, these dumps are useful in modeling various linguistic contexts that a language learner might be interested in.
 
@@ -385,14 +382,14 @@ Which these pre-processing steps, we attain a corpus which mostly contains full	
 \subsection{Construction of NSP Corpora}
 As mentioned in Section \ref{sec:document-level-corpus}, the next sentence prediction task requires consecutive sentences in order to be performed.
 Out of the two context-specific corpus types which we employ, only Wikipedia articles consist of such consecutive sentences.
-This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubs corpora was essentially equal to that of random guessing.
+This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubtitles corpora was essentially equal to that of random guessing.
 Thus, the NSP task is only performed on Wikipedia articles.
 The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
 We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
 
 \subsection{Corpus Characteristics}
 We have described the sources of the corpora used in the implementation of our approach, but to gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
-It can readily be seen that, while the corpora taken from the OpenSubs subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (over three times longer on average than the sentences in subtitles).
+It can readily be seen that, while the corpora taken from the OpenSubtitles subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (over three times longer on average than the sentences in subtitles).
 This makes sense, as Wikipedia articles are written in an academic style, while movie subtitles tend to be more informal.
 Wikipedia articles also contain a higher number of unique words on average, despite containing a lower number of words in total.
 This may hint at a higher diversity of vocabulary employed in articles, although a higher number of named entities may also contribute to the higher count of unique words.
@@ -567,7 +564,7 @@ While the NSP model uses the same tokenizer that is also used for token masking 
 %
 %
 \section{Implementation with Chosen NLP Tasks, Corpora, and XAI Methods} \label{sec:implementation-final}
-The previous chapters have argues for the choice of components in our theoretical approach to vocabulary list generation and evaluation. 
+The previous chapters have argues for the choice of components in our theoretical approach to vocabulary list generation and evaluation.
 This final section about our implementation describes how the chosen components interact in our implementation.
 
 \contentdescription{
