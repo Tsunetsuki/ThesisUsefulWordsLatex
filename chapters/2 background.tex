@@ -74,7 +74,7 @@ Thus, learning for one or multiple specific contexts gives the learner a more co
 
 In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else only a small number of contexts is available \missingcitation{Investigate current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
 
-\subsubsection{Utility}
+\subsubsection{Utility} \label{sec:utility}
 In this work, the \textit{utility} of a word is defined as the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
 Here, language ability refers to being able to understand more of texts they read in the given context, being able to speak about the subject, etc.
 It is easy to see that some words will be more useful than others given a context:
@@ -132,6 +132,26 @@ In contrast, the interaction of computers is usually more rigidly defined by spe
 
 For the purposes of this work, an \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
 We utilize NLP tasks as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in Chapter \ref{ch:approach}.
+
+\subsection{NLP Preprocessing: Named Entity Recognition}
+In this work, we attempt to compile lists of vocabulary by processing corpora with various methods.
+However, these corpora contain so-called Named Entities, such as the names of people, organizations, and places, which are typically not desirable in vocabulary lists:
+\missingcitation{NER}
+Consider the following sentences:
+
+\begin{quote}
+	\textit{Angela Merkel is the chancellor of Germany.}
+\end{quote}
+
+\begin{quote}
+	\textit{Angela Merkel visited Karlsruhe last month.}
+\end{quote}
+
+These sentences contain the personal name \textit{Angela Merkel}, the country name \textit{Germany} and the city name \textit{Karlsruhe}.
+Because personal names such as \textit{Angela Merkel} are generally not seen as vocabulary to learn, when we compile a list of English vocabulary from a corpus containing the above sentences, we filter such names from the lists.
+The names of places can be useful vocabulary to learn, such as in the case of \textit{Germany}, because it differs between English and other languages (e.g., German: \textit{Deutschland}, Spanish: \textit{Alemania}).
+However, our tool for Named Entity Recognition cannot distinguish between the names of countries and other places such as \textit{Karlsruhe}.
+To prevent the vocabulary lists from containing many names of cities, we therefore filter out all recognized names of places, including those of countries.
 
 
 \subsection{NLP Preprocessing: Tokenization}
@@ -328,7 +348,7 @@ This includes words such as \textit{happy} and \textit{baby}.
 Tier Three items are words which are useful mostly in one specific domain, such as \textit{peninsula} or \textit{lathe}.
 These are not high frequency words, and thus Reading Rockets conclude that these words are best learned not in isolation, but rather "when needed in a content area".
 
-Tier Two words are fairly high frequency words that are not so common as to be known by all children, but still useful across many domains, such as \textit{coincidence}, \textit{absurd}.
+Tier Two words are fairly high frequency words that are not so common as to be known by all children, but still useful across many domains, such as \textit{coincidence}, or \textit{absurd}.
 For this reason, Reading Rockets deems that "instruction in these words can add productively to an individual’s language ability." \footnoteref{footnote:reading-rockets-choosing-words-to-teach}
 
 This system of triage can be useful and could be made to fit with the aim of teaching second-language learners too, by teaching Tier One words first, then moving on to Tier Two and Tier Three words.
@@ -357,7 +377,7 @@ In their 1997 paper "Vocabulary size, text coverage and word lists" \cite{nation
 
 Herein we can see the appeal of frequency as a basis for vocabulary selection:
 It gives the reader the highest \textit{coverage} of texts, i.e., the percentage of words in the texts they read.
-However, focusing on maximum-frequency words to achieve text coverage does not take into account that the most frequent words in the language are typically words with little meaning by themselves: 
+However, focusing on maximum-frequency words to achieve text coverage does not take into account that the most frequent words in the language are typically words with little meaning by themselves:
 The following words are the most frequent ten words on Wikipedia according to a count by Leipzig University \footnote{See "Wikipedia" corpus 2016, \url{https://wortschatz.uni-leipzig.de/en/download/English}}:
 "the", "of", "and", "in", "to", "a", "is", "was", "the", "for".
 
@@ -407,7 +427,7 @@ To the best of our knowledge, all current algorithmic methods used for vocabular
 The issue with these approaches is that they tend to rate stop words the highest, as these are very high frequency words in any language.
 Because we are concerned with context-specific language learning, we could attempt to normalize the frequency of a word in a context-specific corpus with its frequency in a more generic background corpus.
 This is the idea of the \textbf{TF-IDF} (\textbf{T}erm \textbf{F}requency - \textbf{I}nverse \textbf{D}ocument \textbf{F}requency)
- \cite{qaiserTextMiningUse2018} metric:
+\cite{qaiserTextMiningUse2018} metric:
 
 It is calculated on a document level:
 Given a collection of documents, we calculate the TF-IDF of a word by taking the number of occurrences of the word in a document (Term Frequency), but discounting words that appear in a large number of documents overall (multiplying by the Inverse Document Frequency).
@@ -430,16 +450,23 @@ Because of this somewhat contradictory nature of the metrics, we are left to won
 
 \todo{TF-IDF section is not acceptable right now}
 
-\subsection{Summary}
+\subsection{Summary} \label{sec:ranking-vocab-lists-summary}
+\todo{Improve this section}
 Current methods do not exploit recent developments in AI technology and thus suffer from several shortcomings:
 In general, all of them essentially only count words without taking into account their relationship between each other:
 
 Frequency: The most frequent words in texts are often words that carry little meaning by themselves, such as "a", "the", "of" in English.
 While these may appear in many texts, they are not useful in determining their meaning.
+Furthermore, frequency is usually used on very large corpora for vocabulary list compilation.
+While it can be used on smaller corpora, the long tail of the distribution means that many words will have frequencies of 2 or 1.
+These words cannot put in a more useful order with raw frequency counts.
+
 TF-IDF: This metric has been used successfully to find the words that give the best hints at a text's topic.
 However, it does not take into account and semantic relationships between the words in a text.
 Thus, learning words by aggregating TF-IDFs on multiple texts may aid in identifying the topic of texts, but not at finding out what the message conveyed about the topic is.
 "not" is a highly frequent word in English and thus will have a low TF-IDF score in most documents.
 But it is essential to know, as it can completely invert the meaning of a sentence.
+
+
 
 

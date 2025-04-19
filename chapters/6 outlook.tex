@@ -19,18 +19,10 @@ However, in textbooks, vocabulary lists are usually organized by headwords or \t
 To compile more useful vocabulary lists, we recommend that words which derive from the same lemma be treated as the same word.
 "Treating" here includes the masking of tokens for model-agnostic XAI methods, as well grouping words together by their lemma in the post-processing of vocabulary lists which are produced by model-specific approaches.
 
-
-\section{Filtering of Named Entities from Vocabulary List}
-In the vocabulary lists produced by the approaches compared in this thesis, all tokens consisting of letters were treated as a potential vocabulary word to learn.
-However, this also includes many names, which may skew the test results.
-
-names are regarded as very important for small corpora, but have little use across corpora
-
-Thus, further analyses should pay due consideration to distinguishing names from regular vocabulary.
-It is important to note that named entities should not be discarded from vocabulary lists:
-Names of countries, for instance, are usually included in vocabulary lists of textbooks, which is justified by the fact that they tend to differ between languages.
-
 \section{Active vs. Passive Utility}
 This work has exclusively focused on the utility of words for understanding existing texts, however, one can also consider the utility of a word for active speaking and writing:
 One obvious difference is that, when there are two synonyms, it suffices to know one of the two for active speaking, but for passive understanding, both must be learned.
 
+\section{Multilinguality}
+
+\section{Distinction of Homonyms}

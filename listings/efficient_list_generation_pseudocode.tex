@@ -3,16 +3,18 @@
 \label{alg:efficient-list-generation}
 \begin{algorithmic}[1]
 \Require corpus, model, xai\_method
-\State Initialize $line\_word\_utilities\_scores$ with empty list
+\State Initialize $line\_word\_utilities$ with empty list
 
 \For{each $line$ in $corpus$}
     \State $word\_utilities\_for\_this\_line \gets$ xai\_method$(model, line)$
-    \State Append $word\_utilities\_for\_this\_line$ to $line\_word\_utilities\_scores$
+    \State Append $word\_utilities\_for\_this\_line$ to $line\_word\_utilities$
 \EndFor
 
-\State $corpus\_word\_utilities\_scores \gets$ aggregate\_word\_utilities($line\_word\_utilities\_scores$)
+\State $corpus\_word\_utilities \gets$ aggregate($line\_word\_utilities$)
+% \State $corpus\_word\_utilities\_scores$ $\gets$\newline
+% aggregate\_word\_utilities($line\_word\_utilities\_scores$)
 
-\State $voc\_list \gets$ words ordered by $corpus\_word\_utilities\_scores$
+\State $voc\_list \gets$ words ordered by $corpus\_word\_utilities$
 
 \State \Return $voc\_list$
 \end{algorithmic}

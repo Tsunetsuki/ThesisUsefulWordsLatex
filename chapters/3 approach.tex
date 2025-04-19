@@ -13,7 +13,7 @@ To solve this final problem, \ref{sec:list-generation} puts forward a general ap
 % utility
 % proxy task
 
-To repeat the problem statement from Section \ref{sec:statement-of-goal}:
+To repeat the core statement from Section \ref{sec:statement-of-goal}:
 The aim of this work is to create computational approaches to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 
 Keeping in mind that this is done in order to sort words into vocabulary lists that can be used by language learners, we can conclude that the output of a proposed solution to this problem would be an ordered list of words.
@@ -106,12 +106,6 @@ Finding vocabulary lists that approximate an optimal list according to formula \
 \end{figure}
 
 \section{Experimental Setup: Measuring Word Utility as Ability Improvement in Humans} \label{sec:human-efficiency-testing}
-
-\contentdescription{State utility in terms of language ability improvement
-	aim is not just to evaluate, but also efficiently find lists of vocab
-	give problems that is faced when trying to test this approach with human test subjects: no repeatability, high costs
-}
-
 With the formula \ref{eq:optimal-vocab-list}, we now have set our goal more concretely.
 We are left with the question of how to design an actual experiment to test vocabulary list efficiency, and also how to generate one that is approximates an optimal list.
 Hence, this section lays forth a hypothetical experiment design by using a human test subject to test efficiency, which will, however, be found to suffer from problems of feasibility, our solution to which is explained in Section \ref{sec:experimental-setup-with-ai}.
@@ -137,8 +131,6 @@ Using AI models and Explainable AI to analyze their interaction with language, w
 This approach is laid out in the following sections.
 
 \section{Experimental Setup with AI Model} \label{sec:experimental-setup-with-ai}
-\contentdescription{I view AI models as containers of language knowledge. We can perform studies on it as though it were human, gaining knowledge "from the viewpoint of an entity interacting with language"}
-
 This work is interested in finding vocabulary lists that language learners can use to gain linguistic competence in their chosen field in the least possible time.
 Section \ref{sec:formal-problem-statement} has specified how with the help of a proxy task, we can define this efficiency.
 Section \ref{sec:human-efficiency-testing} has suggested a hypothetical experiment for testing the efficiency of a vocabulary list with human test subject.
@@ -152,8 +144,8 @@ The following paragraphs discuss how, in such a setup, we can model the concepts
 In recent years, AI models such as ChatGPT \tocite{cite ChatGPT} or BERT \tocite{cite BERT} have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition and Sentiment Detection.
 Such models possess as level of "understanding" that extends to the meaning of words:
 They can recognize that two words such as "building" and "apartment" are close to each other in meaning, even though the words are dissimilar on a character level (this work makes no claims as to whether this understanding is real to that of a human, only that the models behaves as though it were).
-Thanks to this semantic language "understanding", AI models surpass the purely statistical approaches that were the paradigm of NLP until recently \tocite{paper contrasting traditional with AI approaches}.
-Thus, instead of a human performing a language exam to increases in linguistic understanding (\textit{utility}), we could let an AI model perform an NLP task on a corpus instead.
+Thanks to this semantic language "understanding", AI models surpass the purely statistical approaches that were the paradigm of NLP until recently \cite{jurafskySpeechLanguageProcessing2025a}.
+Thus, instead of a human performing a language exam to analyze their increases in linguistic understanding (\textit{utility}), we could let an AI model perform an NLP task on a corpus instead.
 
 If we run the model on a specific corpus and mask some of the words in the input, it is expected that the performance will decrease in comparison to the full input.
 However, presumably some words will have a larger impact on the performance than others.
@@ -167,7 +159,7 @@ Let a pre-trained AI model perform its NLP task on a corpus.
 At the start, we mask all the tokens in the input to simulate a language learner who is a complete beginner and thus knows no words in their target language.
 We then progressively unmask the words from the vocabulary list in the input, and each time run the AI on the corpus to check the updated (and presumably improved) performance.
 
-This yields a plot of performance over unmasked words which shows how quickly the performance improves with unmasked words, similar to Figure \ref{fig:voc-list-efficiency}.
+This yields a plot of performance over the number of unmasked words which shows how quickly the performance improves with unmasked words, similar to Figure \ref{fig:voc-list-efficiency}.
 A quickly increasing performance corresponds to an efficient vocabulary list, whereas an inefficient list creates a plot with low initial gains in performance.
 
 The modified experiment addresses the two issues proposed with the original setup:
@@ -186,7 +178,7 @@ The evaluation of the vocabulary list efficiency in the experiment will depend o
 We have already addressed the role of the AI model in Section \ref{sec:ai-as-test-subject}.
 The corpus and the NLP task performed by the model will also influence how quickly the AI model's performance increases with a given vocabulary list:
 
-For example, when performing Sentiment Detection, words relating to emotion such as "hate", "like", "amazing" will matter more than for an Information Retrieval task such as Temporal Tagging.
+For example, when performing sentiment detection, words relating to emotion such as "hate", "like", "amazing" will matter more than for an Information Retrieval task such as Temporal Tagging.
 The corpus has a more obvious influence on the performance, since corpora differ in many aspects such as formality, topic, and format of the text, all of which are components of a linguistic context.
 Thus, by using diverse corpora, we can model various language contexts, and test word utility in those contexts.
 Once we have efficient vocabulary lists across those contexts, a language learners could choose one or several of these lists, based on what linguistic context is closest to their language learning goals.
@@ -212,7 +204,7 @@ Table \ref{table:concept-implementation-correspondence} summarizes the correspon
 	\label{table:concept-implementation-correspondence}
 \end{table}
 
-The next section discusses the problem of how to not only test list efficiency, but make lists that approach an optimally efficient list.
+The next section discusses how we can not only test list efficiency, but make lists that approach an optimally efficient list.
 
 \section{Evaluating vs. Making Lists of Useful Vocabulary} \label{sec:eval-vs-creation}
 The previous section describes an approach for evaluating the efficiency of vocabulary lists, which measures how quickly the list lets a learner improve their understanding in a specific context.
@@ -249,7 +241,7 @@ By substituting these terms, the question is turned into:
 
 Put like this, the question is very close to the questions that the field of Explainable AI seeks to answer.
 A typical question of Explainable AI would be:
-\textit{Why, for a given input, does the model arrive at its output?}. \tocite{Definition of XAI. How to not make this seem like a direct quote?}
+\textit{Why, for a given input, does the model arrive at its output?}. 
 To be more precise, this is a question for a \textit{local} explanation (see Section \ref{sec:xai-methods}).
 As mentioned in Section \ref{sec:xai-methods}, we use feature importance attribution methods, which, for an NLP task, transforms the question into:
 \textit{Which words in the input have the most influence on the model arriving at its output?}

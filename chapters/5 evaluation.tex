@@ -51,15 +51,17 @@ As an illustration, we present the results of one such efficiency evaluation run
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\textwidth]{marlon-brando-eval.png}
-	\caption{Efficiency evaluation results on vocabulary lists for the Wikipedia Article of American actor Marlon Brando \url{https://en.wikipedia.org/wiki/Marlon_Brando}.}
+	\caption{Efficiency evaluation results on vocabulary lists for the Wikipedia Article of American actor Marlon Brando \protect\footnotemark.}
 	\label{fig:marlon-brando-eval}
 \end{figure}
+
+\footnotetext{\url{https://en.wikipedia.org/wiki/Marlon_Brando}}
 
 To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the sentence embedding model.
 The vocabularies are evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
 The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
 
-To compare the results on a broader scale, we aggregate the results of the evaluation runs for each corpus type, word utility extraction method and AI model (where applicable) by taking the average performance of the generated vocabulary list, with vocabulary sizes 10, 40, 160, and 640.
+To compare the results on a broader scale, we aggregate the results of the evaluation runs for each corpus type, word utility evaluation method and AI model (where applicable) by taking the average performance of the generated vocabulary list, with vocabulary sizes 0, 10, 40, 160, and 640.
 
 
 \todo{Describe train/test splitting}
@@ -248,9 +250,6 @@ Do not number the bullet points. Do not put hyperlinks in the list.
 \todo{results}
 
 \section{Results} \label{sec:results}
-\contentdescription{
-	Pure Description of results without deep interpretations
-}
 
 \subsection{Correspondence of Efficiency Evaluation with Human Intuition}
 As mentioned in the introduction to this chapter, we use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
@@ -347,7 +346,8 @@ We can also observe that the increase in performance is much slower than when a 
 When evaluating the broad applicability of a vocabulary list generation approach, the efficiency of generated vocabulary lists is not the only criterion:
 The runtime of the approach is also an important factor.
 Table \ref{tbl:runtime-results} shows the average runtime for the approaches per corpus type.
-It must be kept in mind that the runtime is not only influenced by the word utility extraction method, but also by implementation details, such as whether batch processing of inputs by the AI models is exploited, and the size of the model employed.
+It must be kept in mind that the runtime is not only influenced by the word utility evaluation method, but also by implementation details, such as whether batch processing of inputs by the AI models is exploited, and the size of the model employed.
+Named Entity Recognition is performed within each method, and contributes most of the runtime for the frequency-based approaches.
 
 \begin{table}[ht]
 	\centering

@@ -1,3 +1,26 @@
+\todo {Write Intro}
+
+Put succinctly, we can pose this as a challenge of finding a computational method that can answer the question:
+
+\begin{quote}
+	\textit{Which words provide the most language understanding in a given linguistic context?}
+\end{quote}
+
+We can subdivide the overarching goal of word utility evaluation into three related, but not quite equivalent sub-goals:
+\begin{itemize}
+	\item Evaluating the utility of a single word.
+	\item Evaluating the utility of an (ordered) list of words to learn.
+	\item Generating maximally useful (ordered) lists of words to learn.
+\end{itemize}
+
+The first and third goal are directly related, in that evaluating the utilities of words in a text trivially generates a useful list of vocabulary if we compile the list by aligning the words in order of their descending utility. 
+Evaluating the utility of an ordered list of vocabulary is conceptually further removed from the other two sub-goals, but nevertheless, its implementation shares many aspects with them.
+For this reason, many chapters in this work contribute to all of these goals equally.
+Therefore, to avoid redundancy, we refer to the overarching goal of this work as "word utility evaluation" throughout the following chapters - which is meant to include these three sub-tasks.
+
+
+
+
 \section{Motivation}
 \subsection{Role of Vocabulary in Language Acquisition}
 Learning a second language involves many different skills, often categorized into listening, reading, speaking, and writing.
@@ -9,7 +32,7 @@ Thus, basic knowledge of vocabulary is clearly one of the most essential skills 
 This raises the question of which vocabulary should be learned first when starting out on the journey of language acquisition.
 This work attempts to contribute to answering this question.
 
- \todo{Mention various methods of finding useful vocabulary from viewpoint of learner: textbooks, apps, etc.}
+\todo{Mention various methods of finding useful vocabulary from viewpoint of learner: textbooks, apps, etc.}
 
 \subsection{Context-specific Language Learning}
 Learners of languages are typically interested in one or more specific aspects of the language.
@@ -57,29 +80,42 @@ Depending on the context, we can think about which of the following English word
 	\item Married
 \end{itemize}
 
-To examine a few examples: Words like “convert” occur frequently when looking at Wikipedia articles \footnote{See "Wikipedia" corpus 2016, drawn from one million lines on https://wortschatz.uni-leipzig.de/en/download/English}. The word "cash" is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
+To examine a few examples: Words like “convert” occur frequently when looking at Wikipedia articles \footnote{See "Wikipedia" corpus 2016, drawn from one million lines on \url{https://wortschatz.uni-leipzig.de/en/download/English}}. The word "cash" is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
 
 \section{Challenges and Contributions}
+\todo{Mention how many languages our approach currently supports }
 
-\subsection{Challenges/Research Questions}
-[What is the problem to be solved? - Given a context, find vocabulary maximally useful for understanding texts in it]
-Criteria for good extraction method:
+In this work, we make the following contributions:
+
 \begin{itemize}
-	\item Requires little manual effort to generate input data (ideally performable on freely available corpora)
-	\item Requires little computational effort
-	\item Outputs word utilities that align with human intuition 
+	\item A workable definition of word utility (Section \ref{sec:utility}).
+	\item The development of a framework for evaluating and generating vocabulary lists, by evaluating the utility of words to understand the meaning of a given text (Chapter \ref{ch:approach}).
+	\item The analysis and selection of appropriate proxy tasks, corpora, and XAI methods, leading the implementation of this approach (Chapter \ref{ch:implementation}).
+	\item Analysis of the resulting vocabulary lists in comparison with each other, as well as frequency-based baseline methods (Chapter \ref{ch:evaluation}).
 \end{itemize}
 
-Inherent challenges of text-based language analysis include:
-\begin{itemize}
-	\item ambiguity
-	\item Words having multiple different meanings (polysemy). E.g., \textit{can} can be a verb or a vessel.
-\end{itemize}
+A major challenge in making computational approaches which generate maximally useful lists of vocabulary is that, to the best of our knowledge, no automatic process has yet been proposed which can measure how useful the words in a vocabulary list are. 
+Thus, in order to evaluate the vocabulary lists produced by our generation approach, we develop our own evaluation method, which is based on similar ideas as our approach for list generation.
+However, we must also assess whether our evaluation approach itself is reliable, which is necessarily manual and subjective for lack of other evaluation measures.
 
-\subsection{Contributions}
-[Motivation: Useful vocabulary -> Need approach to evaluate utility of word]
-[How this work address the challenges: Simulate human trying to understand texts with AI]
-[Distinguish between passive and active utility]
+A general theme of this work is multilinguality --- we attempt to make our implementation applicable to the largest number of languages possible.
+For instance, we seek out sources of text to use as input to our data pipeline where many languages are available and labeled.
+This criterion limits the resources available.
+Another challenge in our particular word utility evaluation approach was finding a mechanism to automatically measure an AI model's understanding of texts, as this understanding is used to calculate a word's utility.
+For this, we let the AI model perform a task on the text, similar to a language exam in a school.
+However, finding tasks that require a broad language understanding to be performed but which can also be reliably evaluated automatically was a major difficulty.
+
+% Inherent challenges of text-based language analysis include:
+% \begin{itemize}
+% 	\item ambiguity
+% 	\item Words having multiple different meanings (polysemy). E.g., \textit{can} can be a verb or a vessel.
+% \end{itemize}
+
+% \subsection{Contributions}
+% [Motivation: Useful vocabulary -> Need approach to evaluate utility of word]
+% [How this work address the challenges: Simulate human trying to understand texts with AI]
+% [Distinguish between passive and active utility]
+
 
 \section{Outline of Work}
 
@@ -91,18 +127,18 @@ Finally, we include a survey about concrete methods which are currently used to 
 
 Chapter \ref{ch:approach} describes in detail our theoretical approach to both evaluating and generating vocabulary lists.
 To this end, we first transform our problem into a mathematical one.
-We then describe an empirical approach for evaluating how well a vocabulary list helps a learner to understand a given context, and how we automate the approach by using \AI\ models to simulate a learner and corpora to simulate linguistic concexts. 
+We then describe an empirical approach for evaluating how well a vocabulary list helps a learner to understand a given context, and how we automate the approach by using \AI\ models to simulate a learner and corpora to simulate linguistic concexts.
 With the evaluation approach as a basis, we develop a second approach for generating vocabulary lists, using methods from the field of Explainable AI.
 
 The technical implementation for both approaches is detailed in Chapter \ref{ch:implementation}:
 After having established the principal components to the approaches in Chapter \ref{ch:approach}, we discuss the choice of these components, namely corpora, AI models, and Explainable AI methods:
-For each component, we first describe desiderata, and then make a number of concrete choices which were used in our experiments. 
+For each component, we first describe desiderata, and then make a number of concrete choices which were used in our experiments.
 
 
 Chapter \ref{ch:evaluation} discusses the evaluation of the vocabulary lists generated by our list generation approach.
 For this, we mainly utilize our own evaluation approach described in Chapter \ref{ch:approach}, but also make several subjective observations on the perceived utility of the lists from a human intuitive perspective.
 We evaluate how well the approaches perform on two different types of datasets, and how much time they require, using frequency-based approaches, which predominate the literature on vocabulary list compilation, as baselines.
-Additionally, we analyze how similar the lists are to one another, independent of their performance. 
+Additionally, we analyze how similar the lists are to one another, independent of their performance.
 
 Finally, Chapter \ref{ch:outlook} outlines potential improvements to our approach to word utility evaluation, which could not be implemented within the scope of this work due to time constraints.
 
