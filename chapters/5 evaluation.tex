@@ -30,9 +30,29 @@ The various utility extraction approaches produce ranked lists as outputs.
 To compare these, we employ both quantitative and qualitative comparison approaches, described in the following sections.
 
 \subsection{NLP Task Performance}
-Our primary metric for evaluating a vocabulary list's efficiency is the approach explained in Section \ref{sec:list-generation}:
-We let an AI model perform an NLP task with a vocabulary consisting of the first $k$ elements of the list.
+Our primary metric for evaluating a vocabulary list's efficiency is the approach explained in Section \ref{sec:experimental-setup-with-ai}:
+We let an AI model perform an NLP task with a vocabulary $V_{l, k}$, consisting of the first $k$ elements of the list $l$.
 The limited vocabulary is simulated by removing words outside the vocabulary from the inputs to the model.
+For illustration, consider the example sentence:
+
+\begin{quote}
+	\textit{Abraham Lincoln faced enmity in 1863.}
+\end{quote}
+
+If our vocabulary consists only of the word \textit{enmity}, this sentence becomes:
+
+\begin{quote}
+	\textit{Abraham Lincoln enmity 1863.}
+\end{quote}
+
+Since \textit{Abraham Lincoln} is recognized as a named entity, we leave it in the input, even though it is not part of the vocabulary.
+Non-alphabetic tokens, such as numbers and punctuation, are also left in the input.
+
+
+We start the evaluation of every vocabulary list with a vocabulary size of 0, letting model run on inputs where only named entities and non-alphabetic are left.
+The score for the entire corpus is calculated by taking the arithmetic mean of the scores of individual lines.
+This allows us to see the "utility" of the named entities on their own, putting into comparison the following performance scores in our evaluation.
+After this, we set the vocabulary size to 10 words, and run the AI models with the resulting vocabulary $V_{l, 10}$.
 We then progressively increase the vocabulary by increasing index $k$ until we reach the end of the list.
 The increase of vocabulary size is exponential, as this ensures a quick evaluation and performance is expected to not grow very much towards the end of the list, where the less useful words should be (this assumption can be confirmed in the evaluation results in Section \ref{sec:results}).
 
@@ -58,7 +78,9 @@ As an illustration, we present the results of one such efficiency evaluation run
 \footnotetext{\url{https://en.wikipedia.org/wiki/Marlon_Brando}}
 
 To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the sentence embedding model.
-The vocabularies are evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
+We first evaluate the AI model performing the task with a vocabulary size of zero, simulating the state of not knowing any words. 
+The only tokens in this run are named entities and punctuation, as these are not considered to be potential vocabulary terms.
+The vocabularies are then evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
 The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
 
 To compare the results on a broader scale, we aggregate the results of the evaluation runs for each corpus type, word utility evaluation method and AI model (where applicable) by taking the average performance of the generated vocabulary list, with vocabulary sizes 0, 10, 40, 160, and 640.

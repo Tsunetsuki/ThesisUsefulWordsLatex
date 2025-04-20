@@ -1,0 +1,55 @@
+\begin{center}
+	\scalebox{0.75}{
+		\begin{tikzpicture}[node distance=1.8cm and 2.5cm, every node/.style={font=\small}]
+
+			% Styles
+			\tikzstyle{process} = [rectangle, rounded corners, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10, text width=8.5cm]
+			\tikzstyle{arrow} = [thick, ->, >=Stealth]
+			\tikzstyle{data} = [align=left, text width=8.5cm, anchor=west]
+
+			% Process Nodes
+			\node (n1) [process] {Input sentence};
+			\node (n2) [process, below=of n1] {Tokenize};
+			\node (n3) [process, below=of n2] {Merge tokens, filter named entities and special tokens};
+			\node (n4) [process, below=of n3] {Make sentence variations by ablating merged tokens};
+			\node (n5) [process, below=of n4] {Run model for variations, evaluate performances};
+			\node (n6) [process, below=of n5] {Calculate difference to baseline in performance};
+
+			% Anchor point to align all data nodes horizontally
+			\node (anchor) [right=of n1] {};
+
+			% Data Nodes, all vertically stacked but aligned to 'anchor'
+			\node (d1) [data] at (anchor) {\textbf{Baseline}: "Abraham Lincoln faced enmity in 1863."\\
+				\textbf{Variation}: "Abraham Lincoln enmity 1863."
+			};
+			\node (d2) [data, right=of n2] {
+			['[CLS]', 'abraham', 'lincoln', 'faced', 'en', '\#\#mity', 'in', '1863', '.', '[SEP]']
+			};
+			\node (d3) [data, right=of n3] { ['faced', 'enmity', 'in'] };
+			\node (d4) [data, right=of n4] {
+				\textbf{Baseline:} "abraham lincoln faced enmity in 1863."\\
+				\textbf{faced:} "abraham lincoln enmity in 1863."\\
+				\textbf{enmity:} "abraham lincoln faced in 1863."\\
+				\textbf{in:} "abraham lincoln faced enmity 1863."\\
+			};
+			\node (d5) [data, right=of n5] {
+				\textbf{Baseline:} 0.8\\
+				\textbf{faced:} 0.5\\
+				\textbf{enmity:} 0.3\\
+				\textbf{in:} 0.7\\
+			};
+			\node (d6) [data, right=of n6] {
+				[('faced', 0.3), ('enmity', 0.5), ('in', 0.1)]
+			};
+
+			% Arrows between process nodes (left column)
+			\draw [arrow] (n1) -- (n2);
+			\draw [arrow] (n2) -- (n3);
+			\draw [arrow] (n3) -- (n4);
+			\draw [arrow] (n4) -- (n5);
+			\draw [arrow] (n5) -- (n6);
+
+		\end{tikzpicture}
+	}
+\end{center}
+
