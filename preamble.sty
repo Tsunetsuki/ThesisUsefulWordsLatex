@@ -1,8 +1,15 @@
 \ProvidesPackage{preamble}
 \usepackage[dvipsnames, table,xcdraw]{xcolor}
-\usepackage{threeparttable}
 \usepackage{booktabs}
 \usepackage[expansion=false]{microtype}
+\usepackage{silence}
+
+\WarningFilter{hyphenat}{*}
+\usepackage{etoolbox}
+% Suppress font warnings
+\def\@font@warning#1{}
+
+\usepackage[htt]{hyphenat}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{pgfplots}

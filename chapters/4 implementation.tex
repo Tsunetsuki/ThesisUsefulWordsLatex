@@ -589,38 +589,45 @@ Table \ref{table:supported-languages} summarizes the language support of each co
 
 	{
 		\renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
-		\begin{table}[ht]
+		\begin{table}[H]
 			\centering
-\begin{threeparttable}
 			\begin{tabularx}{\textwidth}{|X|X|X|}
 				\hline
-				\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                                                                                                        \\
+				\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                             \\
 				\hline
-				Tokenization                                & 104                          & For the \texttt{bert-base-uncased} model \footnote{\url{https://huggingface.co/google-bert/bert-base-uncased}}                                                                                                                                                                                                        \\
+				Tokenization                                & 104                          & Using the \texttt{bert-base-uncased} model\footnotemark[1]                                                                                                                                                                                 \\
 				\hline
-				Named Entity Recognition                    & 9                            & Spacy model \texttt{xx\_ent\_wiki\_sm} \footnote{\url{https://spacy.io/models/xx\#xx_ent_wiki_sm}}. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset \footnote{\url{https://huggingface.co/datasets/mnaguib/WikiNER}}, which contains 9 languages. \\
-				
+				Named Entity Recognition                    & 9                            & Using the \textit{spacy} model \texttt{xx\_ent\_wiki\_sm}\footnotemark[2]. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset\footnotemark[3], which contains 9 languages. \\
 				\hline
-				Next sentence prediction                    & 104                          & The \texttt{bert-base-multilingual-cased} model \footnote{\url{https://huggingface.co/google-bert/bert-base-multilingual-cased}}                                                                                                                                                                                      \\
+				Next sentence prediction                    & 104                          & Using the \texttt{bert-base-multilingual-cased} model\footnotemark[4]                                                                                                                                                                      \\
 				\hline
-				Sentence Embedding                          & $>50$                        & \texttt{paraphrase-multilingual-MiniLM-L12-v2} \footnote{\url{https://www.sbert.net/docs/sentence_transformer/pretrained_models.html\#original-models}}                                                                                                                                                               \\
+				Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5]                                                                                                                                                             \\
 				\hline
-				Sentence splitting (for Wikipedia articles) & $>150$                      & The \texttt{xx\_sent\_ud\_sm} model \footnote{\url{https://spacy.io/models/xx\#xx_sent_ud_sm}} is based on the \textit{Universal Dependencies} \footnote{\url{https://universaldependencies.org/}} framework, which supports $>150$ languages.                                                                                                                                                                                                                                  \\ 
+				Sentence fhuiopehfoiuhesplitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
 				\hline
-				Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                                                                                                                     \\
+				Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                              \\
 				\hline
-				Wikipedia Corpus                            & $>300$                       &  As of 2025, there exist $>300$ Wikipedias \footnote{\url{https://en.wikipedia.org/wiki/List_of_Wikipedias}}                                                                                                                                                                                                                      \\
+				Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8]                                                                                                                                                                   \\
 				\hline
-				OPUS OpenSubtitles Corpus                   & 94                           & \footnote{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}                                                                                                                                                                                                                      \\
-				\hline
+				OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                                       \\
 				\hline
 			\end{tabularx}
-		\end{threeparttable}
+
+
+
 			\caption{Languages supported by each component in the pipeline.}
 			\label{table:supported-languages}
 		\end{table}
 	}
 
-
+\footnotetext[1]{\url{https://huggingface.co/google-bert/bert-base-uncased}}
+\footnotetext[2]{\url{https://spacy.io/models/xx\#xx_ent_wiki_sm}}
+\footnotetext[3]{\url{https://huggingface.co/datasets/mnaguib/WikiNER}}
+\footnotetext[4]{\url{https://huggingface.co/google-bert/bert-base-multilingual-cased}}
+\footnotetext[5]{\url{https://www.sbert.net/docs/sentence_transformer/pretrained_models.html\#original-models}}
+\footnotetext[6]{\url{https://spacy.io/models/xx\#xx_sent_ud_sm}}
+\footnotetext[7]{\url{https://universaldependencies.org/}}
+\footnotetext[8]{\url{https://en.wikipedia.org/wiki/List_of_Wikipedias}}
+\footnotetext[9]{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}
 
 
