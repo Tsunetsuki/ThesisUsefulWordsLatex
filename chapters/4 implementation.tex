@@ -295,7 +295,7 @@ Therefore, in the single-article approach, both the list generation and evaluati
 % Categories therefore not not follow a tree structure, thus most articles belong to more than one top-level category.
 
 
-\paragraph{Pre-Processing:}
+\paragraph{Pre-Processing:} \label{sec:wikipedia-preprocessing}
 In order to use Wikipedia articles as inputs to our word utility evaluation approach, we perform pre-processing on the raw data to filter out source code, as well as chapters that we do not consider to be part of the article text.
 This section shortly describes this process.
 
@@ -580,3 +580,47 @@ This final section about our implementation describes how the chosen components 
 	\caption{Example of sentence embedding scoring}
 	\label{fig:list-evaluation-diagram}
 \end{figure}
+
+\subsection{Supported Languages}
+Our data pipeline contains various language-specific components, all of which must support a language in order for our approach to support vocabulary list generation in the language.
+This section summarizes the supported languages of each component, including pre-processing.
+
+Table \ref{table:supported-languages} summarizes the language support of each component.
+
+	{
+		\renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
+		\begin{table}[ht]
+			\centering
+\begin{threeparttable}
+			\begin{tabularx}{\textwidth}{|X|X|X|}
+				\hline
+				\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                                                                                                        \\
+				\hline
+				Tokenization                                & 104                          & For the \texttt{bert-base-uncased} model \footnote{\url{https://huggingface.co/google-bert/bert-base-uncased}}                                                                                                                                                                                                        \\
+				\hline
+				Named Entity Recognition                    & 9                            & Spacy model \texttt{xx\_ent\_wiki\_sm} \footnote{\url{https://spacy.io/models/xx\#xx_ent_wiki_sm}}. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset \footnote{\url{https://huggingface.co/datasets/mnaguib/WikiNER}}, which contains 9 languages. \\
+				
+				\hline
+				Next sentence prediction                    & 104                          & The \texttt{bert-base-multilingual-cased} model \footnote{\url{https://huggingface.co/google-bert/bert-base-multilingual-cased}}                                                                                                                                                                                      \\
+				\hline
+				Sentence Embedding                          & $>50$                        & \texttt{paraphrase-multilingual-MiniLM-L12-v2} \footnote{\url{https://www.sbert.net/docs/sentence_transformer/pretrained_models.html\#original-models}}                                                                                                                                                               \\
+				\hline
+				Sentence splitting (for Wikipedia articles) & $>150$                      & The \texttt{xx\_sent\_ud\_sm} model \footnote{\url{https://spacy.io/models/xx\#xx_sent_ud_sm}} is based on the \textit{Universal Dependencies} \footnote{\url{https://universaldependencies.org/}} framework, which supports $>150$ languages.                                                                                                                                                                                                                                  \\ 
+				\hline
+				Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                                                                                                                     \\
+				\hline
+				Wikipedia Corpus                            & $>300$                       &  As of 2025, there exist $>300$ Wikipedias \footnote{\url{https://en.wikipedia.org/wiki/List_of_Wikipedias}}                                                                                                                                                                                                                      \\
+				\hline
+				OPUS OpenSubtitles Corpus                   & 94                           & \footnote{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}                                                                                                                                                                                                                      \\
+				\hline
+				\hline
+			\end{tabularx}
+		\end{threeparttable}
+			\caption{Languages supported by each component in the pipeline.}
+			\label{table:supported-languages}
+		\end{table}
+	}
+
+
+
+
