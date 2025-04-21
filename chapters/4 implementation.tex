@@ -583,9 +583,7 @@ This final section about our implementation describes how the chosen components 
 
 \subsection{Supported Languages}
 Our data pipeline contains various language-specific components, all of which must support a language in order for our approach to support vocabulary list generation in the language.
-This section summarizes the supported languages of each component, including pre-processing.
-
-Table \ref{table:supported-languages} summarizes the language support of each component.
+Table \ref{table:supported-languages} summarizes the language support of each component, including pre-processing.
 
 	{
 		\renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
@@ -603,13 +601,13 @@ Table \ref{table:supported-languages} summarizes the language support of each co
 				\hline
 				Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5]                                                                                                                                                             \\
 				\hline
-				Sentence fhuiopehfoiuhesplitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
+				Sentence splitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
 				\hline
 				Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                              \\
 				\hline
 				Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8]                                                                                                                                                                   \\
 				\hline
-				OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                                       \\
+				OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                             \\
 				\hline
 			\end{tabularx}
 
@@ -630,4 +628,9 @@ Table \ref{table:supported-languages} summarizes the language support of each co
 \footnotetext[8]{\url{https://en.wikipedia.org/wiki/List_of_Wikipedias}}
 \footnotetext[9]{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}
 
-
+It can be seen that, apart from the manual selection of certain Wikipedia headings, named entity recognition is the bottleneck in our pipeline with the currently used packages. 
+While we did not individually cross-correlate the supported languages of each component, we estimate that the pipeline supports 9 languages when taking into consideration the \textit{spacy} NER capabilities.
+With a NER model supporting more languages, the implementation is estimated to support at least 40 languages, as the next bottleneck would be the sentence embedding model with over $50$ languages, some of which may, however, not be supported by all other components.
+	
+	
+	
