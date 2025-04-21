@@ -152,6 +152,9 @@ Because personal names such as \textit{Angela Merkel} are generally not seen as 
 The names of places can be useful vocabulary to learn, such as in the case of \textit{Germany}, because it differs between English and other languages (e.g., German: \textit{Deutschland}, Spanish: \textit{Alemania}).
 However, our tool for Named Entity Recognition cannot distinguish between the names of countries and other places such as \textit{Karlsruhe}.
 To prevent the vocabulary lists from containing many names of cities, we therefore filter out all recognized names of places, including those of countries.
+This is similar to the filtering of named entities performed in the KELLY project \cite{kokkinakisCorpusbasedApproachesCreation2011}:
+In it, NER was employed to filter out proper names form its lists of vocabulary.
+The only exceptions from this were the names of countries, which were manually added back into the lists after the automatic filtering.
 
 
 \subsection{NLP Preprocessing: Tokenization}
@@ -331,7 +334,7 @@ It is this work's contention that AI models make it possible to mechanistically 
 % 	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
 % \end{itemize}
 
-\subsection{Expert Judgement: Reading Rockets Tier System}
+\subsection{Expert Judgement: Reading Rockets Tier System} \label{sec:reading-rockets}
 This section introduces a traditional approach to vocabulary list generation.
 While it does put forth criteria for vocabulary selection, they are not considered possible to calculate mechanistically, and thus it relies on the judgement of individual language experts (teachers) to find useful words for their students.
 
@@ -389,11 +392,11 @@ Such words are called \textit{stopwords} in the realm of Natural Language Proces
 Thus, knowing only these words is not sufficient for comprehending most texts.
 
 
-\paragraph {Possible Improvement: Frequency with stopwords filtered out}
-Given the above issue, we can immediately of a way to remedy the issue:
-There exist stopword lists for many languages, such as the one provided by the NLTK library \footnote{\url{https://www.nltk.org/}}.
-Therefore, we could make a more useful vocabulary list by first counting the frequency of words, and then deprioritizing stopwords by a constant factor, or dispersing them more evenly throughout the vocabulary list, such that the first words already contain nouns and verbs allowing for the construction of (though very limited) grammatically correct sentences.
-
+% \paragraph {Possible Improvement: Frequency with stopwords filtered out}
+% Given the above issue, we can immediately of a way to remedy the issue:
+% There exist stopword lists for many languages, such as the one provided by the NLTK library \footnote{\url{https://www.nltk.org/}}.
+% Therefore, we could make a more useful vocabulary list by first counting the frequency of words, and then deprioritizing stopwords by a constant factor, or dispersing them more evenly throughout the vocabulary list, such that the first words already contain nouns and verbs allowing for the construction of (though very limited) grammatically correct sentences.
+%
 
 \subsubsection {Average Reduced Frequency}
 The raw frequency count can give indications about which word in a long corpus are important to know.
@@ -422,7 +425,7 @@ The KELLY project was a project by multiple European universities aimed at "deve
 KELLY employed ARF along with the raw frequency and relative frequency of a word in corpora to find useful words and thus generate lists of vocabulary \cite{kokkinakisCorpusbasedApproachesCreation2011}.
 
 \subsubsection {TF-IDF}
-The previous sections have introduced proxy metrics for word utility based on often a word appears in a (single) large corpus.
+The previous sections have introduced proxy metrics for word utility based on how often a word appears in a (single) large corpus.
 To the best of our knowledge, all current algorithmic methods used for vocabulary list compilation are of this type.
 The issue with these approaches is that they tend to rate stop words the highest, as these are very high frequency words in any language.
 Because we are concerned with context-specific language learning, we could attempt to normalize the frequency of a word in a context-specific corpus with its frequency in a more generic background corpus.
@@ -430,43 +433,34 @@ This is the idea of the \textbf{TF-IDF} (\textbf{T}erm \textbf{F}requency - \tex
 \cite{qaiserTextMiningUse2018} metric:
 
 It is calculated on a document level:
-Given a collection of documents, we calculate the TF-IDF of a word by taking the number of occurrences of the word in a document (Term Frequency), but discounting words that appear in a large number of documents overall (multiplying by the Inverse Document Frequency).
-There are various formulas for calculating the TF-IDF, but for this work, we use the formula in equation \ref{eq:tfidf}, as it is a standard version where the discounting of a word is independent of the length of the other documents in the collection.
-
-Given a collection containing $N$ documents, a term $t$, and a document $t$, we define $\text{tf}_{t,d}$ as the number of occurrences of term $t$ in document $d$, and $\text{df}_{t}$ as the number of documents in which term $t$ appears. Then our TF-IDF is defined as:
+Given a collection of documents, we calculate the TF-IDF of a word in a document by taking the number of occurrences of the word in the document (Term Frequency), but discounting words that appear in a large number of documents overall (multiplying by the Inverse Document Frequency).
+Specifically, we used the following standard formula (taken from \cite{qaiserTextMiningUse2018}):
+Given a term $t$, a document $d$, a collection containing $N$ documents, we define $\text{tf}_{t,d}$ as the number of occurrences of $t$ in $d$, and $\text{df}_{t}$ as the number of documents in which $t$ appears at least once. Then our TF-IDF given by: 
 
 \begin{equation}\label{eq:tfidf}
 	\text{tf-idf}_{t,d} = \text{tf}_{t,d} \times \log \frac{N}{\text{df}_{t,d}}
 \end{equation}
 
-(formula taken from \cite{qaiserTextMiningUse2018})
-
 
 The TF-IDF metric is usually employed for finding keywords in a document, i.e., a small number of words that characterize its contents \cite{qaiserTextMiningUse2018}.
+TF-IDF can be thus be seen as a proxy metric for how important a word is for the overall meaning of the document.
+We can see that there is a potentially paradoxical relationship between the raw frequency and TF-IDF, as generally frequent words achieve a high rank for the raw frequency metric, but a low rank for TF-IDF, leaving us to wonder which of them (if any) is a good proxy metrics for word utility.
 
-The calculated "keyness" can be seen as a proxy for how important a word is for the overall meaning of the document .
-We can see that there is a generally frequent words achieve a high rank for the raw frequency metric, but a low rank for TF-IDF.
-Because of this somewhat contradictory nature of the metrics, we are left to wonder if either of them are good proxy metrics for word utility.
-
-\todo{TF-IDF section is not acceptable right now}
+Another potential downside of TF-IDF in comparison with the manual approach seen in Section \ref{sec:reading-rockets}, is that, while it can identify words that characterize the text, it does not take into account the semantic relationships between the words in a text.
+Thus, if a language learner studies words in order of their TF-IDF in a document they are interested in, the words may well aid in identifying the topic the document, but may not be as useful at finding out what the message conveyed about the topic is.
+For example, "not" is a highly frequent word in English and thus will have a high IDF and low TF-IDF score in most documents.
+But it is essential to know, as it can completely invert the meaning of a sentence.
+Our approach to word utility evaluation is an attempt to overcome this shortcoming of pure word counting, by taking into account additional semantic information from texts which can be extracted using recent AI-based methods.
 
 \subsection{Summary} \label{sec:ranking-vocab-lists-summary}
-\todo{Improve this section}
-Current methods do not exploit recent developments in AI technology and thus suffer from several shortcomings:
-In general, all of them essentially only count words without taking into account their relationship between each other:
-
-Frequency: The most frequent words in texts are often words that carry little meaning by themselves, such as "a", "the", "of" in English.
-While these may appear in many texts, they are not useful in determining their meaning.
-Furthermore, frequency is usually used on very large corpora for vocabulary list compilation.
-While it can be used on smaller corpora, the long tail of the distribution means that many words will have frequencies of 2 or 1.
+Current methods for compiling lists of vocabulary do not exploit recent developments in AI technology and thus suffer from several shortcomings:
+Automatic methods are exclusively based on counting words, without taking into account their meaning or relationship between each other.
+Furthermore, they are usually used on very large corpora for vocabulary list compilation.
+While their use on smaller corpora is possible, the long tail of the distribution means that many words will have frequencies of 2 or 1.
 These words cannot put in a more useful order with raw frequency counts.
 
-TF-IDF: This metric has been used successfully to find the words that give the best hints at a text's topic.
-However, it does not take into account and semantic relationships between the words in a text.
-Thus, learning words by aggregating TF-IDFs on multiple texts may aid in identifying the topic of texts, but not at finding out what the message conveyed about the topic is.
-"not" is a highly frequent word in English and thus will have a low TF-IDF score in most documents.
-But it is essential to know, as it can completely invert the meaning of a sentence.
-
+Manual methods, such as the \textit{Reading Rockets} approach, rely on the expert judgement of individual teachers, making them subjective and challenging to implement on a large number of vocabulary terms.
+In the following section, we will present a novel approach for compiling and evaluating lists of vocabulary, which attempts to surpass purely count-based methods with the use of AI models and Explainable AI.
 
 
 

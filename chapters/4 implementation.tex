@@ -151,13 +151,41 @@ For these reasons, we do not use text summarization in our implementation.
 \missingcitation{Popular text summarization dataset}
 
 \subsubsection{Sentence Embedding} \label{sec:sentence-embedding}
-Sentence embedding takes sentences as inputs and outputs vectors of numbers, which are typically used as inputs for a downstream task such gauging the similarity between two sentences, which can be used to find similar sentences across languages for making training data for a translation model \cite{artetxeMassivelyMultilingualSentence2019} \cite{reimersMakingMonolingualSentence2020}.
+Sentence embedding takes sentences as inputs and outputs vectors of numbers, which are typically used as inputs for a downstream task such gauging the similarity between two sentences, which can in turn be used to find similar sentences across languages for making training data for translations model \cite{artetxeMassivelyMultilingualSentence2019} \cite{reimersMakingMonolingualSentence2020}.
 This approach can be performed on any corpus containing distinct sentences, meaning the corpus does not have to be document-level, and sentences need not be consecutive.
 
 An important characteristic of this task is that it has no ground truth labels, and therefore, when using feature importance attribution XAI methods, we cannot measure differences in performance of the downstream task when the input is perturbed.
-Instead, we embed an input sentence in its original form (the baseline embedding), then embed variations of the sentences where some words have been ablated, and measure the distance between the baseline embedding and the embedding of each variation.
+Instead, we embed an input sentence in its original form (the baseline embedding), then embed variations of the sentence with some of its words removed, and measure the distance between the baseline embedding and the embedding of each variation.
+A large distance between the baseline and the variant embedding where a word has been removed implies that the removed word is useful for understanding the sentence.
 We believe these distances are a valid metric for determining how much a word contributes to the meaning of the sentence, as the embedded vector is already a semantic representation of the input.
 In our estimation, the ease of evaluation and of finding input data, as well as its generality make sentence embedding an ideal task for word utility evaluation, which is why we use it not only for the generation of vocabulary lists, but also for the evaluation of their efficiency.
+
+\subsection{Choice of Model}
+In the previous sections, we have presented two tasks which seem appropriate choices for our vocabulary list generation and evaluation approach, namely, next sentence prediction and sentence embedding.
+This section discusses the choice of the AI model used for both of these tasks.
+In general, we use models from model families which support many languages, but the concrete models in our implementation are monolingual models, as these have shorter inference times, allowing us to process more data.
+
+\subsubsection{Next Sentence Prediction Model}
+As our next sentence prediction model, we use a BERT model \cite{kentonBertPretrainingDeep2019}, as these models have been trained in many languages (over 104 for \texttt{bert-base-multilingual-cased}, the model with the most languages \footnote{\url{https://huggingface.co/google-bert/bert-base-multilingual-cased}}).
+As BERT models have the same structure to each other, this makes extending our approach to more languages trivial:
+We use the model-specific XAI method of attention (see Section \ref{sec:transformer}) in our pipeline, the implementation of which is dependent on the transformer used, as the attention tensor's dimensions are dictates by variables such as the number of attention heads.
+However, for our implementation, we employ the monolingual English model \texttt{bert-base-uncased} \footnote{\url{https://huggingface.co/google-bert/bert-base-uncased}} for its smaller size (110M parameters instead of 170M for \texttt{bert-base-multilingual-cased}) and shorter inference time.
+
+
+\subsubsection{Sentence Embedding Model}
+For the sentence embedding task, there are two model families that appear as suitable candidates for our implementation:
+\textit{LASER} embedding models \cite{artetxeMassivelyMultilingualSentence2019}, developed by Meta, and \textit{Sentence Transformers} a.k.a. \textit{sBert} \cite{reimersMakingMonolingualSentence2020}, developed chiefly by the University of Darmstadt.
+Both of these solutions have set as their aims the embedding of sentence of as many languages as possible, giving special considerations to low-resource languages. 
+
+While the latest \textit{LASER} embedding model is more recent and claims to outperform previous models, its implementation requires a Unix environment to work, which presented compatibility issues with our Windows-based development setup \footnote{\url{https://github.com/facebookresearch/LASER}}.
+Additionally, to the best of our knowledge, the models are not available on the \textit{HuggingFace} \footnote{\url{https://huggingface.co/}} platform, meaning their use would have necessitated various changes in our implementation due the different interface.
+For this reason, we use the models from the \texttt{sentence-transformers} package.
+While the models are available in their dedicated Python package \url{https://www.sbert.net/}, these do not allow for the output of attention values, which is why we load the Sentence Transformer model from HuggingFace directly.
+This necessitates an additional post-processing step, but the code is available on the model website.
+The model we use is \footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}.
+This model is a monolingual English model, however again, it is much more lightweight than the multilingual Sentence Transformer models.
+
+
 
 \subsection{Summary}
 We have put forth desiderata for the NLP tasks to make our approach to vocabulary list generation and evaluation accurate, as well as applicable to many languages and language contexts.
