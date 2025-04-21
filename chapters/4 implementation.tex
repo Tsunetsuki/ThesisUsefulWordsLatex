@@ -100,10 +100,11 @@ Another benefit of using pre-training tasks is that their training is unsupervis
 Their widespread use in \NLP also means that pre-trained models are widely and freely available.
 
 \subsubsection{Language Modeling}
+There generally exist two subtypes of language modeling, namely Causal Language Modeling and Masked Language Modeling \cite{jurafskySpeechLanguageProcessing2025a}.
+Causal language modeling describes the task of predicting the text token in a text, given the sequence of previous tokens, and it constitutes the basis of many recent developments in Large Language Models \cite{brownLanguageModelsAre2020} \cite{openaiGPT4TechnicalReport2024}.
+Masked language modeling involves filling in missing tokens in a sentence, and is one of the training tasks for the popular BERT models \cite{kentonBertPretrainingDeep2019}, along with next sentence prediction.
 
-Language modeling is the basis of many recent developments in Large Language Models \cite{brownLanguageModelsAre2020} \cite{openaiGPT4TechnicalReport2024} .
-Is describes the task of predicting the next token in a text, given the sequence of previous tokens.
-While its training data can be trivially generated from corpora and does not pose great challenges in evaluation, we did not consider language modeling an appropriate NLP task for the purpose of finding useful vocabulary.
+While its training data can be trivially generated from corpora and does not pose great challenges in evaluation, we did not consider either type of language modeling an appropriate NLP task for the purpose of finding useful vocabulary.
 This is because generating the task's training data already involves removing tokens from the input, resulting in training data with word distributions which do not correspond to language found in real texts.
 Another issue arises to the nature of model-agnostic, feature importance attribution XAI methods:
 These methods perturb the input to determine which tokens in the input are the most relevant.
@@ -116,7 +117,7 @@ Consider the sentence:
 
 A language model, given the input datum \textit{The sky is}, may be able to predict that \textit{blue} is a probable next word to this sentence.
 
-However, if we mask the unimportant word  \textit{is} in the sentence to find out if the model's can predict the last word of the sentence even when \textit{is} is missing, we are left with the sentence:
+However, if we mask the --- relatively unimportant --- word  \textit{is} in the sentence to find out if the model's can predict the last word of the sentence even when \textit{is} is missing, we are left with the sentence:
 
 \begin{quote}
 	\textit{The sky}

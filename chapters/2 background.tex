@@ -133,29 +133,6 @@ In contrast, the interaction of computers is usually more rigidly defined by spe
 For the purposes of this work, an \textit{NLP task} is a function with a specific input and output format, where at least one of the two formats takes the form of natural language.
 We utilize NLP tasks as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in Chapter \ref{ch:approach}.
 
-\subsection{NLP Preprocessing: Named Entity Recognition}
-In this work, we attempt to compile lists of vocabulary by processing corpora with various methods.
-However, these corpora contain so-called Named Entities, such as the names of people, organizations, and places, which are typically not desirable in vocabulary lists:
-\missingcitation{NER}
-Consider the following sentences:
-
-\begin{quote}
-	\textit{Angela Merkel is the chancellor of Germany.}
-\end{quote}
-
-\begin{quote}
-	\textit{Angela Merkel visited Karlsruhe last month.}
-\end{quote}
-
-These sentences contain the personal name \textit{Angela Merkel}, the country name \textit{Germany} and the city name \textit{Karlsruhe}.
-Because personal names such as \textit{Angela Merkel} are generally not seen as vocabulary to learn, when we compile a list of English vocabulary from a corpus containing the above sentences, we filter such names from the lists.
-The names of places can be useful vocabulary to learn, such as in the case of \textit{Germany}, because it differs between English and other languages (e.g., German: \textit{Deutschland}, Spanish: \textit{Alemania}).
-However, our tool for Named Entity Recognition cannot distinguish between the names of countries and other places such as \textit{Karlsruhe}.
-To prevent the vocabulary lists from containing many names of cities, we therefore filter out all recognized names of places, including those of countries.
-This is similar to the filtering of named entities performed in the KELLY project \cite{kokkinakisCorpusbasedApproachesCreation2011}:
-In it, NER was employed to filter out proper names form its lists of vocabulary.
-The only exceptions from this were the names of countries, which were manually added back into the lists after the automatic filtering.
-
 
 \subsection{NLP Preprocessing: Tokenization}
 Language presents itself in continuous form in most situations:
@@ -175,6 +152,27 @@ Splitting continuous text into distinct words serves following purposes in this 
 \end{itemize}
 
 In order to provide utility evaluation for words in a wide range of languages, this work employs tokenizers which can handle language of different syntactic structures.
+
+\subsection{NLP Preprocessing: Named Entity Recognition}
+In this work, we attempt to compile lists of vocabulary by processing corpora with various methods.
+However, these corpora contain some words which are typically not desirable in vocabulary lists, such as the names of people, organizations, and places.
+For this reason, we employ Named Entity Recognition \cite{jurafskySpeechLanguageProcessing2025} (\textit{NER} for short) to handle such words in our approach, and prevent them from appearing in our generate vocabulary lists.
+A named entity can be defined "anything that can be referred to with a proper name" \cite{jurafskySpeechLanguageProcessing2025}.
+Consider the following sentence:
+
+\begin{quote}
+	\textit{Angela Merkel, the chancellor of Germany, visited Karlsruhe last month.}
+\end{quote}
+
+This sentence contains the personal name \textit{Angela Merkel}, the country name \textit{Germany} and the city name \textit{Karlsruhe}.
+Because personal names such as \textit{Angela Merkel} are generally not seen as vocabulary to learn, when we compile a list of English vocabulary from a corpus containing the above sentences, we filter such names from the lists.
+The names of places can be useful vocabulary, such as in the case of \textit{Germany}, because it differs between English and other languages (e.g., German: \textit{Deutschland}, Spanish: \textit{Alemania}).
+However, our tool for Named Entity Recognition cannot distinguish between the names of countries and other places such as \textit{Karlsruhe}.
+To prevent the vocabulary lists from containing many names of cities, we therefore filter out all recognized names of places, including those of countries.
+This is similar to the filtering of named entities performed in the KELLY project \cite{kokkinakisCorpusbasedApproachesCreation2011}:
+In it, NER was employed to filter out proper names from its lists of vocabulary.
+The only named entities allowed were the names of countries, which were manually added back into the lists after the automatic filtering.
+
 
 The domain of \NLP\ has in the past been dominated by rule-based methods for processing language.
 However, natural language is a very complex subject which is not easily captured by a priori rules \cite{jurafskySpeechLanguageProcessing2025a}.
