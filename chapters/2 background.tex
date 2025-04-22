@@ -15,7 +15,7 @@ This serves to motivate our research, and makes clear what it does and does not 
 The issue of which words to learn when setting out to acquire a language is not a new one.
 Every textbook on language which does not focus exclusively on grammar must address the issue, and proactive learners will doubtless find themselves looking for ways to optimize the return on their invested studying time.
 
-The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookSecond2022} is a textbook which attempts to comprehensively tackle the various challenges in second language acquisition, including the role of feedback in language learning, the setting for learning and individual differences between learners.
+The Routledge Handbook of Second Language Acquisition \cite{liRoutledgeHandbookSecond2022} is a comprehensive reference work which addresses the various challenges in second language acquisition, including the role of feedback in language learning, the setting for learning and individual differences between learners.
 The chapter concerned with vocabulary acquisition gives three criteria for deciding the order in which words are taught to beginners:
 
 \begin{enumerate}
@@ -48,31 +48,38 @@ Therefore, the following section defines utility and related concepts more caref
 \subsection{Statement of Goal} \label{sec:statement-of-goal}
 Generally speaking, this work addresses the problem of evaluating how useful it is to learn a given word in the target language of a language learner.
 This helps us in generating ordered lists of vocabulary to learn which aid the learner in gaining competency in their target language quickly.
-Since different language learners learn languages for different reasons \missingcitation{Statistics on motivations of language learners}, we attempt to take into account the learner's motivation to tailor vocabulary specifically to the individual.
+Since different language learners learn languages for different reasons \footnote{Statistics on motivations of language learners: \url{https://www.babbel.com/press/en-us/releases/2016-01-20-Babbel_Global_User_Survey.html}}, we attempt to take into account the learner's motivation to tailor vocabulary specifically to the individual.
+\todo{Might have to remove this footnote depending on Motivation chapter}
 This stands in contrast to traditional learning resources such as textbooks, which, by their linear and static structure, cannot take individual differences in interests of learners into account.
 To make this goal more specific, we define several concepts that help us speak more precisely about this goal and how it may be accomplished.
 These concepts are used throughout this work.
 
 \subsubsection{Linguistic Context}
-The ways in which people interact with language (a "context") can be described from many different perspectives and along different dimensions (formality, topic, setting of the interaction etc.).
+The ways in which people interact with language (a "context") can be described from many different perspectives and along different dimensions, such as the level of formality, the topic or the setting of the interaction.
 In this work, a \textit{linguistic context} or just \textit{context} refers to one particular such way of linguistic interaction.
 Examples of language contexts by topic are:
 News, football, crocheting.
-
 Examples of language contexts by situation are:
 Everyday conversation, scientific articles, watching movies.
-
 Contexts can be further subdivided into smaller contexts, or grouped across different lines:
 "News" could be subdivided into "international politics", "sports", "business", etc.
 
 The concept of a language context is useful to a language learner since it enables them to prioritize learning vocabulary and grammar associated with the context they are interested in:
 Someone who is learning Arabic to better understand middle-eastern politics will have little use for words which are mostly associated with football.
 
-The context could even determine the complexity of sentences that a learner must be able to understand:
-Some contexts, like everyday conversation, can be navigated fairly well with short sentences, but political speeches often feature long and structurally complex sentences, with various relative clauses, multiple negations, etc. \missingcitation{Complexity differing across contexts}
+The context can even determine the length and complexity of sentences that a learner must be able to understand:
+We will see in Section \ref{sec:corpus-characteristics} that sentence in Wikipedia articles are about three times longer, on average, that those found in movie subtitles.
 Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
 
-In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context, or else only a small number of contexts is available \missingcitation{Investigate current popular language tools. Classroom cannot cater to individual preferences and apps only allow some personalization}.
+In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context.
+This is partially due to the format of these tools:
+A static resource, such as a textbook, cannot cater to individual preferences of learners.
+Some publisher produce books on "Business English" or "Technical English", but each of these take manual effort to produce and can hence address only a few, relatively broad contexts, in addition to being scarce for less studied languages:
+For instance, despite being the 21st most spoken language in the world
+\footnote{According to the Encyclopedia Britannica \url{https://www.britannica.com/topic/languages-by-total-number-of-speakers-2228881}, last accessed April 22, 2025}
+, no textbook on Business Vietnamese is sold by any major US publisher such as Pears \footnote{\url{https://www.pearson.com}}, HMH \footnote{\url{https://www.hmhco.com}}, or McGraw Hill \footnote{\url{https://www.mheducation.com}}.
+Classroom lectures, where groups of students are taught in one course, can also only cater to individual preferences to a limited degree, especially if they are oriented around textbooks, for the above reason.
+In this work, we will present an approach for the compilation of context-specific vocabulary lists that requires minimal effort to expand to new languages or contexts.
 
 \subsubsection{Utility} \label{sec:utility}
 In this work, the \textit{utility} of a word is defined as the increase of language ability in a given context that a person gains by knowing a word versus not knowing it at all.
@@ -85,8 +92,8 @@ Some of the concepts in the realm of language learning cannot be measured direct
 This can be because they are psychological in nature ("understanding") or because they are too complex to be objectively measured by numbers ("language ability").
 The above section defines word utility as an increase in "language ability", but to analyze this ability with computers, we must make be able to put a number on it, even though we lack both an agreed upon scale and unit of measurement.
 
-To circumvent this issue, we use so-called \textit{proxy tasks}:
-Proxy tasks are tasks that test subjects can perform, where the test result (the \textit{proxy measure}) is used to capture the abstract quantity under study \missingcitation{Proxy task definition}.
+To circumvent this issue, we use \textit{proxy tasks}:
+In this paper, we use the term \textit{proxy tasks} for tasks that test subjects (either human or AI models) can perform, where the test result (the \textit{proxy measure}) is used to capture the abstract quantity under study.
 For example, as a proxy measure for a person's general spelling ability, we could make them choose from multiple spelling variants of a word, and use the accuracy with which they select the correct answers.
 This work employs AI models solving NLP tasks as an economic and repeatable substitute for real humans interacting with language, and uses the NLP tasks as proxy tasks to make "language understanding", and thus "utility", measurable concepts that can be computationally maximized.
 
@@ -111,9 +118,8 @@ A common definition of a corpus can be seen in \cite{hunstonCorpusLinguistics200
 Recently, many large corpora have been compiled and are freely available to the public.
 Corpora differ from each other mostly in their source and method of compilation.
 Depending on their source, some corpora may serve as examples of language being used in a language context, such as news or movie subtitles.
-
+The idea of using context-specific corpora to compile context-specific vocabulary lists has been used in the past, especially to create lists of academic vocabulary for specific academic fields \cite{xodabandeDevelopingValidatingMidfrequency2023} \cite{gholaminejadAcademicVocabularyCollocations2020}.
 In the implementation and evaluation of this work's approach to word utility estimation, we use several such context-specific corpora, as they present a way to analyze how language (and more specifically, vocabulary) is used in the linguistic context of the corpus.
-\todo{Quote previous work that uses corpora to model linguistic contexts for the purposes of language learning}
 
 \subsection{NLP Task}
 This work attempts to make use of not only static data in the form of corpora, but also the interaction of AI models with those corpora in order to gain insights into word utility.
@@ -134,7 +140,7 @@ For the purposes of this work, an \textit{NLP task} is a function with a specifi
 We utilize NLP tasks as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in Chapter \ref{ch:approach}.
 
 
-\subsection{NLP Preprocessing: Tokenization}
+\subsection{NLP Preprocessing: Tokenization} \label{sec:tokenization}
 Language presents itself in continuous form in most situations:
 When listening to spoken language, it is not obvious where one word ends and another begins.
 Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
@@ -142,7 +148,7 @@ While words in the written English language are mostly separated by spaces, a wr
 
 Further complicating the issue of where to separate words is the fact that many non-European languages do not use spaces in their spelling (e.g. Japanese, Mandarin Chinese) or use spaces for a different purpose (separating syllables in Vietnamese, separating sentences in Thai).
 For these reasons, \textit{tokenizers} are used in Natural Language Processing to divide continuous texts into individual words \cite{jurafskySpeechLanguageProcessing2025}.
-\todo{Explain various types of tokenization: Sub-word, word etc.}
+
 
 Splitting continuous text into distinct words serves following purposes in this work:
 \begin{itemize}
@@ -151,7 +157,11 @@ Splitting continuous text into distinct words serves following purposes in this 
 	\item Being able to remove individual words in text inputs to AI models, in order to test what effect removing a particular word has on the output.
 \end{itemize}
 
-In order to provide utility evaluation for words in a wide range of languages, this work employs tokenizers which can handle language of different syntactic structures.
+Speaking more precisely, tokenizer divide texts into \textit{tokens}, which do not necessarily correspond to words \cite{jurafskySpeechLanguageProcessing2025}:
+For instance, the \texttt{bert-base-uncased} tokenizer splits the word \textit{enmity} into the sub-word tokens \textit{en} and \textit{\#\#mity} (sub-word tokens which are not the start of a word begin with \textit{\#\#} in their text representation for BERT tokenizers).
+As we are interested in counting complete words, we must therefore merge sub-word tokens back into complete words when they occur in our data pipeline.
+The details of this are discussed when presenting our implementation in Chapter \ref{ch:implementation}.
+In order to provide utility evaluation for words in a wide range of languages, this work employs tokenizers which can handle language of different syntactic structures, and where the tokenizer outputs sub-word tokens, we usually merge the tokens into complete words.
 
 \subsection{NLP Preprocessing: Named Entity Recognition}
 In this work, we attempt to compile lists of vocabulary by processing corpora with various methods.
@@ -194,7 +204,7 @@ If these patterns resemble the knowledge that humans gain when they learn a new 
 The field which provides these methods of analysis is Explainable AI, which is explained in Section \ref{sec:explainable-ai}.
 
 The current de facto standard for recent AI models is the \textit{Neural Network} architecture \cite{jurafskySpeechLanguageProcessing2025}, which attempts to imitate the neural makeup of the human brain.
-Such models achieve state-of-the-art results on most NLP tasks \missingcitation{neural networks performing NLP task}, and all models used in this work are Neural Networks for this reason.
+Such models achieve state-of-the-art results on most NLP tasks \cite{jurafskySpeechLanguageProcessing2025a}, and all models used in this work are Neural Networks for this reason.
 However, within this architecture there exist further subtypes of AI models, the most important for this work is the \textbf{transformer model}.
 
 
@@ -216,7 +226,7 @@ It then uses another attention layer (using \textit{cross-attention}) to assign 
 Many transformers feature a mechanism called \textit{multi-head} attention.
 This means that the relationships between tokens are given weights from multiple \textit{heads}.
 These individual heads "learn to perform different tasks", the combination of which helps create a more nuanced understanding of the token relationships \cite{vaswani2017attention}.
-Attention is one possible way to attribute importance to inputs, and thus utility to words in our case.
+Attention is one possible way to attribute importance to inputs \cite{liUnderstandingNeuralNetworks2017}, and thus utility to words in our case.
 How exactly this proxy metric is calculated is discussed in Section \ref{sec:xai-methods}.
 
 
@@ -300,19 +310,6 @@ Table \ref{table:XAi-method-criteria} summarizes the use of XAI in this work.
 
 \section{Ranking Vocabulary Lists} \label{sec:ranking-lists-of-vocabulary}
 
-% \contentdescription{{
-% 		\begin{itemize}
-% 			\item How is vocabulary order selected by current language teaching tools:
-% 			\item Not context-specific in most cases
-% 			\item offers only one order,
-% 			\item investigate if there are any automatic approaches besides frequency
-% 			\item can present methods for extracting useful words from text
-% 			\item can be similar in either method or goal.
-% 			\item goal is finding useful words for language learning
-% 			\item method is extracting important words from text via XAI
-% 		\end{itemize}
-% 	} }
-
 As described in Section \ref{sec:linguistic-motivation}, the Routledge Handbook of Second Language Acquisition cites the concepts of frequency, usefulness and difficulty as widely accepted criteria to decide when to teach which words.
 To the best of our knowledge, all previous methods for making lists of vocabulary for language learners use similar criteria.
 They can be classified roughly into two categories based on which of the previously named criteria they employ:
@@ -321,16 +318,6 @@ Approaches which use frequency have the benefit of being easy to implement on a 
 Previous approaches which have aimed at generating lists by a utility concept outside of frequency have relied on human experts.
 This section introduces concrete methods from both categories, and examine each method's strong and weak points.
 It is this work's contention that AI models make it possible to mechanistically calculate utility in addition to frequency, and that this could be a possible point of attack for refining previously accepted approaches for vocabulary list compilation.
-
-
-% However, the literature is not clear on how usefulness is defined outside of "human intuition" \cite{heChoosingWordsTeach2019}.
-% Furthermore, usefulness is presented as independent from frequency, making it more unclear still how it may be defined.
-% The advantage of human intuition is that humans can understand the nuances of texts better than computers, especially before the invention of large AI models tackling NLP tasks.
-% Relying on human intuition to evaluate word utility has two main drawbacks compared to computational methods:
-% \begin{itemize}
-% 	\item Difficult to put a concrete number on word.
-% 	\item Evaluating many languages would necessitate human experts for each language, necessitating expensive studies.
-% \end{itemize}
 
 \subsection{Expert Judgement: Reading Rockets Tier System} \label{sec:reading-rockets}
 This section introduces a traditional approach to vocabulary list generation.
@@ -385,8 +372,8 @@ The following words are the most frequent ten words on Wikipedia according to a 
 Herein, we can see can issue with using frequency as the exclusive criterion for vocabulary selection:
 We do not contend that the above words are useful and among the most important words to know for an English learner.
 However, if we were to teach these as the first words, the learner would not be able to understand the meaning any sentence, nor make a complete sentence of their own design.
-This is because they are prepositions, articles, and copula verbs, which by themselves do not allow for the construction of a grammatically correct sentences, nor convey much meaning.
-Such words are called \textit{stopwords} in the realm of Natural Language Processing, and they are often filtered out from the inputs for AI models since they are not necessary to perform many NLP tasks \tocite{stopwords being useless}.
+This is because they are prepositions, articles, and copula verbs, which by themselves do not allow for the construction of grammatically correct sentences, nor convey much meaning.
+Such words are called \textit{stopwords} in the realm of Natural Language Processing, and they are often filtered out from the inputs for AI models since they are not necessary to perform many NLP tasks \cite{jurafskySpeechLanguageProcessing2025}.
 Thus, knowing only these words is not sufficient for comprehending most texts.
 
 

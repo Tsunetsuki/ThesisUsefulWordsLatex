@@ -59,10 +59,10 @@ These criteria are used in the next section to select concrete tasks for our imp
 
 \subsubsection{Model Availability in Many Languages}
 The goal of this work is to find approaches to find useful words for the purpose of language learning.
-Much research in Natural Language Processing is dedicated to improving NLP performance in English and other high-resource languages such as Spanish, French or Mandarin Chinese \tocite{resource availability in various languages}.
-This has the consequence that many AI models and other NLP methods achieve high levels of performance only in these languages, and many AI models are only available in English or only a small number of languages.
-However, there are over 7,000 languages in the world \tocite{Ethnologue}, and for many of these there exist corpora, or online digital texts which can be used as inputs for our word utility evaluation approach \missingcitation{corpora in many languages}.
-For this reason, in order to realize word utility evaluation in \textbf{as many languages as possible}, we only consider NLP tasks for which pre-trained models exist which can process a high number of languages.
+Much research in Natural Language Processing is dedicated to improving NLP performance in English and other high-resource languages such as English, French or Mandarin Chinese \cite{joshiStateFateLinguistic2021}.
+This has the consequence that many AI models and other NLP methods achieve high levels of performance only in these languages, and many AI models are only available in English or only a small number of languages \cite{joshiStateFateLinguistic2021}.
+However, there are over 7,000 languages in the world \footnote{According to \textit{Ethnologue} (\url{https://www.ethnologue.com/}, last accessed on April 22, 2025)}, and for many of these there exist corpora, or online digital texts which can be used as inputs for our word utility evaluation approach, such as Wikipedia articles, \textit{Open Parallel Corpora}  (OPUS) \footnote{\url{https://opus.nlpl.eu/}}, or \textit{Wortschatz Leipzig} \footnote{\url{https://wortschatz.uni-leipzig.de/}}.
+In order to make an implementation with the potential to exploit the linguistic diversity in these resources to the fullest extent, we only consider NLP tasks for which pre-trained models exist which can process a high number of languages.
 
 \subsubsection{Corpus Availability in Many Languages}
 The second point of consideration for task selection is \textbf{how much data is available for performing the task}.
@@ -90,14 +90,16 @@ Finally, the task must be easily scorable, since the task score is the metric by
 The next section introduces several candidates, primarily by surveying which tasks are commonly used as pre-training tasks for state-of-the-art language models, as these must fulfill similar requirements to those stated in this section.
 
 \subsection{Survey of Candidate NLP Tasks}
-This section introduces some NLP tasks that might work for our purposes.
+This section introduces several NLP tasks we use in our implementation, as well as some tasks which were not selected.
 We first describe the process of how candidate tasks were found, and then go into detail for each candidate as to why it was or was not selected in the following subsections.
 
-Candidates were first compiled by surveying common pre-training tasks which are of state-of-the-art NLP models:
-This is because the purpose of a pre-training task is to endow the AI model with a general understanding of the language, before either using transfer learning to specialize it for a more specific downstream task, or using it before another downstream AI model to pre-process input \missingcitation{definition of pre-training task}.
+Candidates were first compiled by surveying common pre-training tasks which are used in state-of-the-art NLP models:
+This is because the purpose of a pre-training task is to endow the AI model with a general understanding of the language, before either using transfer learning to specialize it for a more specific downstream task, or using it before another downstream AI model to pre-process input \cite{jurafskySpeechLanguageProcessing2025a}.
 Such tasks must necessarily be general and require general language understanding, since training the model with them is supposed to provide a solid basis for a wide variety of NLP tasks.
 Another benefit of using pre-training tasks is that their training is unsupervised, meaning there is no need to manually label data.
 Their widespread use in \NLP also means that pre-trained models are widely and freely available.
+From this consideration, we select language modeling and next sentence prediction as candidates, but reject language modeling for the reasons below.
+In addition to these common pre-training tasks also consider text summarization and sentence embedding, however, because text summarization is difficult to evaluate, reject this task as well.
 
 \subsubsection{Language Modeling}
 There generally exist two subtypes of language modeling, namely Causal Language Modeling and Masked Language Modeling \cite{jurafskySpeechLanguageProcessing2025a}.
@@ -139,17 +141,15 @@ For these reasons, we use the NSP task in our word evaluation approach.
 \subsubsection{Text Summarization} \label{sec:text-summarization}
 This task involves summarizing a given text, in other words, writing a shorter version of the input text while still conveying as much of the information from the original text as possible \cite{radevIntroductionSpecialIssue2002}.
 Summarizing texts accurately would seem to require a high level of understanding of the text, and thus be good choice for testing whether ablating certain words from the text has detrimental effect on the model performance.
-Unfortunately, this tasks is not appropriate for our purposes with respect to our other desiderata, because evaluating the quality of a summary is a very challenging task:
+Unfortunately, this task is not appropriate for our purposes with respect to our other desiderata, because evaluating the quality of a summary is a very challenging task:
 It involves a ground truth summary which is usually manually created, against which another summary is compared.
-This already makes the use of this task problematic for low-resource languages, as there exist fewer text summarization datasets for them.
+This already makes the use of this task problematic for low-resource languages (languages for which only few or only small NLP datasets exist), as text summarization datasets are scarce for these \cite{dahanStateFateSummarization2025}.
 However, even assuming sufficient data, the comparison of two summaries is difficult:
 A standard way of evaluating summaries are ROUGE scores \cite{allahyariTextSummarizationTechniques2017}:
 
 These measure the overlap of n-grams (word sequences) between two texts.
 However, it is questionable how well they capture the similarity between texts, because they do not recognize the semantic similarity of synonyms, and a different sentence structure will result in a low ROUGE score even if the actual meaning of the sentences may be very close.
 For these reasons, we do not use text summarization in our implementation.
-
-\missingcitation{Popular text summarization dataset}
 
 \subsubsection{Sentence Embedding} \label{sec:sentence-embedding}
 Sentence embedding takes sentences as inputs and outputs vectors of numbers, which are typically used as inputs for a downstream task such gauging the similarity between two sentences, which can in turn be used to find similar sentences across languages for making training data for translations model \cite{artetxeMassivelyMultilingualSentence2019} \cite{reimersMakingMonolingualSentence2020}.
@@ -282,11 +282,10 @@ Due to its vast size, we did not use the entire corpus, but a random sample of 5
 \subsection{Wikipedia} \label{sec:wikipedia}
 Our primary source for corpora are articles from Wikipedia \footnote{\url{https://www.wikipedia.org/}}.
 Wikipedia is a valuable resource for several reasons:
-It contains a vast number of articles, about a diverse set of topics.
+It contains a vast number of articles, and about a diverse set of topics.
 Wikipedia articles are assigned article categories describing their topic, such as "20th century American male actors".
-This means we do not have to group articles to topics ourselves, enabling the creation of smaller-scope corpora from Wikipedia with minimal effort.
-The characteristics of the article category system on Wikipedia is discussed in the paragraph below.
-\todo{Rephrase}
+This means we do not have to group articles into topics ourselves, enabling us to trivially create corpora that model linguistic contexts more general than a single article, but more specific than Wikipedia as a whole.
+The characteristics of the article category system on Wikipedia are discussed below.
 
 Wikipedia's articles are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (\textit{CC BY-SA}).
 Because of this, Wikipedia can provide dumps of its entire article database ready for download, with the articles in continuous form and with category metadata attached to them \footnote{Available for download at \url{https://dumps.wikimedia.org/}}.
@@ -294,7 +293,6 @@ This enables us to use the articles as a source for the next sentence prediction
 
 While Wikipedia offers a large diversity of articles and article topics, the tone of language of the articles is generally academic.
 Therefore, Wikipedia is less likely to contain informal language, such as nonstandard language (English: \textit{ain't}, \textit{y'all}), slang, or language of a conversational form.
-% This means that e.g., for English, the second person pronoun "you" occurs very infrequently on Wikipedia. \tocite{Wikipedia rank of you}
 This is especially relevant for languages such as Japanese, where grammatical forms in conversation vary significantly depending on the relationship between the speaker and listener:
 In Japanese, there exist various linguistic markers of politeness (\textit{Teineigo} and \textit{Keigo}) which play a crucial role in in-person interactions between Japanese speakers, as their presence or absence can signify respect, familiarity or humility with regard to one's interlocutor.
 However, such forms are rarely found on Wikipedia, as its articles do not take the form of a person addressing other people.
@@ -392,10 +390,10 @@ Its sentences are generated from subtitles from the popular subtitle sharing pla
 The full process, as illustrated by the authors, can be seen in Figure \ref{fig:opensubtitles-pipeline}
 As of 2025, the latest version of the corpus (v2018) contains aligned subtitles of 62 languages between each other.
 
-\begin{figure}[H]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{opensubs_corpus_processing.png}
-	\caption{The pipeline producing the OpenSubtitles parallel corpus}
+	\caption{Pre-processing of the OPUS OpenSubtitles parallel corpus.}
 	\label{fig:opensubtitles-pipeline}
 \end{figure}
 
@@ -411,7 +409,7 @@ Thus, the NSP task is only performed on Wikipedia articles.
 The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
 We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
 
-\subsection{Corpus Characteristics}
+\subsection{Corpus Characteristics} \label{sec:corpus-characteristics}
 We have described the sources of the corpora used in the implementation of our approach, but to gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
 It can readily be seen that, while the corpora taken from the OpenSubtitles subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (over three times longer on average than the sentences in subtitles).
 This makes sense, as Wikipedia articles are written in an academic style, while movie subtitles tend to be more informal.
@@ -542,25 +540,20 @@ Progressive Summary attempts to find the most important words in a sentence one 
 The words which bring the model output for the summary closest to that of the original sentence are regarded as the most useful.
 
 \subsection{Attention as Explanation}
-The model-agnostic methods so far are general tools which can be employed on any model.
-However, as many of the latest state-of-the-art AI models follow the Neural Network architecture, and more specifically the transformer architecture (see Section \ref{sec:transformer}), we also attempt word utility estimation with methods specific to these model.
-These model-specific XAI methods have the advantage of being computationally efficient:
-Model-agnostic methods extract information about the model by perturbing its inputs and analyzing the resulting changes in the output.
-This requires many model calls for one input datum.
-In contrast, model-specific methods can analyze the input-output relationship with only one model call, as they look into the model itself for information.
-We therefore try two model-specific methods for analyzing word utility as well, as their more efficient calculations means they can process more input data in a given time, which should increase the accuracy of the resulting word list.
-\todo{Correction relevance propagation is no longer employed}
-
-
-One XAI method which has been proposed to explain the decision of transformer models specifically is the transformer's own attention mechanism:
-As stated in Section \ref{sec:transformer}, transformer model (if their input is in text format) use self-attention to assign importance to the connections between tokens in the input.
-This may be used as a kind of explanation, as words which have strong connections to many words in the sentences presumably are more important than those receiving less self-attention.
+The model-agnostic methods so far could be employed on any AI model.
+However, as many of the latest state-of-the-art AI models follow the Neural Network architecture, and more specifically the transformer architecture (see Section \ref{sec:transformer}), we also attempt word utility estimation with method specific to these models, namely attention.
+% These model-specific XAI methods have the advantage of being computationally efficient:
+% Model-agnostic methods extract information about the model by perturbing its inputs and analyzing the resulting changes in the output.
+% This requires many model calls for one input datum.
+% In contrast, model-specific methods can analyze the input-output relationship with only one model call, as they look into the model itself for information.
+% We therefore try two model-specific methods for analyzing word utility as well, as their more efficient calculations means they can process more input data in a given time, which should increase the accuracy of the resulting word list for large corpora.
+As stated before, transformer models use self-attention to assign importance to the connections between tokens in the input (if their input is in text format).
+This may be used as a kind of explanation, as words which have strong connections to many other words in the sentence presumably are more important to the AI model's understanding of it than those receiving less self-attention.
 
 An important difference to the model-agnostic methods explained before is that we do not control word masking with a tokenizer \textit{independent of the model}, thus the splitting of words is not under our direct control.
 The tokenizers used are \texttt{bert-base-uncased} and \texttt{sentence-transformers/paraphrase-MiniLM-L6-v2}.
 These produce tokens on a sub-word level, which means that we must perform post-processing on the attentions to acquire values on the word level and make vocabulary lists than contain full words.
-For BERT tokens, this is a simple process as sub-tokens which are not at the beginning of a word start with "\#\#".
-\todo{Insert sub-word tokenization example from BERT}
+For BERT tokens, this is a simple process as sub-tokens which are not at the beginning of a word start with "\#\#" (See Section \ref{sec:tokenization}).
 The estimated utility for the reconstructed token is calculated by taking the sum of the attention values of each sub-token.
 
 \paragraph{Approach:}
@@ -578,9 +571,10 @@ One disadvantage of attention as our explanation mechanism is that attentions ar
 Unlike the model-agnostic methods where word masking is controlled by a tokenizer \textit{independent of the model}, the tokenizer cannot be changed.
 AI models are trained with some tokenizer as preprocessing the input, and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
 This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
-
-In addition to this technical downside, Attention is controversial as a mechanism to explain model decisions.
-\tocite{Attention is not Explanation}
+In addition to this technical downside, attention is controversial as a mechanism to explain model decisions:
+One point of critique is that, while attention influences the model's behavior, it is not a faithful explanation because alternative attention distributions can yield similar model outputs \cite{jainAttentionNotExplanation2019}.
+On the other hand, it has been argued that the mere fact that a model chooses a particular attention distribution, rather than another, means that the actually generated distribution is a more plausible explanation that artificial adversarial distributions \cite{wiegreffeAttentionNotNot2019}.
+As we will show in our list evaluation, when used with our list generation approach, attention produces vocabulary lists that are close in efficiency to those produced by the model-agnostic methods.
 
 \paragraph{Summary:}
 Among the XAI methods used in this work, Attention as Explanation requires the least resources, and it is not restricted to any one NLP task (although the model must be of transformer type).
@@ -600,9 +594,7 @@ While the NSP model uses the same tokenizer that is also used for token masking 
 The previous chapters have argued for the choice of components in our theoretical approach to vocabulary list generation and evaluation.
 This final section about our implementation describes how the chosen components interact in our implementation.
 
-\contentdescription{
-	Describe which comps are compatible, and where it is not obvious, how exactly they are made to work with each other.
-}
+\todo{ Describe which comps are compatible, and where it is not obvious, how exactly they are made to work with each other. }
 
 \begin{figure}[H]
 	\input{listings/list_efficiency_evaluation_diagram.tex}

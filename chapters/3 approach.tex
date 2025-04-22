@@ -8,11 +8,6 @@ To solve this final problem, \ref{sec:list-generation} puts forward a general ap
 
 \section{Formal Problem Statement} \label{sec:formal-problem-statement}
 
-% the following terms have been defined before can should be used now
-% language context
-% utility
-% proxy task
-
 To repeat the core statement from Section \ref{sec:statement-of-goal}:
 The aim of this work is to create computational approaches to find words that have the maximum \textit{utility} given a particular \textit{language context} by means of \textit{proxy tasks}.
 
@@ -141,11 +136,11 @@ To replace the human test subject in the experiment described in Section \ref{se
 The following paragraphs discuss how, in such a setup, we can model the concepts from Section \ref{sec:statement-of-goal} such as linguistic context and utility with technological tools.
 
 \subsubsection{AI as a Test Subject} \label{sec:ai-as-test-subject}
-In recent years, AI models such as ChatGPT \tocite{cite ChatGPT} or BERT \tocite{cite BERT} have become highly adept at fulfilling language-related tasks such as Language Modeling \tocite{LLMs}, Named Entity Recognition and Sentiment Detection.
-Such models possess as level of "understanding" that extends to the meaning of words:
-They can recognize that two words such as "building" and "apartment" are close to each other in meaning, even though the words are dissimilar on a character level (this work makes no claims as to whether this understanding is real to that of a human, only that the models behaves as though it were).
+In recent years, AI models such as BERT have become highly adept at language-related tasks such as masked language modeling, question answering  and sentiment detection \cite{kentonBertPretrainingDeep2019}.
+Such models possess an "understanding" of language that extends to the meaning of words:
+They can recognize that two words such as "building" and "apartment" are close to each other in meaning, even though the words are dissimilar on a character level (this work makes no claims as to whether this ability stems from conscious understanding in the sense of the Chinese Room thought experiment \cite{searleMindsBrainsPrograms1980}, only that the models behaves as though they possessed such an understanding).
 Thanks to this semantic language "understanding", AI models surpass the purely statistical approaches that were the paradigm of NLP until recently \cite{jurafskySpeechLanguageProcessing2025a}.
-Thus, instead of a human performing a language exam to analyze their increases in linguistic understanding (\textit{utility}), we could let an AI model perform an NLP task on a corpus instead.
+Thus, instead of a human who performs a language exam as described above to analyze their increases in linguistic understanding, we could let an AI model perform an NLP task on a corpus instead.
 
 If we run the model on a specific corpus and mask some of the words in the input, it is expected that the performance will decrease in comparison to the full input.
 However, presumably some words will have a larger impact on the performance than others.
@@ -260,54 +255,3 @@ Rather, this work uses the generation approach to make lists (Chapter \ref{ch:im
 In the next section, we discuss the implementation of this approach.
 We present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.
 
-%
-% It is readily seen that these components are not independent of each other.
-% Some completely determine the choice of another, while others limit the selection of the other components.
-% 	[describe dependencies between components]
-% Task $\rightarrow$ model $\rightarrow$ tokenizer $\rightarrow$ words.
-%
-% must investigate comparability of results later.
-
-% (also corpus $\rightarrow$ task)
-% \subsection{Preliminary Investigations of Integrity}
-% The core idea this work is to evaluate word utility by investigating a function (in the form of an AI model) that presumably represents some level of understanding of the language and checking which inputs (words) have the biggest influence on either the input or the model's internal state.
-% To ensure the function does possess this understanding, it is necessary to first ensure that the output of the model corresponds reliably to the ground truth, in other words, to tests the performance of the model on the specific data that will later be used to investigate the model itself.
-%
-% \todo{A lot of prelim. test results, for example, first tests of NSP model on opensubtitles sentences show low reliability. Might also have to move this section to end (or in "results" chapter?)}
-%
-
-
-%
-%
-% \section{Experimental Setup with AI Technology}
-% With the experimental setup described in chapter \ref{seq:human-efficiency-testing}, we established a way to test the efficiency of a vocabulary list with a human test subject.
-% Now that we have introduced the idea of performing the experiment with an AI model instead, let us examine how such an approach would work:
-% Chapter \ref{table:concept-implementation-correspondence} suggested ways that we could use technological components to stand in for abstract concepts.
-%
-%
-% \todo{ restate math problem definition with components replaced by AI}
-%
-%
-
-% \section{TO BE MOVED OR DELETED}
-% Let us examine examples of how utility may be defined:
-% In the question "Would you like some coffee?", the most important part is "coffee".
-% If we replaced the entire sentence with "coffee?", the meaning becomes less clear, but it is still possible to guess what is meant.
-% If, however, we replace the sentence with "would?", there is so little information in the sentence that it becomes impossible to guess the meaning.
-% To identify which words are important to understand the question, we could ask a human to point them out.
-% However, this is not very quantifiable and the answer is likely to be influenced by bias.
-% We could try removing some of the words in the sentence and see if a human hearing the question can still answer appropriately.
-% While this removes some of the bias, there are still issues with this approach:
-% Going through all possible permutations of the sentence would take a great amount of time to perform, and the same test subject cannot process one permutation without being influenced by the past experiences:
-% If we go through "would?", "you?", "like?", "some?", "coffee?" in sequence, the test subject would have full knowledge of the sentence by the time the last item is asked.
-% These problems can be alleviated by using AI models: They are cheaper to perform tests on than humans, and can be employed in such a way as to answer the question without being influenced by the previous questions each time.
-%
-% \todo{Explain approach where a model is trained on small set of words and performance is evaluated. But too costly.}
-%
-%
-% While the models achieving state-of-the-art performance (neural networks) are black boxes for the most part, they are easier to understand than human decisions and the field of Explainable AI has produced various approaches to gauge the importance of inputs to the model.
-% Explainable AI has the explanation of the decisions of AI models as its aim.
-% This means that when analyzing the decisions of AI models by reducing them to human-understandable rules or by observing which words are the most important for the AI to fulfill its tasks, we are not technically observing rules of objective truth, but only the behavior which the AI has learned to perform its task.
-% If we try to extract truthful knowledge about language from the AI, we are relying on the assumption that the AI has learned rules that correspond to linguistic reality.
-% However, in the case of state-of-the-art models, we know the performance of such models to meet certain standards, which supports the above assumption.
-%
