@@ -78,7 +78,7 @@ As an illustration, we present the results of one such efficiency evaluation run
 \footnotetext{\url{https://en.wikipedia.org/wiki/Marlon_Brando}}
 
 To make the figure readable, only three list generation approaches are compared, namely Raw Frequency, TF-IDF, and Single Token Ablation with the sentence embedding model.
-We first evaluate the AI model performing the task with a vocabulary size of zero, simulating the state of not knowing any words. 
+We first evaluate the AI model performing the task with a vocabulary size of zero, simulating the state of not knowing any words.
 The only tokens in this run are named entities and punctuation, as these are not considered to be potential vocabulary terms.
 The vocabularies are then evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
 The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
@@ -92,7 +92,7 @@ Can two lists which differ substantially in their ordering produce similar perfo
 To answer this question, the next section introduces additional evaluation metrics which measure the similarity of two lists.
 
 \subsection{List Similarities}
-In order to compare the resulting vocabulary lists provided by the various approaches, metrics are needed that can be consistently calculated across the different approaches.
+In order to compare the similarity of the resulting vocabulary lists provided by our approaches, metrics are needed that can be consistently calculated across the different approaches.
 While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
 A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered in descending order by supposed utility, and outputs a real number giving either a distance or similarity between the lists.
 
@@ -177,9 +177,6 @@ Considerations of the choice of metric are:
 \end{description}
 
 
-\subsubsection{Tests of Applicability}
-[Results of preliminary tests of various metrics on own lists such as rank switching ,replacement at bottom and top of list etc.]
-
 \subsection{Sample text}
 \todo{Show a sample paragraph with first n words from each list. Can be used to intuitively evaluate utilities}
 In addition to the above automatic measures of list efficiency, we can also use human intuition to evaluate the various vocabulary lists:
@@ -257,7 +254,7 @@ TF-IDF: The frequency of a word in the context-specific corpus, normalized again
 
 \subsection{LLM Prompts}
 In recent years, Large Language Models have become a popular tools for language learners to find new words to learn about specific areas.
-For this purpose, we run the following prompt to ChatGPT 3 for each context to get a sense of how well my method performs against this easy method.
+For this purpose, we run the following prompt to ChatGPT 3 for each context to get a sense of how well our method performs against this easy method.
 
 Prompt:
 
@@ -303,6 +300,25 @@ For small corpora, there is no train-test-data distinction, thus for each corpus
 	\caption{Model performance across vocabulary sizes.}
 	\label{tbl:performance-results}
 \end{table}
+
+\begin{table}[ht]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/similarity_heatmap_table_single.tex}
+	}
+	\caption{Similarity of vocabulary lists. Black boxes represent missing values.}
+	\label{tbl:similarity-results-single}
+\end{table}
+
+\begin{table}[ht]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/similarity_heatmap_table_big.tex}
+	}
+	\caption{Similarity of vocabulary lists, big. Black boxes represent missing values.}
+	\label{tbl:similarity-results-big}
+\end{table}
+
 
 We can observe several points in the data:
 
