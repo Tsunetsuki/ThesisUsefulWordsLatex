@@ -49,7 +49,7 @@ Since \textit{Abraham Lincoln} is recognized as a named entity, we leave it in t
 Non-alphabetic tokens, such as numbers and punctuation, are also left in the input.
 
 
-We start the evaluation of every vocabulary list with a vocabulary size of 0, letting model run on inputs where only named entities and non-alphabetic are left.
+We start the evaluation of every vocabulary list with a vocabulary size of 0, letting the model run on inputs where only named entities and non-alphabetic are left.
 The score for the entire corpus is calculated by taking the arithmetic mean of the scores of individual lines.
 This allows us to see the "utility" of the named entities on their own, putting into comparison the following performance scores in our evaluation.
 After this, we set the vocabulary size to 10 words, and run the AI models with the resulting vocabulary $V_{l, 10}$.
@@ -82,16 +82,24 @@ We first evaluate the AI model performing the task with a vocabulary size of zer
 The only tokens in this run are named entities and punctuation, as these are not considered to be potential vocabulary terms.
 The vocabularies are then evaluated with an initial size of 10, and increase by a factor of 4 in each step, until a final evaluation is done with the full vocabulary list.
 The full list typically contains all words from the corpus, which is why the performance reaches 1 with all lists.
-
 To compare the results on a broader scale, we aggregate the results of the evaluation runs for each corpus type, word utility evaluation method and AI model (where applicable) by taking the average performance of the generated vocabulary list, with vocabulary sizes 0, 10, 40, 160, and 640.
 
+\subsubsection{Utility Aggregation for Large Context Scenario}
+\todo{the following is supposed to describe aggregation both for gen and eval. Make it understandable.}
+As described above, the utility of a word for a given single corpus is calculated by taking the sum of the word's utility across the corpus' lines
+For the large context evaluation scenario, we must also aggregate the utilities across corpora.
+The simplest method would be to simply take the sum of each word's utility across all lines in the composite corpus.
+However, this approach is biased against small single corpora, which contain fewer lines and are thus assigned less total word utility.
+For this reason, we normalize the word utilities such that each corpus contributes the same total word utility.
+For the evaluation too, we average over the performance scores of a list across corpora instead of across lines.
 
-\todo{Describe train/test splitting}
 When we find two approaches for list generation produces vocabulary lists of similar efficiencies, we might ask ourselves if these lists are similar:
 Can two lists which differ substantially in their ordering produce similar performance?
 To answer this question, the next section introduces additional evaluation metrics which measure the similarity of two lists.
 
-\subsection{List Similarities}
+
+\subsection{List Similarity}
+Apart from our own vocabulary list evaluation approach that measures performance of an AI model using the vocabulary list, we also compare how similar the lists are in general.
 In order to compare the similarity of the resulting vocabulary lists provided by our approaches, metrics are needed that can be consistently calculated across the different approaches.
 While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
 A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered in descending order by supposed utility, and outputs a real number giving either a distance or similarity between the lists.
@@ -196,24 +204,34 @@ The purpose is to have a point of comparison, to see if generated lists agree wi
 
 \subsection{Existing Lists}
 As one point of comparison, we can use existing vocabulary lists that are readily available in digital format, regardless of the method which created them.
-For this, a survey was done on popular language learning tools which make public some of their learning data.
+For this, a survey was performed on popular language learning tools which make public some of their learning data.
+However, mostly due to paywall restrictions, we only obtained one list for comparison, from the online learning platform \Rosetta (details below).
 
+\subsection{Textbooks}
+An obvious source of vocabulary lists to compare our lists against are English textbooks, which often contain vocabulary lists for each lesson.
+However, the books we considered as candidates do not publish their course contents free of charge.
+This includes:
+\begin{itemize}
+	\item \textit{Practical English Usage} by Michael Swan \footnote{Available at Oxford University Press at \url{https://elt.oup.com/catalogue/items/global/grammar_vocabulary/practical_english_usage_4th_edition/9780194202510} (last accessed on April 25, 2025)}
+\end{itemize}
 
-
-\todo{	Language learning textbooks}
+\subsubsection{Cambridge Word Lists}
+Cambridge publishes word lists for certain levels of English \footnote{\url{https://www.cambridgeenglish.org/images/149681-yle-flyers-word-list.pdf}}.
+However, these lists are meant for assessing learner's level of vocabulary skills, and the list for each level is ordered by alphabetical order, rather than the perceived level of the word, making them unusable as comparison to our approach.
 
 \subsubsection{Duolingo}
 While Duolingo is the most popular language learning application as of 2024, it does not publish its word lists or course contents that is free of cost and easily convertible to a format that can be processed with NLP tools.
 
 \subsubsection{Rosetta Stone}
 \Rosetta \footnote{\url{https://rosettastone.co.jp/}} is a popular online and mobile language learning platform.
-\Rosetta\ publishes some of their course contents on its website \footnote{\url{https://support.rosettastone.com/s/article/Rosetta-Stone-Course-Content}}.
+\Rosetta\ publishes some of the course contents on its website \footnote{\url{https://support.rosettastone.com/s/article/Rosetta-Stone-Course-Contents}}.
 These lessons take the form of phrases that should help a learner to quickly gain competence in their target language.
-To make a list of vocabulary from \Rosetta 's Lesson Contents, we use a tokenizer on the lesson and let the order of first appearance of a word in the lesson be its rank in the resulting vocabulary list.
-Thus, the generated list features those words first which \Rosetta\ introduces first to its learners, which presumable is close to the word order that \Rosetta estimates is most useful.
-One qualification of the previous statement is that some words are probably only introduced in order for the learner to have something concrete to talk about, rather than because of the word's inherent utility.
-
-
+To make a list of vocabulary from \Rosetta 's lesson contents, we use the freely available lessons  of the \textit{American English} course (Units 1-20).
+We convert the PDF files to text format, filter lines which do not contain lessons contents (e.g., "Lesson 8" and similar ancillary notes).
+On the filtered text, we run the \texttt{bert-base-uncased} tokenizer and let the order of first appearance of a word in the lessons be its rank in the resulting vocabulary list.
+Thus, the generated list features the lessons' words in the order in which \Rosetta\ introduces them to its learners, which presumably is close to the word order that \Rosetta estimates to be most useful.
+One qualification of the previous statement is that some words may be introduced in order for the learner to have something concrete to talk about, rather than because of their estimated utility.
+The final vocabulary list contains 2,545 words in total.
 
 This section has introduced some pre-existing lists as points of comparison for our generated vocabulary lists.
 However, one shortcoming of this comparison is that these lists have not been prepared with the same linguistic contexts in mind as those made by this work's approach, and thus their utility is naturally greater in general-context corpora than specialized ones.
@@ -225,32 +243,10 @@ The next section introduces some of these methods, which we use to generate comp
 
 
 \subsection{Existing List Generation Methods}
-To get an impression of how well our XAI-based method for vocabulary list generation performs, it is informative to test established methods for extracting important words from texts.
+To get an impression of how well our XAI-based method for vocabulary list generation performs, we employ the three frequency-based methods for generating lists of vocabulary introduced in Section \ref{sec:frequency-based-list-generation-methods}, namely Raw Frequency, Average Reduced Frequency, and TF-IDF.
+We use these three measures as baselines to our methods, using the same tokenizer \texttt{bert-base-uncased} to divide texts into words that we can count.
+To calculate the inverse document frequency in TF-IDF, we use a random sample of 53,178 documents from the Oscar corpus (see Section \ref{sec:oscar}).
 
-\subsubsection{Raw Frequency}
-
-Raw word frequency has been used as a criterion for which words to teach to language learners \cite{heChoosingWordsTeach2019}.
-Frequency is much less computationally intensive than any of the XAI-based approaches, as it only requires a tokenizer to be run on a corpus, without involving model calls.
-
-\subsubsection{Frequency, Without Stopwords}
-One drawback of using raw frequency as the criterion by which to order vocabulary lists is that the most frequent words in most corpora consist of stopwords.
-This can be seen in the following frequency word list from corpus [x].
-\todo{insert sample from raw frequency word list from corpora used in experiments }
-
-These words, while being the most generally useful, have very little meaning by themselves \cite{rajaraman2011data}.
-For this reason, they are often filtered out in the inputs of NLP tasks.
-Removing from the raw frequency-based word lists could be a way boost the list's  efficiency, especially at the top of the list.
-We therefore filter out known stop words, based on a list from the popular NLP library \textit{NLTK} \footnote{\url{https://www.nltk.org/}}.
-\footnote{The NLTK stopword list can be downloaded by following the instructions on \url{https://www.nltk.org/howto/corpus.html\#word-lists-and-lexicons}.}
-
-
-\subsubsection{TF-IDF}
-\todo{Either finish this section or replace with collection frequency normalization}
-To characterize the contents of a document, \cite{qaiserTextMiningUse2018}.
-TF-IDF has, to the best of our knowledge, not been considered for vocabulary list generation.
-However, it is often employed to find key terms in a document, which characterize the document's contents with a small number of words.
-
-TF-IDF: The frequency of a word in the context-specific corpus, normalized against a background corpus.
 
 \subsection{LLM Prompts}
 In recent years, Large Language Models have become a popular tools for language learners to find new words to learn about specific areas.
@@ -282,51 +278,73 @@ We compare the performances of the following lists:
 	\item A list compiled by single-token ablation.
 \end{enumerate}
 
-The full lists can be seen in the following table.
-\todo{Insert table}
+The tops of the lists can be seen in Table \ref{tbl:first-k-words-sample}.
 
-\subsection{Performance Results of Lists Generated from Same Corpus} \label{sec:results-same-corpus}
+\begin{table}[H]
+	\centering
+	% \resizebox{\textwidth}{!}{%
+	\input{data/first k words sample.tex}
+	% }
+	\caption{Top 10 words of each compared list on the sample text.}
+	\label{tbl:first-k-words-sample}
+\end{table}
+
+
+\input{data/sample_text_original.tex}
+\input{data/sample_text_full.tex}
+\input{data/sample_text_empty.tex}
+
+As stated before, the evaluation process begins with (recognized) named entities and punctuation, yielding the text in Listing \ref{lst:sample-text-empty}.
+We can see that the lines containing named entities (Line 4 and 9) already have a rather high score in the evaluation, reflecting the importance of the name to the meaning of the sentence.
+The overall score of this variation of the sample text is 0.17.
+In the listings, we see the sample text with a vocabulary of 10 words filled in from the three vocabulary lists, in addition to the named entities. 
+
+\input{data/sample_texts.tex}
+
+
+\subsection{Small Context} \label{sec:results-small-context}
 
 This section shows the results of our evaluation approach for the efficiencies of vocabulary list, applied to lists which have been generated by the various list generation approaches.
 Performance scores were rounded to two decimals to improve readability.
 
 
-Table \ref{tbl:performance-results} shows the aggregated results of small-scale corpora, separated by corpus type.
+Table \ref{tbl:performance-results-single-opensubs} and \ref{tbl:performance-results-single-opensubs} show the aggregated results of small-scale corpora, separated by corpus type.
 For small corpora, there is no train-test-data distinction, thus for each corpus and extraction method, a vocabulary list produced, whose efficiency is then evaluated with the same corpus as a basis.
+%
+% \begin{table}[ht]
+% 	\centering
+% 	\input{data/performance.tex}
+% 	\caption{DELETE THIS}
+% \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 	\centering
-	\input{data/performance.tex}
-	\caption{Model performance across vocabulary sizes.}
-	\label{tbl:performance-results}
+	% \resizebox{\textwidth}{!}{%
+	\input{data/first k words OPENSUBS.tex}
+	% }
+	\caption{Tops of generated lists for OpenSubtitles dataset.}
+	\label{tbl:first-k-words-opensubs}
 \end{table}
 
-
-\begin{table}[ht]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
-		\input{data/performance wikipedia-article.tex}
+		\input{data/performance opensubs-subtitle single.tex}
 	}
-	\caption{Similarity of vocabulary lists on Wikipedia Articles}
-	\label{tbl:performance-results-single-wikipedia}
-\end{table}
-
-
-\begin{table}[ht]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\input{data/performance opensubs-subtitle.tex}
-	}
-	\caption{Performance of vocabulary lists on OPUS Subtitles.}
+	\caption{Model performance across vocabulary sizes on single subtitles.}
 	\label{tbl:performance-results-single-opensubs}
 \end{table}
 
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/performance wikipedia-article single.tex}
+	}
+	\caption{Model performance across vocabulary sizes on single Wikipedia articles.}
+	\label{tbl:performance-results-single-wikipedia}
+\end{table}
 
-
-
-LIST SIMILARITIES
-
-\begin{table}[ht]
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 		\input{data/similarity_heatmap_table_single.tex}
@@ -335,7 +353,28 @@ LIST SIMILARITIES
 	\label{tbl:similarity-results-single}
 \end{table}
 
-\begin{table}[ht]
+\subsection{Large Context} \label{sec:results-large-context}
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/performance opensubs-subtitle big.tex}
+	}
+	\caption{Model performance across vocabulary sizes on subtitles, with separate train/test subtitles.}
+	\label{tbl:performance-results-opensubs-large}
+\end{table}
+
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/performance wikipedia-article big.tex}
+	}
+	\caption{Model performance across vocabulary sizes on Wikipedia articles, with separate train/test articles.}
+	\label{tbl:performance-results-wikipedia-large}
+\end{table}
+
+\begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
 		\input{data/similarity_heatmap_table_big.tex}
@@ -400,7 +439,7 @@ Table \ref{tbl:runtime-results-wikipedia-categories} shows the results of these 
 	\label{tbl:runtime-results-wikipedia-categories}
 \end{table}
 
-Because vocabulary lists are generated from a much larger corpus, they are longer than the per-article lists in section \ref{sec:results-same-corpus}.
+Because vocabulary lists are generated from a much larger corpus, they are longer than the per-article lists in section \ref{sec:results-small-context}.
 We can also observe that the increase in performance is much slower than when a list is evaluated on the same corpus used to generate it.
 
 

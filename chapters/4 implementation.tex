@@ -176,7 +176,7 @@ However, for our implementation, we employ the monolingual English model \texttt
 \subsubsection{Sentence Embedding Model}
 For the sentence embedding task, there are two model families that appear as suitable candidates for our implementation:
 \textit{LASER} embedding models \cite{artetxeMassivelyMultilingualSentence2019}, developed by Meta, and \textit{Sentence Transformers} a.k.a. \textit{sBert} \cite{reimersMakingMonolingualSentence2020}, developed chiefly by the University of Darmstadt.
-Both of these solutions have set as their aims the embedding of sentence of as many languages as possible, giving special considerations to low-resource languages. 
+Both of these solutions have set as their aims the embedding of sentence of as many languages as possible, giving special considerations to low-resource languages.
 
 While the latest \textit{LASER} embedding model is more recent and claims to outperform previous models, its implementation requires a Unix environment to work, which presented compatibility issues with our Windows-based development setup \footnote{\url{https://github.com/facebookresearch/LASER}}.
 Additionally, to the best of our knowledge, the models are not available on the \textit{HuggingFace} \footnote{\url{https://huggingface.co/}} platform, meaning their use would have necessitated various changes in our implementation due the different interface.
@@ -222,6 +222,8 @@ Having decided on these, we now require data, i.e., corpora, as inputs for the t
 Which corpora we use is another important decision, as these serve the purpose of modeling the language contexts in which the language learner is striving to achieve proficiency.
 This section therefore first states our general selection criteria for corpora.
 We then introduce publicly available corpora which are suitable for our evaluation approach, and conclude by choosing Wikipedia and OPUS subtitle data as inputs for the NLP tasks.
+From these data sources, we model linguistic contexts with two methods:
+A single article or subtitle, as well as a composite of various articles and subtitles
 For the background corpus used to calculate the inverse document frequency in TD-IDF, we use a corpus from the \textit{Oscar} project (see Section \ref{sec:oscar}).
 
 \subsection{Desiderata}
@@ -277,7 +279,7 @@ Instead, we use a corpus from the \textit{Oscar} project \footnote{\url{https://
 Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which preprocessing steps such as HTML stripping and removal of boilerplate content have already been performed.
 It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
 There exist many versions of the Oscar dataset, but for this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
-Due to its vast size, we did not use the entire corpus, but a random sample of 53,179 documents from this dataset to calculate inverse document frequency.
+Due to its vast size, we did not use the entire corpus, but a random sample of 53,178 documents from this dataset to calculate inverse document frequency.
 
 \subsection{Wikipedia} \label{sec:wikipedia}
 Our primary source for corpora are articles from Wikipedia \footnote{\url{https://www.wikipedia.org/}}.
@@ -409,8 +411,38 @@ Thus, the NSP task is only performed on Wikipedia articles.
 The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
 We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
 
-\subsection{Corpus Characteristics} \label{sec:corpus-characteristics}
-We have described the sources of the corpora used in the implementation of our approach, but to gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
+\subsection{Final Data Set} \label{sec:corpus-characteristics}
+We have described the sources of the corpora used in the implementation of our approach, but from these sources, we test our approach on two scales:
+We call the first test scenario a \textbf{small context} approach, where we generate a vocabulary list from a single Wikipedia article or OPUS subtitle.
+We then evaluate the generated vocabulary list on the same corpus.
+This covers the intended use case where a learner wishes to read an article or watch a movie, and study the most important words beforehand.
+We call a single article or single subtitle a \textbf{single corpus} from here on, to avoid repetition.
+
+In the second scenario, which we call \textbf{large context}, we generate the vocabulary list from a large number of single corpora, grouped by context, and the set of single corpora used for generation evaluation is disjoint:
+For Wikipedia articles, we use 80\% or the articles in each Wikipedia category to create a vocabulary list specific to that category, whereas for the OpenSubtitles dataset, a sample of 632 subtitles is used.
+Evaluation, meanwhile, is performed on the remaining 20\% or articles for each Wikipedia category , and a set of 30 randomly chosen subtitles (not used for list generation) for the OpenSubtitles dataset.
+The large context scenario was created to test how useful the words given by each approach are to understanding a large context, where a learner is trying to increase their general understanding of texts in a certain context, without knowing the exact texts before engaging with them.
+We can thus categorize our evaluation by two both the corpus source and the scale of the evaluation, giving us four categories:
+
+
+\begin{enumerate}
+	\item A single Wikipedia article, where the lines used for list generation and evaluation are the same.
+	\item A single subtitle, where the lines used for list generation and evaluation are the same.
+	\item A Wikipedia category, where vocabulary lists are generated on the "train" set of articles in that category, and evaluated on the "test" article set. The proportion of "test" articles s 20\% .
+	\item A large sample of subtitles, with designated "train" and "test" subtitles as well. Due to the large number of subtitles, we were not able to include the entire dataset in the list generation.
+\end{enumerate}
+
+Table \ref{tbl:train-test-corpora} shows the number of single corpora (articles or subtitles) in each composite corpus.
+
+\begin{table}[ht]
+	\centering
+	\input{data/train_test_corpora.tex}
+	\caption{Number of "train" and "test" corpora in each composite corpus.}
+	\label{tbl:train-test-corpora}
+\end{table}
+
+
+To gain a better understanding of the data, Table \ref{tbl:corpus-sizes} shows a few key metrics of each corpus type.
 It can readily be seen that, while the corpora taken from the OpenSubtitles subtitles are composed of more lines on average, the Wikipedia articles feature much longer sentences (over three times longer on average than the sentences in subtitles).
 This makes sense, as Wikipedia articles are written in an academic style, while movie subtitles tend to be more informal.
 Wikipedia articles also contain a higher number of unique words on average, despite containing a lower number of words in total.
@@ -431,7 +463,9 @@ Another notable pattern is that the articles of male actors tend to be longer th
 
 \begin{table}[ht]
 	\centering
-	\input{data/corpus_sizes_wikipedia_categories.tex}
+	\resizebox{\textwidth}{!}{%
+		\input{data/corpus_sizes_wikipedia_categories.tex}
+	}
 	\caption{General statistics on corpora, per Wikipedia article category.}
 	\label{tbl:corpus-sizes-per-wiki-category}
 \end{table}
@@ -606,38 +640,38 @@ This final section about our implementation describes how the chosen components 
 Our data pipeline contains various language-specific components, all of which must support a language in order for our approach to support vocabulary list generation in the language.
 Table \ref{table:supported-languages} summarizes the language support of each component, including pre-processing.
 
-	{
-		\renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
-		\begin{table}[H]
-			\centering
-			\begin{tabularx}{\textwidth}{|X|X|X|}
-				\hline
-				\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                             \\
-				\hline
-				Tokenization                                & 104                          & Using the \texttt{bert-base-uncased} model\footnotemark[1]                                                                                                                                                                                 \\
-				\hline
-				Named Entity Recognition                    & 9                            & Using the \textit{spacy} model \texttt{xx\_ent\_wiki\_sm}\footnotemark[2]. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset\footnotemark[3], which contains 9 languages. \\
-				\hline
-				Next sentence prediction                    & 104                          & Using the \texttt{bert-base-multilingual-cased} model\footnotemark[4]                                                                                                                                                                      \\
-				\hline
-				Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5]                                                                                                                                                             \\
-				\hline
-				Sentence splitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
-				\hline
-				Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                              \\
-				\hline
-				Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8]                                                                                                                                                                   \\
-				\hline
-				OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                             \\
-				\hline
-			\end{tabularx}
+{
+\renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|X|X|X|}
+		\hline
+		\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                             \\
+		\hline
+		Tokenization                                & 104                          & Using the \texttt{bert-base-uncased} model\footnotemark[1]                                                                                                                                                                                 \\
+		\hline
+		Named Entity Recognition                    & 9                            & Using the \textit{spacy} model \texttt{xx\_ent\_wiki\_sm}\footnotemark[2]. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset\footnotemark[3], which contains 9 languages. \\
+		\hline
+		Next sentence prediction                    & 104                          & Using the \texttt{bert-base-multilingual-cased} model\footnotemark[4]                                                                                                                                                                      \\
+		\hline
+		Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5]                                                                                                                                                             \\
+		\hline
+		Sentence splitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
+		\hline
+		Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                              \\
+		\hline
+		Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8]                                                                                                                                                                   \\
+		\hline
+		OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                                       \\
+		\hline
+	\end{tabularx}
 
 
 
-			\caption{Languages supported by each component in the pipeline.}
-			\label{table:supported-languages}
-		\end{table}
-	}
+	\caption{Languages supported by each component in the pipeline.}
+	\label{table:supported-languages}
+\end{table}
+}
 
 \footnotetext[1]{\url{https://huggingface.co/google-bert/bert-base-uncased}}
 \footnotetext[2]{\url{https://spacy.io/models/xx\#xx_ent_wiki_sm}}
@@ -649,9 +683,9 @@ Table \ref{table:supported-languages} summarizes the language support of each co
 \footnotetext[8]{\url{https://en.wikipedia.org/wiki/List_of_Wikipedias}}
 \footnotetext[9]{\url{https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}}
 
-It can be seen that, apart from the manual selection of certain Wikipedia headings, named entity recognition is the bottleneck in our pipeline with the currently used packages. 
+It can be seen that, apart from the manual selection of certain Wikipedia headings, named entity recognition is the bottleneck in our pipeline with the currently used packages.
 While we did not individually cross-correlate the supported languages of each component, we estimate that the pipeline supports 9 languages when taking into consideration the \textit{spacy} NER capabilities.
 With a NER model supporting more languages, the implementation is estimated to support at least 40 languages, as the next bottleneck would be the sentence embedding model with over $50$ languages, some of which may, however, not be supported by all other components.
-	
-	
-	
+
+
+
