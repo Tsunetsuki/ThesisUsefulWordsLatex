@@ -268,39 +268,57 @@ Do not number the bullet points. Do not put hyperlinks in the list.
 
 \subsection{Correspondence of Efficiency Evaluation with Human Intuition}
 As mentioned in the introduction to this chapter, we use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
-Before we present the results of these tests, however, we must first establish that the performance of AI models is a reliable indicator that the list is useful to humans as well.
-This section therefore examines several vocabulary lists tested on a corpus that should be familiar to most readers.
+Before we present the results of these tests, however, we examine whether the performance of AI models is a reliable indicator that the list is useful to humans as well.
+This section therefore examines several vocabulary lists tested on a short sample text containing ten lines from subtitles of the 1972 movie \textit{The Godfather}, seen here:
 
-We compare the performances of the following lists:
+\input{data/sample_text_original.tex}
+
+When only the named entities and punctuation tokens are left in the text (our starting point for the evaluation), the text becomes:
+We display the evaluation score for each line on the left.
+
+\input{data/sample_text_empty.tex}
+
+We can see that the lines containing named entities (Line 4 and 9) already have a rather high score in the evaluation, reflecting the importance of the names to the meaning of the sentences.
+However, the other lines receive a score of 0.0, resulting in an overall score of 0.17.
+We also observe that the name \textit{Moe} in line 1 is not recognized by the \texttt{spacy} named entity recognizer (falsely) making it a possible vocabulary word.
+
+To compare their intuitive utilities, we use four vocabulary lists on the corpus and see how well their first words perform when evaluated on the sample text:
 \begin{enumerate}
-	\item A list randomly selected from words in the corpus.
-	\item A list compiled from raw frequency.
-	\item A list compiled by single-token ablation.
+	\item A randomly ordered list from words in the sample text.
+	\item A list compiled with raw frequency.
+	\item A list compiled with TF-IDF (with the Oscar corpus as normalization).
+	\item A list compiled by Single Token Summary with sentence embedding.
 \end{enumerate}
 
 The tops of the lists can be seen in Table \ref{tbl:first-k-words-sample}.
 
 \begin{table}[H]
 	\centering
-	% \resizebox{\textwidth}{!}{%
 	\input{data/first k words sample.tex}
-	% }
 	\caption{Top 10 words of each compared list on the sample text.}
 	\label{tbl:first-k-words-sample}
 \end{table}
 
-
-\input{data/sample_text_original.tex}
-\input{data/sample_text_full.tex}
-\input{data/sample_text_empty.tex}
-
-As stated before, the evaluation process begins with (recognized) named entities and punctuation, yielding the text in Listing \ref{lst:sample-text-empty}.
-We can see that the lines containing named entities (Line 4 and 9) already have a rather high score in the evaluation, reflecting the importance of the name to the meaning of the sentence.
-The overall score of this variation of the sample text is 0.17.
-In the listings, we see the sample text with a vocabulary of 10 words filled in from the three vocabulary lists, in addition to the named entities. 
+It can be seen that the ten top words of the lists collected with TF-IDF and the XAI Single Token Summary give a better idea of the meaning of the text than the words from the random and frequency lists.
+Next, we examine the words in the context of the sample text.
+In the following listings, we see the sample text with the 10 top words filled in from each vocabulary list, in addition to the recognized named entities. 
+Each line displays the evaluation score for it, and the total score (calculated by taking the average across the lines) is seen in the caption of each listing.
 
 \input{data/sample_texts.tex}
 
+The main observation is that the texts with the TF-IDF and Single Token Summary resemble the meaning of the original text much closer than the other two approaches, and are indeed evaluated significantly higher (0.52 and 0.56 vs. 0.33 and 0.30).
+In our opinion, this is evidence that our evaluation scores roughly align with how much the words let a reader understand the text, aligning with utility as defined in Section \ref{sec:utility}.
+Both of these lists feature the essential words \textit{casino} and \textit{godfather} and \textit{gamblers}, as well as other words which let a reader guess at the situation.
+
+We can, however, also notice some peculiarities in the evaluation scores:
+The text with words from the randomly assembled list (Listing \ref{lst:sample-text-random}) seems more understandable to use than when words from the  frequency words are filled in (Listing \ref{lst:sample-text-frequency}), since the randomly compiled list contains useful words such as \textit{selling}, \textit{casino} and \textit{contract}.
+However, the text with the frequency words receives a higher evaluation score than the randomly assembled list (0.33 vs. 0.3).
+This is due partially to the unrecognized entity \textit{moe} which is contained in the frequency list but not the random one, "artificially" boosting the score of the frequency list.
+But even disregarding that name, the scores are not as disparate as we expected them to be.
+While this is necessarily a subjective observation, this seems to suggest that the evaluation scores do not reflect the true utility of words in all circumstances.
+
+
+% On the other hand, the presence of the unrecognized name \textit{Moe} 
 
 \subsection{Small Context} \label{sec:results-small-context}
 
