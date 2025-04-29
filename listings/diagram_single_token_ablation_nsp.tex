@@ -12,8 +12,8 @@
 			\node (n2) [process, below=of n1] {Tokenize the first sentence};
 			\node (n3) [process, below=of n2] {Merge tokens, filter named entities and special tokens};
 			\node (n4) [process, below=3cm of n3] {Make sentence pair variations by ablating merged tokens from the first line};
-			\node (n5) [process, below=4cm of n4] {Run model for variations};
-			\node (n6) [process, below=of n5] {Calculate word utility by taking $1 - output$};
+			\node (n5) [process, below=4cm of n4] {Run model for variations, predicting $p_{is\_next}$};
+			\node (n6) [process, below=of n5] {Calculate word utility by $|p_{baseline} - p_{w}|$};
 
 			% Anchor point to align all data nodes horizontally
 			\node (anchor) [right=of n1] {};
@@ -26,6 +26,9 @@
 			};
 			\node (d3) [data, right=of n3] { \texttt{['faced', 'enmity', 'in'] }};
 			\node (d4) [data, right=of n4] {
+				\textbf{(Baseline):}  \\
+				\quad 	\texttt{["abraham lincoln faced enmity in 1863.",\\
+							\quad 		"yet, he prevailed in the end."] }\\
 				\textbf{faced:}  \\
 				\quad 	\texttt{["abraham lincoln enmity in 1863.",\\
 							\quad 		"yet, he prevailed in the end."] }\\
@@ -37,14 +40,20 @@
 							\quad 				"yet, he prevailed in the end."] }\\
 			};
 			\node (d5) [data, right=of n5] {
-				\textbf{faced:} \texttt{0.5}\\
-				\textbf{enmity:} \texttt{0.3}\\
-				\textbf{in:} \texttt{0.7}\\
+				\begin{tabular}{@{}ll@{}}
+					\textbf{(Baseline):} & \texttt{0.9} \\
+					\textbf{faced:}      & \texttt{0.5} \\
+					\textbf{enmity:}     & \texttt{0.3} \\
+					\textbf{in:}         & \texttt{0.7} \\
+				\end{tabular}
+
 			};
 			\node (d6) [data, right=of n6] {
-				\textbf{faced:} \texttt{0.5}\\
-				\textbf{enmity:} \texttt{0.7}\\
-				\textbf{in:} \texttt{0.3}\\
+				\begin{tabular}{@{}ll@{}}
+					\textbf{faced:} & \texttt{0.4}  \\
+					\textbf{enmity:} & \texttt{0.6} \\
+					\textbf{in:} & \texttt{0.2}     \\
+				\end{tabular}
 			};
 
 			% Arrows between process nodes (left column)

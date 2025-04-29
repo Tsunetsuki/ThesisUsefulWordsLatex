@@ -21,11 +21,11 @@
 			% Data Nodes, all vertically stacked but aligned to 'anchor'
 			\node (d1) [data] at (anchor) {\texttt{"Abraham Lincoln faced enmity in 1863."}};
 			\node (d2) [data, right=of n2] {
-				\texttt{['[CLS]', 'abraham', 'lincoln', 'faced', 'en', '\#\#mity', 'in', '1863', '.', '[SEP]']}
+			\texttt{['[CLS]', 'abraham', 'lincoln', 'faced', 'en', '\#\#mity', 'in', '1863', '.', '[SEP]']}
 			};
 			\node (d3) [data, right=of n3] { \texttt{['faced', 'enmity', 'in']} };
 			\node (d4) [data, right=of n4] {
-				\textbf{Baseline:} \\
+				\textbf{(Baseline):} \\
 				\quad \texttt{"abraham lincoln faced enmity in 1863."}\\
 				\textbf{faced:} \\
 				\quad \texttt{"abraham lincoln enmity in 1863."}\\
@@ -35,15 +35,19 @@
 				\quad \texttt{"abraham lincoln faced enmity 1863."}\\
 			};
 			\node (d5) [data, right=of n5] {
-				\textbf{Baseline:} $\vec{r}$ \\
-				\textbf{faced:} $\vec{a}$\\
-				\textbf{enmity:} $\vec{b}$\\
-				\textbf{in:} $\vec{c}$\\
+				\begin{tabular}{@{}ll@{}}
+					\textbf{(Baseline):} & $\vec{r}$ \\
+					\textbf{faced:}      & $\vec{a}$ \\
+					\textbf{enmity:}     & $\vec{b}$ \\
+					\textbf{in:}         & $\vec{c}$ \\
+				\end{tabular}
 			};
 			\node (d6) [data, right=of n6] {
-				\textbf{faced:} \texttt{0.5}\\
-				\textbf{enmity:} \texttt{0.7}\\
-				\textbf{in:} \texttt{0.3}\\
+				\begin{tabular}{@{}ll@{}}
+					\textbf{faced:}  & $\text{CosDist}(\vec{a}, \vec{r}) = \texttt{0.5}$ \\
+					\textbf{enmity:} &  $\text{CosDist}(\vec{b}, \vec{r}) = \texttt{0.7}$ \\
+					\textbf{in:}     &  $\text{CosDist}(\vec{c}, \vec{r}) = \texttt{0.3}$ \\
+				\end{tabular}
 			};
 
 			% Arrows between process nodes (left column)
