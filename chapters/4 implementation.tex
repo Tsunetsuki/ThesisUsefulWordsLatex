@@ -428,7 +428,7 @@ We can thus categorize our evaluation by two both the corpus source and the scal
 \begin{enumerate}
 	\item A single Wikipedia article, where the lines used for list generation and evaluation are the same.
 	\item A single subtitle, where the lines used for list generation and evaluation are the same.
-	\item A Wikipedia category, where vocabulary lists are generated on the "train" set of articles in that category, and evaluated on the "test" article set. The proportion of "test" articles s 20\% .
+	\item A Wikipedia category, where vocabulary lists are generated on the "train" set of articles in that category, and evaluated on the "test" article set. The proportion of "test" articles is 20\% .
 	\item A large sample of subtitles, with designated "train" and "test" subtitles as well. Due to the large number of subtitles, we were not able to include the entire dataset in the list generation.
 \end{enumerate}
 
@@ -506,7 +506,7 @@ The results of the experiments with these methods is presented in Chapter \ref{c
 Our aim in using XAI methods is to find out which words, if known, improve the model's performance the most, when compared to not knowing the word.
 Perhaps the simplest way of testing this is by going through every word in the AI model's input, and examining the impact on model performance when the word is removed from the input.
 Within this work, this approach is called \textbf{Single Token Ablation}.
-The processing steps performed in Single Token Ablation can be seen in Figure \ref{fig:single-token-ablation}.
+The processing steps performed in Single Token Ablation can be seen in Figure \ref{fig:single-token-ablation-sentemb}.
 
 \paragraph{Approach:}
 For an input sentence, we run the model on the unmodified sentence to get a baseline performance.
@@ -523,9 +523,15 @@ Furthermore, this method does not take into account the utility of a word in the
 However, among the methods used in this paper, this method achieves the best results in the final evaluation.
 
 \begin{figure}[H]
-	\input{listings/utility_evaluation_diagrams.tex}
-	\caption{Example of Single Token Ablation, on one sentence.}
-	\label{fig:single-token-ablation}
+	\input{listings/diagram_single_token_ablation_sentemb.tex}
+	\caption{Example of Single Token Ablation with sentence embedding, on one sentence.}
+	\label{fig:single-token-ablation-sentemb}
+\end{figure}
+
+\begin{figure}[H]
+	\input{listings/diagram_single_token_ablation_nsp.tex}
+	\caption{Example of Single Token Ablation with next sentence prediction, on one sentence pair.}
+	\label{fig:single-token-ablation-nsp}
 \end{figure}
 
 \subsection{Single Token Summary}
@@ -543,6 +549,18 @@ The utility in this approach is calculated by taking the performance improvement
 Like Single Token Ablation, this method requires only one model call for each unique token in the sentence ($\mathcal{O}(n)$).
 This method may find tokens helpful to beginners more efficiently, however, as it simulates knowing only one word, whereas Single Token Ablation tests performance while taking into account the meaning of the other words in each sentence, as well.
 However, this could the method to assign low utility to words which mostly convey meaning when in combination with other words, such as "not".
+
+\begin{figure}[H]
+	\input{listings/diagram_single_token_summary_sentemb.tex}
+	\caption{Example of Single Token Summary with sentence embedding, on one line.}
+	\label{fig:single-token-summary}
+\end{figure}
+
+\begin{figure}[H]
+	\input{listings/diagram_single_token_summary_nsp.tex}
+	\caption{Example of Single Token Summary with next sentence prediction, on one sentence pair.}
+	\label{fig:single-token-summary-nsp}
+\end{figure}
 
 % \paragraph{Compatibility with NLP tasks:}
 % \todo{compat with NSP?}
@@ -630,11 +648,11 @@ This final section about our implementation describes how the chosen components 
 
 \todo{ Describe which comps are compatible, and where it is not obvious, how exactly they are made to work with each other. }
 
-\begin{figure}[H]
-	\input{listings/list_efficiency_evaluation_diagram.tex}
-	\caption{Example of sentence embedding scoring}
-	\label{fig:list-evaluation-diagram}
-\end{figure}
+% \begin{figure}[H]
+% 	\input{listings/list_efficiency_evaluation_diagram.tex}
+% 	\caption{Example of sentence embedding scoring}
+% 	\label{fig:list-evaluation-diagram}
+% \end{figure}
 
 \subsection{Supported Languages}
 Our data pipeline contains various language-specific components, all of which must support a language in order for our approach to support vocabulary list generation in the language.

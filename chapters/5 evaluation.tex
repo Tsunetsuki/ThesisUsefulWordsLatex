@@ -29,6 +29,8 @@ We then present the results of the evaluation, as well as discuss their implicat
 The various utility extraction approaches produce ranked lists as outputs.
 To compare these, we employ both quantitative and qualitative comparison approaches, described in the following sections.
 
+
+
 \subsection{NLP Task Performance}
 Our primary metric for evaluating a vocabulary list's efficiency is the approach explained in Section \ref{sec:experimental-setup-with-ai}:
 We let an AI model perform an NLP task with a vocabulary $V_{l, k}$, consisting of the first $k$ elements of the list $l$.
@@ -185,15 +187,6 @@ Considerations of the choice of metric are:
 \end{description}
 
 
-\subsection{Sample text}
-\todo{Show a sample paragraph with first n words from each list. Can be used to intuitively evaluate utilities}
-In addition to the above automatic measures of list efficiency, we can also use human intuition to evaluate the various vocabulary lists:
-To compare vocabulary list up to some index $k$, we use a sample paragraph, and take the vocabulary $V_{l, k}$ of each of the lists.
-Then, we compare how the paragraph appears for each vocabulary if we blot out all words not in the vocabulary, in order to simulate the perspective of someone who only knows the words from the vocabulary.
-
-
-
-
 
 
 
@@ -242,13 +235,13 @@ These also use corpora, but not AI models or XAI methods to find important words
 The next section introduces some of these methods, which we use to generate comparison lists to our own.
 
 
-\subsection{Existing List Generation Methods}
+\subsection{Frequency-Based List Generation Methods}
 To get an impression of how well our XAI-based method for vocabulary list generation performs, we employ the three frequency-based methods for generating lists of vocabulary introduced in Section \ref{sec:frequency-based-list-generation-methods}, namely Raw Frequency, Average Reduced Frequency, and TF-IDF.
 We use these three measures as baselines to our methods, using the same tokenizer \texttt{bert-base-uncased} to divide texts into words that we can count.
 To calculate the inverse document frequency in TF-IDF, we use a random sample of 53,178 documents from the Oscar corpus (see Section \ref{sec:oscar}).
 
 
-\subsection{LLM Prompts}
+\subsection{LLM Prompt}
 In recent years, Large Language Models have become a popular tools for language learners to find new words to learn about specific areas.
 For this purpose, we run the following prompt to ChatGPT 3 for each context to get a sense of how well our method performs against this easy method.
 
@@ -269,15 +262,15 @@ Do not number the bullet points. Do not put hyperlinks in the list.
 \subsection{Correspondence of Efficiency Evaluation with Human Intuition}
 As mentioned in the introduction to this chapter, we use the performance of AI models on corpora where we simulate a limited vocabulary in order to measure the efficiency of a vocabulary list.
 Before we present the results of these tests, however, we examine whether the performance of AI models is a reliable indicator that the list is useful to humans as well.
-This section therefore examines several vocabulary lists tested on a short sample text containing ten lines from subtitles of the 1972 movie \textit{The Godfather}, seen here:
+This section therefore examines several vocabulary lists tested on a short sample text containing ten lines of dialog from the subtitles of the 1972 movie \textit{The Godfather}, seen here:
 
 \input{data/sample_text_original.tex}
 
-When only the named entities and punctuation tokens are left in the text (our starting point for the evaluation), the text becomes:
-We display the evaluation score for each line on the left.
+After preprocessing the text and leaving only the named entities and punctuation tokens in the text (which constitutes our starting point for the evaluation), the text becomes as follows (evaluation score for each line are displayed on the left):
 
 \input{data/sample_text_empty.tex}
 
+Due to the uncased tokenizer used, all words in the reconstructed text are lowercase.
 We can see that the lines containing named entities (Line 4 and 9) already have a rather high score in the evaluation, reflecting the importance of the names to the meaning of the sentences.
 However, the other lines receive a score of 0.0, resulting in an overall score of 0.17.
 We also observe that the name \textit{Moe} in line 1 is not recognized by the \texttt{spacy} named entity recognizer (falsely) making it a possible vocabulary word.
@@ -301,32 +294,30 @@ The tops of the lists can be seen in Table \ref{tbl:first-k-words-sample}.
 
 It can be seen that the ten top words of the lists collected with TF-IDF and the XAI Single Token Summary give a better idea of the meaning of the text than the words from the random and frequency lists.
 Next, we examine the words in the context of the sample text.
-In the following listings, we see the sample text with the 10 top words filled in from each vocabulary list, in addition to the recognized named entities. 
+In the following listings, we see the sample text with the 10 top words filled in from each vocabulary list, in addition to the recognized named entities.
 Each line displays the evaluation score for it, and the total score (calculated by taking the average across the lines) is seen in the caption of each listing.
 
 \input{data/sample_texts.tex}
 
 The main observation is that the texts with the TF-IDF and Single Token Summary resemble the meaning of the original text much closer than the other two approaches, and are indeed evaluated significantly higher (0.52 and 0.56 vs. 0.33 and 0.30).
-In our opinion, this is evidence that our evaluation scores roughly align with how much the words let a reader understand the text, aligning with utility as defined in Section \ref{sec:utility}.
-Both of these lists feature the essential words \textit{casino} and \textit{godfather} and \textit{gamblers}, as well as other words which let a reader guess at the situation.
+In our opinion, this is evidence that our evaluation scores roughly coincide with how much the words let a reader understand the text, aligning with utility as defined in Section \ref{sec:utility}.
+Both of these lists feature the essential words \textit{casino}, \textit{godfather} and \textit{gamblers}, as well as other words which let a reader guess at the situation.
 
 We can, however, also notice some peculiarities in the evaluation scores:
-The text with words from the randomly assembled list (Listing \ref{lst:sample-text-random}) seems more understandable to use than when words from the  frequency words are filled in (Listing \ref{lst:sample-text-frequency}), since the randomly compiled list contains useful words such as \textit{selling}, \textit{casino} and \textit{contract}.
-However, the text with the frequency words receives a higher evaluation score than the randomly assembled list (0.33 vs. 0.3).
+The text with words from the randomly assembled list (Listing \ref{lst:sample-text-random}) seems more understandable to us than when words from the  frequency list are filled in (Listing \ref{lst:sample-text-frequency}), since the randomly compiled list contains useful words such as \textit{selling}, \textit{casino} and \textit{contract}.
+However, the text with the frequency words receives a higher evaluation score than the one with the random words (0.33 vs. 0.3).
 This is due partially to the unrecognized entity \textit{moe} which is contained in the frequency list but not the random one, "artificially" boosting the score of the frequency list.
-But even disregarding that name, the scores are not as disparate as we expected them to be.
-While this is necessarily a subjective observation, this seems to suggest that the evaluation scores do not reflect the true utility of words in all circumstances.
-
-
-% On the other hand, the presence of the unrecognized name \textit{Moe} 
+But even disregarding that name, the scores are not as disparate as we expected them to be:
+For example, line 3 in the random words text \textit{"i' make       ."} receives a (rounded) score of 0.0, while the same line in the frequency text \textit{"i' ll      he      ."} is assigned a score of 0.3.
+Since both versions of the line seem to contain very little information, this difference in the evaluation score suggests that the evaluation scores do not reflect the true utility of words in all circumstances.
+With these observations in mind, we present the evaluation results in the next sections.
 
 \subsection{Small Context} \label{sec:results-small-context}
-
 This section shows the results of our evaluation approach for the efficiencies of vocabulary list, applied to lists which have been generated by the various list generation approaches.
 Performance scores were rounded to two decimals to improve readability.
 
 
-Table \ref{tbl:performance-results-single-opensubs} and \ref{tbl:performance-results-single-opensubs} show the aggregated results of small-scale corpora, separated by corpus type.
+Table \ref{tbl:performance-results-single-opensubs} and \ref{tbl:performance-results-single-wikipedia} show the aggregated results of small-scale corpora, separated by corpus type.
 For small corpora, there is no train-test-data distinction, thus for each corpus and extraction method, a vocabulary list produced, whose efficiency is then evaluated with the same corpus as a basis.
 %
 % \begin{table}[ht]
@@ -335,14 +326,6 @@ For small corpora, there is no train-test-data distinction, thus for each corpus
 % 	\caption{DELETE THIS}
 % \end{table}
 
-\begin{table}[H]
-	\centering
-	% \resizebox{\textwidth}{!}{%
-	\input{data/first k words OPENSUBS.tex}
-	% }
-	\caption{Tops of generated lists for OpenSubtitles dataset.}
-	\label{tbl:first-k-words-opensubs}
-\end{table}
 
 \begin{table}[H]
 	\centering
@@ -371,35 +354,6 @@ For small corpora, there is no train-test-data distinction, thus for each corpus
 	\label{tbl:similarity-results-single}
 \end{table}
 
-\subsection{Large Context} \label{sec:results-large-context}
-
-\begin{table}[H]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\input{data/performance opensubs-subtitle big.tex}
-	}
-	\caption{Model performance across vocabulary sizes on subtitles, with separate train/test subtitles.}
-	\label{tbl:performance-results-opensubs-large}
-\end{table}
-
-
-\begin{table}[H]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\input{data/performance wikipedia-article big.tex}
-	}
-	\caption{Model performance across vocabulary sizes on Wikipedia articles, with separate train/test articles.}
-	\label{tbl:performance-results-wikipedia-large}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\input{data/similarity_heatmap_table_big.tex}
-	}
-	\caption{Similarity of vocabulary lists, big. Black boxes represent missing values.}
-	\label{tbl:similarity-results-big}
-\end{table}
 
 
 We can observe several points in the data:
@@ -433,10 +387,10 @@ The discrepancy in performance of small vocabulary sizes between the two corpus 
 One piece of counter-evidence to this theory is that raw frequency also performs better on Wikipedia than on OpenSubtitles, despite frequency lists from both corpus types featuring many stopwords at their top.
 An alternative hypothesis is that Wikipedia articles are more similar to the data the models had been trained on.
 This cannot be confirmed, however, as the source of BERT's training data is not publicly known.
-An interesting point to note is that, for a vocabulary size of 640, the list efficiencies have nearly converged:
+An interesting point to note is that, for a vocabulary size of 640, the list efficiencies nearly converge:
 Despite the larger average corpus size of movie subtitles, the average performance is 0.90 for subtitles and 0.89 for Wikipedia.
 
-\subsection{Performance Results of Lists Generated from Similar Corpora}
+\subsection{Large Context} \label{sec:results-large-context}
 So far, we have analyzed the efficiencies of vocabulary lists with respect to the same corpus which was used to generate them in the first place.
 This may be useful for a learner who wishes to read specific articles of watch specific movies, and learn the most useful vocabulary beforehand.
 However, in real life, it is not always possible for a learner to know the exact contents of the texts they will be engaging in:
@@ -448,15 +402,87 @@ For each category, we randomly split its articles into "train" and "test" articl
 When generating vocabulary lists, only the "train" articles are used as inputs.
 With these lists, we evaluate the list efficiencies against the "test" corpora.
 The scores across the individual corpora is then aggregated by taking the mean.
-Table \ref{tbl:runtime-results-wikipedia-categories} shows the results of these experiments.
+% Table \ref{tbl:performance-results-wikipedia-categories} shows the results of these experiments.
 
-\begin{table}[ht]
+To first gain an overview of the resulting lists, we present the first 20 words of each vocabulary list made from the sample of 632 subtitles:
+
+\begin{table}[H]
 	\centering
-	\input{data/performances_wikipedia_categories.tex}
-	\caption{Performance of Vocabulary Lists on similar corpora.}
-	\label{tbl:runtime-results-wikipedia-categories}
+	% \resizebox{\textwidth}{!}{%
+	\input{data/first k words OPENSUBS.tex}
+	% }
+	\caption{Top 20 words of the generated lists for the OpenSubtitles dataset.}
+	\label{tbl:first-k-words-opensubs}
 \end{table}
 
+We can see some similarities across all lists:
+Every list is headed by the two pronouns \textit{i} and \textit{you}, which seems reasonable for movie dialog.
+After these, we can see the characteristics of the various approaches:
+Raw Frequency and Average Reduced Frequency produce very similar lists, consisting mostly of stop words at the top.
+The list made from using attention as explanation follows a similar pattern.
+In contrast, the lists generated from both TF-IDF and feature importance explanations show words that are more useful for a beginner language learner in our view:
+All of them contain at least one verb (\textit{know}), as well as several words that can constitute a meaningful sentence by themselves, such as \textit{what}, \textit{okay}, \textit{right}, \textit{yeah}.
+Next, we present the results of the efficiency evaluation of the large lists produced on the (separate) test datasets.
+We include the vocabulary list produced from the \Rosetta lesson in this evaluation, since both it and our own lists were not specifically compiled for the evaluation data (though our lists were compiled on more similar data).
+
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/performance opensubs-subtitle big.tex}
+	}
+	\caption{Model performance across vocabulary sizes on subtitles, with separate train/test subtitles.}
+	\label{tbl:performance-results-opensubs-large}
+\end{table}
+
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/performance wikipedia-article big.tex}
+	}
+	\caption{Model performance across vocabulary sizes on Wikipedia articles, with separate train/test articles.}
+	\label{tbl:performance-results-wikipedia-large}
+\end{table}
+
+We can see that the results for most approaches achieve \textbf{very similar} evaluation scores, with difference of at most 0.02 per tested vocabulary size. 
+The only exception is the \Rosetta\ list, which performs significantly worse than either the frequency or the XAI lists.
+This is a surprising result, as the subjective evaluation seen above would seem to imply that the lists compiled with feature attribution methods should outperform the frequency-based metrics.
+It can be seen that the Single Token Summary approach still outperforms the other approaches for small vocabulary sizes, which may be due to it selecting words which, by themselves, are closest to the meaning of an entire sentence.
+
+However, we take the small differences in these result as an indication that, \textbf{for large contexts, frequency-based approaches are a viable way to collect vocabulary}, with more complicated methods only bringing marginal to vocabulary list efficiency.
+The fact that the datasets for generating the lists and evaluating them is a likely cause for why these results are similar, as finding words that are very specifically useful to the "train" dataset becomes less productive in such a scenario.
+Still, the TF-IDF metric can be seen to achieve better results than raw frequency, and comparable results to the XAI approaches, which makes it a worthwhile method for compiling context-specific word lists in our view, especially since it requires much less time to be run on a large corpus.
+Table \ref{tbl:similarity-results-big} shows the similarities of the generated lists.
+
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/similarity_heatmap_table_big.tex}
+	}
+	\caption{Similarity of vocabulary lists compiled from the large context corpora. Black boxes represent missing values.}
+	\label{tbl:similarity-results-big}
+\end{table}
+
+% \begin{table}[ht]
+% 	\centering
+% 	\input{data/performances_wikipedia_categories.tex}
+% 	\caption{Performance of Vocabulary Lists on similar corpora.}
+% 	\label{tbl:performance-results-wikipedia-categories}
+% \end{table}
+
+
+% \begin{table}[ht]
+% 	\centering
+% 	\resizebox{\textwidth}{!}{%
+% 		\input{data/performances big all.tex}
+% 	}
+% 	\caption{Performance of Vocabulary Lists on similar corpora, for each Wikipedia category.}
+% 	\label{tbl:performance-results-big-all}
+% \end{table}
+
+\input{data/performances big all.tex}
 Because vocabulary lists are generated from a much larger corpus, they are longer than the per-article lists in section \ref{sec:results-small-context}.
 We can also observe that the increase in performance is much slower than when a list is evaluated on the same corpus used to generate it.
 
@@ -489,6 +515,23 @@ Wikipedia Articles have fewer lines, but more words per line, making the Progres
 
 
 \section{Discussion}
+Our results show that the lists generated with our XAI approach, using feature importance methods, outperform traditional, frequency-based metrics on small corpora, and slightly on larger corpora for small vocabulary sizes.
+Especially Single Token Ablation and Single Token Summary generate better lists for small corpora than raw frequency and average reduced frequency, while still only requiring about ten times the runtime require for the frequency-based approaches.
+Attention, at least with our setup, does not produce comparably performant lists.
+Progressive Summary, while being similar to Single Token Ablation and Single Token Summary in its results, did not outperform them despite its much longer runtime.
+
+For smaller corpora, therefore, we recommend the use of the Single Token Ablation and Single Token Summary to create maximally useful word lists for language learners. 
+
+For larger corpora, one could combine the performance of the Single Token Summary approach with the speed of a frequency-based approach in the following way:
+For a large sample of the corpus, one could use the Single Token Summary to create the top of the list.
+This list head would be likely to include non-stop words, which a learner could use to form grammatically correct sentences from the start.
+After this top portion of the list, one could use TF-IDF to generate the rest of the list, avoiding the long tail of frequency for rare words.
+
 
 \todo{Interpretation,
 	Could you combine approaches with each other or baselines to  combine strength, what are the strengths/weakness of each approach}
+
+
+
+
+

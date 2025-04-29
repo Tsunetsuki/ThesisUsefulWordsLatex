@@ -1,0 +1,59 @@
+\begin{center}
+	\scalebox{0.75}{
+		\begin{tikzpicture}[node distance=1.8cm and 2.5cm, every node/.style={font=\small}]
+
+			% Styles
+			\tikzstyle{process} = [rectangle, rounded corners, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10, text width=8.5cm]
+			\tikzstyle{arrow} = [thick, ->, >=Stealth]
+			\tikzstyle{data} = [align=left, text width=8.5cm, anchor=west]
+
+			% Process Nodes
+			\node (n1) [process] {Input sentence};
+			\node (n2) [process, below=of n1] {Tokenize the first sentence};
+			\node (n3) [process, below=of n2] {Merge tokens, filter named entities and special tokens};
+			\node (n4) [process, below=3cm of n3] {Make sentence pair variations by ablating merged tokens from the first line};
+			\node (n5) [process, below=4cm of n4] {Run model for variations};
+			\node (n6) [process, below=of n5] {Calculate word utility by taking $1 - output$};
+
+			% Anchor point to align all data nodes horizontally
+			\node (anchor) [right=of n1] {};
+
+			% Data Nodes, all vertically stacked but aligned to 'anchor'
+			\node (d1) [data] at (anchor) {\texttt{["Abraham Lincoln faced enmity in 1863."\\
+								"Yet, he prevailed in the end."]}};
+			\node (d2) [data, right=of n2] {
+			\texttt{['[CLS]', 'abraham', 'lincoln', 'faced', 'en', '\#\#mity', 'in', '1863', '.', '[SEP]']}
+			};
+			\node (d3) [data, right=of n3] { \texttt{['faced', 'enmity', 'in'] }};
+			\node (d4) [data, right=of n4] {
+				\textbf{faced:}  \\
+				\quad 	\texttt{["abraham lincoln enmity in 1863.",\\
+							\quad 		"yet, he prevailed in the end."] }\\
+				\textbf{enmity:}   \\
+				\quad 	\texttt{["abraham lincoln faced in 1863.", \\
+							\quad 			"yet, he prevailed in the end."] }\\
+				\textbf{in:}\\
+				\quad 	\texttt{["abraham lincoln faced enmity 1863.",\\
+							\quad 				"yet, he prevailed in the end."] }\\
+			};
+			\node (d5) [data, right=of n5] {
+				\textbf{faced:} \texttt{0.5}\\
+				\textbf{enmity:} \texttt{0.3}\\
+				\textbf{in:} \texttt{0.7}\\
+			};
+			\node (d6) [data, right=of n6] {
+				\textbf{faced:} \texttt{0.5}\\
+				\textbf{enmity:} \texttt{0.7}\\
+				\textbf{in:} \texttt{0.3}\\
+			};
+
+			% Arrows between process nodes (left column)
+			\draw [arrow] (n1) -- (n2);
+			\draw [arrow] (n2) -- (n3);
+			\draw [arrow] (n3) -- (n4);
+			\draw [arrow] (n4) -- (n5);
+			\draw [arrow] (n5) -- (n6);
+
+		\end{tikzpicture}
+	}
+\end{center}
