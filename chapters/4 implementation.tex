@@ -577,6 +577,12 @@ From the remaining words in the sentence, we check which one improves the perfor
 By iterating this method, we progressively reconstruct the original sentence, which each step adding the word which improves the performance the most.
 Here, the estimated utility of a word is the boost in performance which is brought to the sentence when the word is added.
 
+\begin{figure}[H]
+	\input{listings/diagram_progressive_summary_sentemb.tex}
+	\caption{Example of Progressive Summary with sentence embedding, on one sentence.}
+	\label{fig:progressive-summary}
+\end{figure}
+
 \paragraph{Critical Evaluation:}
 For a single sentence, Progressive Summary would appear to be the most accurate in ordering its words by utility, as it considers the utility of each word in combination with the words which have already been found to be useful.
 However, Progressive Summary is much more computationally intensive than Single Token Summary, which requires only one model call per word in the sentence.
@@ -625,7 +631,7 @@ AI models are trained with some tokenizer as preprocessing the input, and this t
 This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
 In addition to this technical downside, attention is controversial as a mechanism to explain model decisions:
 One point of critique is that, while attention influences the model's behavior, it is not a faithful explanation because alternative attention distributions can yield similar model outputs \cite{jainAttentionNotExplanation2019}.
-On the other hand, it has been argued that the mere fact that a model chooses a particular attention distribution, rather than another, means that the actually generated distribution is a more plausible explanation that artificial adversarial distributions \cite{wiegreffeAttentionNotNot2019}.
+On the other hand, it has been argued that the mere fact that a model chooses a particular attention distribution, rather than another, means that the actually generated distribution is a more plausible explanation than artificial adversarial distributions \cite{wiegreffeAttentionNotNot2019}.
 As we will show in our list evaluation, when used with our list generation approach, attention produces vocabulary lists that are close in efficiency to those produced by the model-agnostic methods.
 
 \paragraph{Summary:}
