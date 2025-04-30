@@ -1,0 +1,65 @@
+\begin{center}
+	\scalebox{0.75}{
+		\begin{tikzpicture}[node distance=1.8cm and 2.5cm, every node/.style={font=\small}]
+
+			% Styles
+			\tikzstyle{process} = [rectangle, rounded corners, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10, text width=8.5cm]
+			\tikzstyle{arrow} = [thick, ->, >=Stealth]
+			\tikzstyle{data} = [align=left, text width=8.5cm, anchor=west]
+
+			% Process Nodes
+			\node (n1) [process] {Input sentence};
+			\node (n2) [process, below=of n1] {Tokenize the sentence};
+			\node (n3) [process, below=3cm of n2] {Run the models and sum over the attentions for each token};
+			\node (n4) [process, below=3cm of n3] {Filter special tokens, punctuation, and named entities, then merge the remaining sub-word tokens};
+			\node (n5) [process, below=of n4] {Normalize the attention sum to 1};
+
+			% Anchor point to align all data nodes horizontally
+			\node (anchor) [right=of n1] {};
+
+			% Data Nodes, all vertically stacked but aligned to 'anchor'
+			\node (d1) [data] at (anchor) {\texttt{["Abraham Lincoln faced enmity in 1863."\\
+								"Yet, he prevailed in the end."]}};
+			\node (d2) [data, right=of n2] {
+			\texttt{['[CLS]', 'abraham', 'lincoln', 'faced', 'en', '\#\#mity', 'in', '1863', '.', '[SEP]']}
+			};
+			\node (d3) [data, right=of n3] {
+				\begin{tabular}{@{}ll@{}}
+					\texttt{[CLS]}    & 400 \\
+					\texttt{abraham}  & 300 \\
+					\texttt{lincoln}  & 200 \\
+					\texttt{faced}    & 150 \\
+					\texttt{en}       & 150 \\
+					\texttt{\#\#mity} & 200 \\
+					\texttt{in}       & 100 \\
+					\texttt{1863}     & 200 \\
+					\texttt{.}        & 50  \\
+					\texttt{[SEP]}    & 500 \\
+				\end{tabular}
+			};
+
+			\node (d4) [data, right=of n4] {
+				\begin{tabular}{@{}ll@{}}
+					\texttt{faced}    & 150 \\
+					\texttt{enmity}       & 350 \\
+					\texttt{in}       & 100 \\
+				\end{tabular}
+			};
+			\node (d5) [data, right=of n5] {
+				\begin{tabular}{@{}ll@{}}
+					\texttt{faced}    & 0.25 \\
+					\texttt{enmity}       & 0.58 \\
+					\texttt{in}       & 0.16 \\
+				\end{tabular}
+			};
+
+			% Arrows between process nodes (left column)
+			\draw [arrow] (n1) -- (n2);
+			\draw [arrow] (n2) -- (n3);
+			\draw [arrow] (n3) -- (n4);
+			\draw [arrow] (n4) -- (n5);
+
+		\end{tikzpicture}
+	}
+\end{center}
+

@@ -31,53 +31,54 @@
 				\quad \texttt{"abraham lincoln 1863."}\\
 				\textbf{(Baseline):} \\
 				\quad \texttt{"abraham lincoln faced enmity in 1863."}\\
-				\\
-				Current sentence:  \texttt{"abraham lincoln 1863."}\\
+				Current sentence: \\
+				\quad \texttt{"abraham lincoln 1863."}\\
 				Current performance: \texttt{0.4}\\
 			};
 			\node (d5) [data, right=of n5] {
 				Remaining words: \texttt{['faced', 'enmity', 'in']} \\
 				\quad \textbf{faced:} \\
-				\quad \quad \texttt{"abraham lincoln faced 1863."} $\rightarrow$ \texttt{0.6} \\
+				\mbox{\quad \quad \texttt{"abraham lincoln faced 1863."} $\rightarrow$ \texttt{0.6} }\\
 				\quad \textbf{enmity:} \\
-				\quad \quad 	\texttt{"abraham lincoln enmity 1863."} $\rightarrow$ \texttt{0.7}\\
+				\mbox{\quad \quad 	\texttt{"abraham lincoln enmity 1863."} $\rightarrow$ \texttt{0.7}}\\
 				\quad \textbf{in:} \\
-				\quad \quad \texttt{"abraham lincoln in 1863."} $\rightarrow$ \texttt{0.5}\\
-				\\
+				\mbox{\quad \quad \texttt{"abraham lincoln in 1863."} $\rightarrow$ \texttt{0.5}}\\
 				Next best word: \textbf{enmity}\\
 				Utility of \textbf{enmity}: $0.7 - 0.4 = 0.3$ \\
-				Current sentence:  \texttt{"abraham lincoln enmity 1863."}\\
+				Current sentence:  \\ 
+				\quad \texttt{"abraham lincoln enmity 1863."}\\
 				Current performance: \texttt{0.7}\\
 			};
 			\node (d6) [data, right=of n6] {
 				Remaining words: \texttt{['faced', 'in']} \\
-				\textbf{faced:} \\
-				\quad \texttt{"abraham lincoln faced enmity 1863."} $\rightarrow$ \texttt{0.9} \\
-				\textbf{in:} \\
-				\quad \texttt{"abraham lincoln enmity in 1863."} $\rightarrow$ \texttt{0.8} \\
-				\\
+				\quad \textbf{faced:} \\
+				\mbox{\quad \quad \texttt{"abraham lincoln faced enmity 1863." $\rightarrow$ 0.9} }\\
+				\quad \textbf{in:} \\
+				\mbox{\quad \quad \texttt{"abraham lincoln enmity in 1863." $\rightarrow$ 0.8}} \\
 				Next best word: \textbf{faced}\\
 				Utility of \textbf{faced}: $0.9 - 0.7 = 0.2$ \\
-				Current sentence:  \texttt{"abraham lincoln faced enmity 1863."}\\
+				Current sentence: \\
+				\quad \texttt{"abraham lincoln faced enmity 1863."}\\
+
 				Current performance: \texttt{0.9}\\
 			};
 			\node (d7) [data, right=of n7] {
 				Remaining words: \texttt{['in']} \\
-				\textbf{in:} \\
-				\quad \texttt{"abraham lincoln faced enmity in 1863."}$\rightarrow$ \texttt{1} \\
-\\
+				\quad \textbf{in:} \\
+				\mbox{\quad \quad \texttt{"abraham lincoln faced enmity in 1863."}$\rightarrow$ \texttt{1} }\\
 				Next best word: \textbf{in}\\
-				Utility of \textbf{in}: $1 - 0.9 = 0.1$ \\
-				Current sentence: \texttt{"abraham lincoln faced enmity in 1863."}\\
+			Utility of \textbf{in}: $1 - 0.9 = 0.1$ \\
+				Current sentence:\\ 
+				\quad \texttt{"abraham lincoln faced enmity in 1863."}\\
 				Current performance: \texttt{1}\\
 			};
 			\node (d8) [data, right=of n8] {
 				\begin{tabular}{@{}ll@{}}
-					\textbf{faced:} & \texttt{0.2}  \\
+					\textbf{faced:}  & \texttt{0.2} \\
 					\textbf{enmity:} & \texttt{0.3} \\
-					\textbf{in:} & \texttt{0.1}     \\
+					\textbf{in:}     & \texttt{0.1} \\
 				\end{tabular}
-		}
+			};
 
 			% Arrows between process nodes (left column)
 			\draw [arrow] (n1) -- (n2);

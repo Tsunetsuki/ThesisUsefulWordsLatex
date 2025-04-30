@@ -623,6 +623,12 @@ Next, special tokens and punctuation are filtered
 Finally, we normalize the attentions such that the attention for all words in the line sums up to one.
 The attributed attention to a word is its estimated utility.
 
+\begin{figure}[H]
+	\input{listings/diagram_attention.tex}
+	\caption{Example of attention as explanation, on one sentence.}
+	\label{fig:attention}
+\end{figure}
+
 \paragraph{Critical Evaluation:}
 As hinted at before, this method uses one model call for one input line, and thus has a time complexity of $\mathcal{O}(1)$.
 One disadvantage of attention as our explanation mechanism is that attentions are attributed to input tokens of the model.
