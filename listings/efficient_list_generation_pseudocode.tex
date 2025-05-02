@@ -2,10 +2,14 @@
 \caption{Efficient List Generation.}
 \label{alg:efficient-list-generation}
 \begin{algorithmic}[1]
-\Require corpus, model, xai\_method
+\Require corpus\_lines, model, xai\_method
 \State Initialize $line\_word\_utilities$ with empty list
 
-\For{each $line$ in $corpus$}
+\If{model is NSP model}
+    \State corpus\_lines $\gets$ make\_NSP\_line\_pairs(corpus\_lines)
+\EndIf
+
+\For{each $line$ in $corpus\_lines$}
     \State $word\_utilities\_for\_this\_line \gets$ xai\_method$(model, line)$
     \State Append $word\_utilities\_for\_this\_line$ to $line\_word\_utilities$
 \EndFor

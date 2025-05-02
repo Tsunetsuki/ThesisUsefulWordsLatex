@@ -1,12 +1,12 @@
 Evaluation of the vocabulary list generation approaches is challenging:
-The accuracy of the approaches is evaluated by evaluating the efficiency of the vocabulary lists.
-We have described in detail our approach to vocabulary efficiency evaluation in Section \ref{sec:experimental-setup-with-ai}, which involves running an AI model on a context-specific corpus with a given vocabulary, where the vocabulary is given by taking the first n $k$ words from the vocabulary list in question.
+We can measure the quality of each approach by measuring the efficiency of the vocabulary lists it produces.
+We have described in detail our method for vocabulary efficiency evaluation in Section \ref{sec:experimental-setup-with-ai}, which involves running an AI model on a context-specific corpus with a given vocabulary, where the vocabulary is given by taking the first $k$ words from the vocabulary list in question.
 However, this approach is very similar to our approach for list generation, which involves analyzing AI interaction of AI models with corpora through the use of XAI methods.
 Therefore, it is natural to assume that our evaluation approach is biased towards the lists stemming from our list generation approach.
 This concern is especially pertinent as it has been shown that AI models do not reliably respond comparably to humans when the inputs to NLP tasks are perturbed \cite{tjuatjaLLMsExhibitHumanlike2024}.
 
 To the best of our knowledge, there has not yet been a proposed evaluation metric for vocabulary lists that can be done automatically and which outputs a simple numeric result.
-For this reason, in addition to our own evaluation approach utilizing AI models, we take some sample vocabulary lists, use our evaluation approach, and check whether the results align with human intuition.
+For this reason, in addition to our own evaluation approach utilizing AI models, we also present sample vocabulary lists, use our evaluation approach, and check whether the results align with human intuition.
 
 For this reason, our evaluation is not only concerned with analyzing statistics of measured efficiency, but also with whether the calculated efficiency values are reliable.
 The questions examined in this chapter can be summed up as:
@@ -88,20 +88,23 @@ To compare the results on a broader scale, we aggregate the results of the evalu
 
 \subsubsection{Utility Aggregation for Large Context Scenario}
 \todo{the following is supposed to describe aggregation both for gen and eval. Make it understandable.}
-As described above, the utility of a word for a given single corpus is calculated by taking the sum of the word's utility across the corpus' lines
+As described above, the utility of a word for a given single corpus is calculated by taking the sum of the word's utility across all lines in the corpus.
 For the large context evaluation scenario, we must also aggregate the utilities across corpora.
 The simplest method would be to simply take the sum of each word's utility across all lines in the composite corpus.
 However, this approach is biased against small single corpora, which contain fewer lines and are thus assigned less total word utility.
 For this reason, we normalize the word utilities such that each corpus contributes the same total word utility.
-For the evaluation too, we average over the performance scores of a list across corpora instead of across lines.
+For the list evaluation too, we average over the performance scores of the list across corpora, instead of across lines.
 
-When we find two approaches for list generation produces vocabulary lists of similar efficiencies, we might ask ourselves if these lists are similar:
-Can two lists which differ substantially in their ordering produce similar performance?
-To answer this question, the next section introduces additional evaluation metrics which measure the similarity of two lists.
-
+This section has described our approach to evaluating the efficiency of vocabulary lists.
+However, as this approach is a novel one, we also compare the \textit{similarity} of the vocabulary lists as a sanity check.
+The next section will introduce the metrics we use for this comparison.
 
 \subsection{List Similarity}
-Apart from our own vocabulary list evaluation approach that measures performance of an AI model using the vocabulary list, we also compare how similar the lists are in general.
+Apart from our own vocabulary list evaluation approach that measures the performance of an AI model using the vocabulary list, we also compare how similar the lists are in general.
+For one, this allows us to check whether the results of our efficiency evaluation are plausible.
+It also serves another purpose, for the case when two approaches for list generation produce vocabulary lists of similar efficiencies, but one takes much less time:
+If the lists of both approaches are not only similar in efficiency, but also in content, we can safely say that the approach taking less time is objectively the superior one (for the data observed).
+
 In order to compare the similarity of the resulting vocabulary lists provided by our approaches, metrics are needed that can be consistently calculated across the different approaches.
 While a human may be able to qualitatively analyze lists and gain a rough idea of their similarity, computed metrics provide an instantaneous (if simplified) outlook on similarities.
 A metric shall be defined as a function which takes as parameters two word lists of equal length which are word lists ordered in descending order by supposed utility, and outputs a real number giving either a distance or similarity between the lists.
@@ -117,77 +120,97 @@ Considerations of the choice of metric are:
 	      A word that is rank 1 in list A, but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A, but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
 \end{description}
 
-\subsubsection{Metrics Used}
+While Kendall rank correlation \cite{kendallNEWMEASURERANK1938b} and Spearman's footrule  \cite{spearmanCorrelationCalculatedFaulty1910} are widely used metrics to compare ranked lists in general, we rejected their use because they make no distinction between differences at the top of lists and differences at their ends, in addition to being difficult to adapt to handle for missing elements.
 
-\begin{description}
-	\item [Sequential rank agreement (modified)] \cite{ekstromSequentialRankAgreement2015}: This metric is based on the deviations of some subset of the lists in the upper ranks.
-	      It is important to note that this metric has an additional parameter "depth" which determines how many elements (from the top of the list) are considered.
-	      It is therefore more helpful to view its results at various depths.
-	      The original formula for this metric in the case of two lists is:
-	      \[
-		      a_{d} := a \text{ from start to rank } d
-	      \]
+%
+% \subsubsection{Sequential rank agreement (modified)}
+% Sequential rank agreement \cite{ekstromSequentialRankAgreement2015} is based on the deviations of some subset of the lists in the upper ranks.
+% 	      It is important to note that this metric has an additional parameter "depth" which determines how many elements (from the top of the list) are considered.
+% 	      It is therefore more helpful to view its results at various depths.
+% 	      The original formula for this metric in the case of two lists is:
+% 	      \[
+% 		      a_{d} := a \text{ from start to rank } d
+% 	      \]
+%
+% 	      \[
+% 		      S_{d} := a_{d} \cup b_{d}
+% 	      \]
+%
+% 	      \[
+% 		      SRA_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \left( r_{b}(x) \right) - \left( r_{a}(x) \right) \right)}{|S_{d}|}
+% 	      \]
+%
+% 	      where \(\lambda\) is a normalization factor ensuring that \(\max(SRA) = 1\).
+% 	      In its proposed form, this metric can only compare lists which contain the same set of unique elements, just in different orders.
+% 	      In order to make it work on lists where this is not the case, one can set the "rank" of nonexisting elements to a value greater than the length of the lists, such as \(2 |a|\).
+% 	      Another drawback of the metric is that the standard deviation of two numbers does not depend on their absolute value, only their difference.
+% 	      However, to satisfy number 3 of the stated requirements, we can take the deviation of the logarithm of the ranks instead of the deviation of the ranks themselves, resulting in the formula
+%
+% 	      \[
+% 		      r^{\prime}(x) :=
+% 		      \begin{cases}
+% 			      \mathrm{rank}_{b}(x) & \text{if } x \in b, \\
+% 			      2 \cdot |a|          & \text{otherwise.}
+% 		      \end{cases}
+% 	      \]
+%
+% 	      \[
+% 		      SRA^{mod}_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \log (r^{\prime}_{b}(x))-\log(r^{\prime}_{a}(x))\right)}{|S_{d}|}
+% 	      \]
+%
+% 	      For this modified version, \(\lambda\) can be calculated with:
+%
+% 	      \[
+% 		      \lambda = \frac{1}{SRA_{d}(a, a^{*})},
+% 	      \]
+%
+% 	      where \(a^{*}\) is a list such that \(a \cap a^{*} = \emptyset\).
 
-	      \[
-		      S_{d} := a_{d} \cup b_{d}
-	      \]
+\subsubsection{Average Overlap}
+The Average Overlap \cite{webberSimilarityMeasureIndefinite2010} of two lists is given by the average cardinality of the union set (overlap) of the sets given by taking the two lists up until every possible index.
+Because the first element contributes to every iteration, it causes the tops of the lists to impact the metrics more than their ends.
+There is also no issue with partial overlaps between the lists.
+As we already defined a vocabulary $V_{l, k}$ as a set of words given by vocabulary list $l$ until an index $k$, we use this notation in our formula for average overlap between two vocabulary lists:
 
-	      \[
-		      SRA_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \left( r_{b}(x) \right) - \left( r_{a}(x) \right) \right)}{|S_{d}|}
-	      \]
+\begin{equation}
+	\text{AverageOverlap}(A, B) = \frac{1}{n} \sum_{k=1}^{n} \frac{|V_{A, k}  \cap V_{B,k}|}{k}
+\end{equation}
 
-	      where \(\lambda\) is a normalization factor ensuring that \(\max(SRA) = 1\).
-	      In its proposed form, this metric can only compare lists which contain the same set of unique elements, just in different orders.
-	      In order to make it work on lists where this is not the case, one can set the "rank" of nonexisting elements to a value greater than the length of the lists, such as \(2 |a|\).
-	      Another drawback of the metric is that the standard deviation of two numbers does not depend on their absolute value, only their difference.
-	      However, to satisfy number 3 of the stated requirements, we can take the deviation of the logarithm of the ranks instead of the deviation of the ranks themselves, resulting in the formula
+% \item \textbf{11-point interpolated average precision} \cite{manningIntroductionInformationRetrieval2008}: Uses set metric precision (though may also use recall or F1 score on various subsets of the list (first 10\%, first 20\% etc.) and takes their geometric mean to arrive at a single number.
+%       As each of the elevent numbers is calculated on the partial subset of the list's elements starting at the first element, this means that changes in the top of the list affect more of these numbers and thus have a larger impact on the final calculated mean.
+%       One drawback of this method is that precision measurement within the 10\% interval only takes into account set membership, not the order of words:
+%       For a list containing 10,000 words, the evaluated intervals are words in the index intervals $\left[ 0, 1000 \right), \left[ 0, 2000 \right), ... ,\left[ 0, 10000 \right)$.  Differences of order within the first 1000 words are thus ignored.
 
-	      \[
-		      r^{\prime}(x) :=
-		      \begin{cases}
-			      \mathrm{rank}_{b}(x) & \text{if } x \in b, \\
-			      2 \cdot |a|          & \text{otherwise.}
-		      \end{cases}
-	      \]
+\subsubsection{Normalized Discounted Cumulative Gain (NCDG)}
+(Normalized) Discounted Cumulative Gain \cite{jurafskySpeechLanguageProcessing2025} is a metric used in information retrieval to compare relevance scoring of two sets of elements.
+By making the relevance score of a set element determined by its rank in our ranked lists, we adapt this metric to compare the similarity of two lists:
 
-	      \[
-		      SRA^{mod}_{d}(a, b) := \lambda \cdot \frac{\sum_{x \in S_{d}} \sigma ^2 \left( \log (r^{\prime}_{b}(x))-\log(r^{\prime}_{a}(x))\right)}{|S_{d}|}
-	      \]
+% This formula outputs a value between 0 and 1, with 1 being given if both lists are identical, 0 when they have no elements in common, and values in between when there is partial overlap between elements and/or their order is different.
 
-	      For this modified version, \(\lambda\) can be calculated with:
+% ${DCG_{p}} =\sum _{i=1}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}=rel_{1}+\sum _{i=2}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}$
 
-	      \[
-		      \lambda = \frac{1}{SRA_{d}(a, a^{*})},
-	      \]
 
-	      where \(a^{*}\) is a list such that \(a \cap a^{*} = \emptyset\).
-	      % \item \textbf{Average overlap / rank-biased overlap} \cite{webberSimilarityMeasureIndefinite2010}: Compares ranked list and puts more emphasis on the top of the list than at the bottom. However, assumes that the elements of both lists are the same, i.e., that all elements of list A are also in list B and vice versa.
-	      %
-	      % \item \textbf{11-point interpolated average precision} \cite{manningIntroductionInformationRetrieval2008}: Uses set metric precision (though may also use recall or F1 score on various subsets of the list (first 10\%, first 20\% etc.) and takes their geometric mean to arrive at a single number.
-	      %       As each of the elevent numbers is calculated on the partial subset of the list's elements starting at the first element, this means that changes in the top of the list affect more of these numbers and thus have a larger impact on the final calculated mean.
-	      %       One drawback of this method is that precision measurement within the 10\% interval only takes into account set membership, not the order of words:
-	      %       For a list containing 10,000 words, the evaluated intervals are words in the index intervals $\left[ 0, 1000 \right), \left[ 0, 2000 \right), ... ,\left[ 0, 10000 \right)$.  Differences of order within the first 1000 words are thus ignored.
-
-	\item [Discounted Cumulative Gain]:
-	      This formula outputs a value between 0 and 1, with 1 being given if both lists are identical, 0 when they have no elements in common, and values in between when there is partial overlap between elements and/or their order is different.
-	      ${DCG_{p}} =\sum _{i=1}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}=rel_{1}+\sum _{i=2}^{p}{\frac {rel_{i}}{\log _{2}(i+1)}}$
-\end{description}
 
 \[
-	rel_{i} :=
+	\text{DCG}(A, B) = \sum_{k=1}^{n} \frac{2^{R(A_k)} - 1}{\log_2(1 + k)}
+\]
+
+The relevance $R_B$ is a function taking as input an element (not an index) of list A.
+We define it as follows:
+
+\[
+	R_B(m) :=
 	\begin{cases}
-		\frac{1}{rank_{b}(el_{i}) + 1} & \text{if } el_{i} \in b \\
-		0                              & \text{otherwise}
+		\frac{1}{rank_{B}(m) + 1} & \text{if } B \text{ contains } m \\
+		0                         & \text{otherwise}
 	\end{cases}
 \]
-\subsubsection{Metrics Rejected}
-\begin{description}
-	\item [Kendall rank correlation ] \cite{kendallNEWMEASURERANK1938b}: This metric is bounded between 0 and 1 and compares the ranks of the elements of two lists. However, it cannot handle elements that only occur in one of the two lists, and thus is not suitable for our purposes. It also does not distinguish between differences in the upper and lower parts of the lists.
-	\item [Spearman's footrule] \cite{spearmanCorrelationCalculatedFaulty1910}: Rejected for the same reasons as Kendall rank correlation.
-\end{description}
+With relevance defined in this way, we ensure both that differences between the tops of the lists impact the measurement more than differences at the end, and that partial overlap between the lists is handled.
+To normalize this metric to output values between 0 and 1, we divide by the maximum value for the list length, which is given by the DCG of one of the lists with itself:
 
-
-
+\[
+	\text{NDCG}(A,B) = \frac{1}{\text{DCG}(A, A)} \text{DCG}(A, B)
+\]
 
 
 \section{Baselines}
@@ -348,11 +371,22 @@ For small corpora, there is no train-test-data distinction, thus for each corpus
 \begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
-		\input{data/similarity_heatmap_table_single.tex}
+		\input{data/similarity_heatmap_table_single average-overlap.tex}
 	}
-	\caption{Similarity of vocabulary lists. Black boxes represent missing values.}
-	\label{tbl:similarity-results-single}
+	\caption{Average Overlap similarity of small context vocabulary lists. Black boxes represent missing values.}
+	\label{tbl:similarity-results-single-average-overlap}
 \end{table}
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/similarity_heatmap_table_single ndcg.tex}
+	}
+	\caption{NDCG similarity of small context vocabulary lists. Black boxes represent missing values.}
+	\label{tbl:similarity-results-single-ndcg}
+\end{table}
+
+
 
 
 
@@ -445,25 +479,38 @@ We include the vocabulary list produced from the \Rosetta lesson in this evaluat
 	\label{tbl:performance-results-wikipedia-large}
 \end{table}
 
-We can see that the results for most approaches achieve \textbf{very similar} evaluation scores, with difference of at most 0.02 per tested vocabulary size. 
+We can see that the results for most approaches achieve \textbf{very similar} evaluation scores, with difference of at most 0.02 per tested vocabulary size.
 The only exception is the \Rosetta\ list, which performs significantly worse than either the frequency or the XAI lists.
 This is a surprising result, as the subjective evaluation seen above would seem to imply that the lists compiled with feature attribution methods should outperform the frequency-based metrics.
 It can be seen that the Single Token Summary approach still outperforms the other approaches for small vocabulary sizes, which may be due to it selecting words which, by themselves, are closest to the meaning of an entire sentence.
 
-However, we take the small differences in these result as an indication that, \textbf{for large contexts, frequency-based approaches are a viable way to collect vocabulary}, with more complicated methods only bringing marginal to vocabulary list efficiency.
+However, we take the small differences in these result as an indication that, \textbf{for large contexts, frequency-based approaches are a viable way to collect vocabulary}, with more complicated methods only bringing marginal improvements to vocabulary list efficiency.
 The fact that the datasets for generating the lists and evaluating them is a likely cause for why these results are similar, as finding words that are very specifically useful to the "train" dataset becomes less productive in such a scenario.
 Still, the TF-IDF metric can be seen to achieve better results than raw frequency, and comparable results to the XAI approaches, which makes it a worthwhile method for compiling context-specific word lists in our view, especially since it requires much less time to be run on a large corpus.
-Table \ref{tbl:similarity-results-big} shows the similarities of the generated lists.
+The following tables show the similarities of the generated lists.
 
 
 \begin{table}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
-		\input{data/similarity_heatmap_table_big.tex}
+		\input{data/similarity_heatmap_table_big average-overlap.tex}
 	}
-	\caption{Similarity of vocabulary lists compiled from the large context corpora. Black boxes represent missing values.}
-	\label{tbl:similarity-results-big}
+	\caption{Average Overlap similarity of large context vocabulary lists. Black boxes represent missing values.}
+	\label{tbl:similarity-results-big-average-overlap}
 \end{table}
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{data/similarity_heatmap_table_big ndcg.tex}
+	}
+	\caption{NDCG similarity of large context vocabulary lists. Black boxes represent missing values.}
+	\label{tbl:similarity-results-big-ndcg}
+\end{table}
+
+
+
+
 
 % \begin{table}[ht]
 % 	\centering
@@ -520,7 +567,7 @@ Especially Single Token Ablation and Single Token Summary generate better lists 
 Attention, at least with our setup, does not produce comparably performant lists.
 Progressive Summary, while being similar to Single Token Ablation and Single Token Summary in its results, did not outperform them despite its much longer runtime.
 
-For smaller corpora, therefore, we recommend the use of the Single Token Ablation and Single Token Summary to create maximally useful word lists for language learners. 
+For smaller corpora, therefore, we recommend the use of the Single Token Ablation and Single Token Summary to create maximally useful word lists for language learners.
 
 For larger corpora, one could combine the performance of the Single Token Summary approach with the speed of a frequency-based approach in the following way:
 For a large sample of the corpus, one could use the Single Token Summary to create the top of the list.

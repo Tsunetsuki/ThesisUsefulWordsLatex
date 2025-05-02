@@ -1,6 +1,13 @@
-\todo {Write Intro}
+The acquisition of vocabulary is an important part of learning a second language, and can pose a challenge due to the large numbers of words one has to acquire to become proficient.
+As such, selecting vocabulary that can help learners to efficiently understand and communicate is an important task which should be taken seriously by educators and developers of language learning tools.
+However, the selection is seldom investigated empirically:
+Current methods for compiling lists of vocabulary rely either on the intuition of experts, or use the frequency of words in large collections of text as a criterion for ranking words (as we will show in Section \ref{sec:ranking-lists-of-vocabulary}).
 
-Put succinctly, we can pose this as a challenge of finding a computational method that can answer the question:
+However, while the frequency of words is an easy metric to obtain, it is not regarded fully corresponding to their utility \cite{liRoutledgeHandbookSecond2022}.
+Recent developments in Artificial Intelligence have made it possible to process texts not only syntactically (on a character level), but semantically (with a grasp of the meaning of the text) as well.
+In this work, we attempt to leverage the semantic text processing capabilities of AI models to compile vocabulary lists that are more useful than those compiled by current methods.
+We make a special effort to compile context-specific vocabulary lists, as the utility of a word can change drastically depending on the context in which a person interacts with language.
+Put succinctly, we can pose the aim of this word as a challenge of finding computational methods that can answer the question:
 
 \begin{quote}
 	\textit{Which words provide the most language understanding in a given linguistic context?}
@@ -9,8 +16,8 @@ Put succinctly, we can pose this as a challenge of finding a computational metho
 We can subdivide the overarching goal of word utility evaluation into three related, but not quite equivalent sub-goals:
 \begin{itemize}
 	\item Evaluating the utility of a single word.
-	\item Evaluating the utility of an (ordered) list of words to learn.
-	\item Generating maximally useful (ordered) lists of words to learn.
+	\item Evaluating the utility of an (ordered) vocabulary list.
+	\item Generating maximally useful (ordered) vocabulary lists.
 \end{itemize}
 
 The first and third goal are directly related, in that evaluating the utilities of words in a text trivially generates a useful list of vocabulary if we compile the list by aligning the words in order of their descending utility. 
@@ -18,9 +25,14 @@ Evaluating the utility of an ordered list of vocabulary is conceptually further 
 For this reason, many chapters in this work contribute to all of these goals equally.
 Therefore, to avoid redundancy, we refer to the overarching goal of this work as "word utility evaluation" throughout the following chapters - which is meant to include these three sub-tasks.
 
+In this chapter, we first outline the need for better methods to evaluate the utility of words in Section \ref{sec:motivation}.
+We then point out the contributions made in this work in Section \ref{sec:challenges-and-contributions}, and finally provide an outline for the entire work in Section \ref{sec:outline-of-work}.
 
 
-\section{Motivation}
+\section{Motivation} \label{sec:motivation}
+This section details our motivation in writing the present work.
+We will point out the role vocabulary plays in the larger aim of language learning, as well as shortcomings in current language learning tools.
+
 \subsection{Role of Vocabulary in Language Acquisition}
 Learning a second language involves many different skills, often categorized into listening, reading, speaking, and writing.
 Another categorization may be vocabulary, grammatical skills, the ability to understand known words in various accents, understanding language when spoken at a fast speed.
@@ -29,16 +41,13 @@ A person with basic grammatical skills but no vocabulary has no ability to expre
 On the other hand, a person familiar with rudimentary vocabulary but no grammatical knowledge may struggle with understanding complex sentences and sound unnatural when speaking, but can at least make sense of short phrases and express themselves.
 Thus, basic knowledge of vocabulary is clearly one of the most essential skills for using a language.
 This raises the question of which vocabulary should be learned first when starting out on the journey of language acquisition.
-This work attempts to contribute to answering this question.
-
-\todo{Mention various methods of finding useful vocabulary from viewpoint of learner: textbooks, apps, etc.}
+This work attempts to contribute to answering this question with an approach for both the generation and evaluation of vocabulary lists.
 
 \subsection{Context-specific Language Learning}
-\todo{use this language report \url{https://www.babbel.com/press/en-us/releases/2016-01-20-Babbel_Global_User_Survey.html}}
-
-Learners of languages are typically interested in one or more specific aspects of the language.
-There is no such thing as an unbiased corpus than can fit every use case.
-Decisions must be made how much focus is given to everyday conversation, academic writing, writing pertaining to business like job applications etc.
+Learners of languages are typically interested in one or more specific aspects of the language, as can be seen in a 2016 survey by the online language learning platform \textit{Babel} \footnote{\url{https://www.babbel.com/press/en-us/releases/2016-01-20-Babbel_Global_User_Survey.html}, last accessed on March 1, 2025.}.
+It surveyed the motivations of its users, finding that motivations such as use for travel, improving one's career prospects, and cultural interest are popular motivations for its users.
+However, current language learning tools are limited in how far they can address learning for one such specific goal, especially in learning context-specific vocabulary:
+% Decisions must be made how much focus is given to everyday conversation, academic writing, writing pertaining to business like job applications etc.
 Many textbooks group vocabulary by topic, with a new topic being introduced with each lesson that student should ideally be able to converse in after completing the lesson.
 However, this way of introducing vocabulary has several shortcomings:
 \begin{itemize}
@@ -47,13 +56,9 @@ However, this way of introducing vocabulary has several shortcomings:
 	      Thus, learners interested in learning the use of the language in one context will have a hard time of skipping earlier, less pertinent lessons to them.
 \end{itemize}
 
-
-(cut segment about frequency and TF-IDF here)
-
-Thus, there is a need for further exploration as to how word utility can be calculated, using modern NLP methods involving artificial intelligence where necessary.
-Put more simply, this question may be reduced to:
-
-\textbf{What order or words, when learned, gives the learner the best set of words to understand and communicate in the language as quickly as possible?}
+Here, we can see that there is a need for further exploration as to how vocabulary can be selected which is useful for a specific context.
+For this reason, we implement our approach for generating and evaluating lists of vocabulary in contexts which differ both in topic and by the style of text (movie dialog and academic writing), in an attempt to demonstrate the use of our method to language learners in finding context-specific vocabulary.
+In the next section, we give examples of such contexts and context-specific words, to illustrate how a different context necessitates different vocabulary to be learned.
 
 \subsection{Examples of Contexts and Words}
 Some examples for contexts that could be interesting to language learners include:
@@ -83,14 +88,14 @@ Depending on the context, we can think about which of the following English word
 
 To examine a few examples: Words like “convert” occur frequently when looking at Wikipedia articles \footnote{See "Wikipedia" corpus 2016, drawn from one million lines on \url{https://wortschatz.uni-leipzig.de/en/download/English}}. The word "cash" is likely to be useful for travelers, but in most other contexts, it would not be as relevant. “Y’all” is almost never used in formal writing but used abundantly in everyday speech in the southern United Stated of America and South Africa. “From”, meanwhile, will be likely to be one of the most frequently used words regardless of context.
 
-\section{Challenges and Contributions}
+\section{Challenges and Contributions} \label{sec:challenges-and-contributions}
 In this work, we make the following contributions:
 
 \begin{itemize}
 	\item A workable definition of word utility (Section \ref{sec:utility}).
 	\item The development of a framework for evaluating and generating vocabulary lists, by evaluating the utility of words to understand the meaning of a given text (Chapter \ref{ch:approach}).
-	\item The analysis and selection of appropriate proxy tasks, corpora, and XAI methods, leading the implementation of this approach (Chapter \ref{ch:implementation}), supporting an estimated 9 languages with an 40 languages without filtering of names from the lists.
-	\item Analysis of the resulting vocabulary lists in comparison with each other, as well as frequency-based baseline methods (Chapter \ref{ch:evaluation}).
+	\item The analysis and selection of appropriate proxy tasks, corpora, and XAI methods, leading up to the implementation of the framework (Chapter \ref{ch:implementation}) supporting an estimated 9 languages with and 40 languages without filtering of names from the lists.
+	\item Analysis of the resulting vocabulary lists in comparison with each other, as well as with frequency-based baseline methods (Chapter \ref{ch:evaluation}).
 \end{itemize}
 
 A major challenge in making computational approaches which generate maximally useful lists of vocabulary is that, to the best of our knowledge, no automatic process has yet been proposed which can measure how useful the words in a vocabulary list are. 
@@ -116,7 +121,7 @@ However, finding tasks that require a broad language understanding to be perform
 % [Distinguish between passive and active utility]
 
 
-\section{Outline of Work}
+\section{Outline of Work} \label{sec:outline-of-work}
 
 The following gives an overview of this work from a top-level perspective.
 
