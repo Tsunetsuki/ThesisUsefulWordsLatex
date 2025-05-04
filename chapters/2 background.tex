@@ -68,7 +68,7 @@ The concept of a language context is useful to a language learner since it enabl
 Someone who is learning Arabic to better understand middle-eastern politics will have little use for words which are mostly associated with football.
 
 The context can even determine the length and complexity of sentences that a learner must be able to understand:
-We will see in Section \ref{sec:corpus-characteristics} that sentence in Wikipedia articles are about three times longer, on average, that those found in movie subtitles.
+We will see in Section \ref{sec:final-dataset} that sentence in Wikipedia articles are about three times longer, on average, that those found in movie subtitles.
 Thus, learning for one or multiple specific contexts gives the learner a more concrete goal and thus better idea of what they must learn to achieve it.
 
 In contemporary methods and tools for language learning, usually little emphasis is placed on learning for a specific context.
@@ -140,7 +140,7 @@ For the purposes of this work, an \textit{NLP task} is a function with a specifi
 We utilize NLP tasks as a way for AI models to interact with natural language, enabling us to analyze how certain words influence this interaction; the exact approach is described in Chapter \ref{ch:approach}.
 
 
-\subsection{NLP Preprocessing: Tokenization} \label{sec:tokenization}
+\subsection{NLP Pre-Processing: Tokenization} \label{sec:tokenization}
 Language presents itself in continuous form in most situations:
 When listening to spoken language, it is not obvious where one word ends and another begins.
 Likewise, written texts we find online or in books are not necessarily subdivided into its semantic constituents.
@@ -163,7 +163,7 @@ As we are interested in counting complete words, we must therefore merge sub-wor
 The details of this are discussed when presenting our implementation in Chapter \ref{ch:implementation}.
 In order to provide utility evaluation for words in a wide range of languages, this work employs tokenizers which can handle language of different syntactic structures, and where the tokenizer outputs sub-word tokens, we usually merge the tokens into complete words.
 
-\subsection{NLP Preprocessing: Named Entity Recognition}
+\subsection{NLP Pre-Processing: Named Entity Recognition}
 In this work, we attempt to compile lists of vocabulary by processing corpora with various methods.
 However, these corpora contain some words which are typically not desirable in vocabulary lists, such as the names of people, organizations, and places.
 For this reason, we employ Named Entity Recognition \cite{jurafskySpeechLanguageProcessing2025} (\textit{NER} for short) to handle such words in our approach, and prevent them from appearing in our generate vocabulary lists.

@@ -23,7 +23,7 @@ As mentioned before, the main components of this approach are:
 	\item An XAI method, which analyzes the interaction of the AI model with the corpus to determine word utilities.
 \end{itemize}
 
-In addition, we must perform some preprocessing in the form of tokenization on the input texts for model-agnostic methods, which determines the words to be analyzed.
+In addition, we must perform some pre-processing in the form of tokenization on the input texts for model-agnostic methods, which determines the words to be analyzed.
 Thus, the implementation of the approach mainly consists of deciding which AI model, XAI method, etc., is used, as well as determining how exactly these components interact with each other.
 In addition, we perform pre-processing on the lines from the corpora, the exact form of which is dependent on the XAI method used.
 The interaction of these components can be seen in pseudocode in Algorithm \ref{alg:efficient-list-generation}.
@@ -180,7 +180,8 @@ In our estimation, the ease of evaluation and of finding input data, as well as 
 \subsection{Choice of Model}
 In the previous sections, we have presented two tasks which seem appropriate choices for our vocabulary list generation and evaluation approach, namely, next sentence prediction and sentence embedding.
 This section discusses the choice of the AI model used for both of these tasks.
-In general, we use models from model families which support many languages, but the concrete models in our implementation are monolingual models, as these have shorter inference times, allowing us to process more data.
+The models in our implementation are monolingual models, as these have shorter inference times than their multilingual counterparts, allowing us to process more data.
+However, we use models from model families which, in principle, support many languages, allowing for easy inclusion of additional languages in our implementation.
 
 \subsubsection{Next Sentence Prediction Model}
 As our next sentence prediction model, we use a BERT model \cite{kentonBertPretrainingDeep2019}, as these models have been trained in many languages (over 104 for \texttt{bert-base-multilingual-cased}, the model with the most languages \footnote{\url{https://huggingface.co/google-bert/bert-base-multilingual-cased}}).
@@ -189,19 +190,18 @@ As BERT models form a family, their model architecture is similar to each other,
 
 
 \subsubsection{Sentence Embedding Model}
-For the sentence embedding task, there are two model families that appear as suitable candidates for our implementation:
-\textit{LASER} embedding models \cite{artetxeMassivelyMultilingualSentence2019}, developed by Meta, and \textit{Sentence Transformers} a.k.a. \textit{sBert} \cite{reimersMakingMonolingualSentence2020}, developed chiefly by the University of Darmstadt.
+For the sentence embedding task, there are two model families that appear as promising candidates for our implementation:
+\textit{LASER} \cite{artetxeMassivelyMultilingualSentence2019}, developed by Meta, and \textit{Sentence Transformers} a.k.a. \textit{sBert} \cite{reimersMakingMonolingualSentence2020}, developed chiefly by the University of Darmstadt.
 Both of these solutions have set as their aims the embedding of sentence of as many languages as possible, giving special considerations to low-resource languages.
 
-While the latest \textit{LASER} embedding model is more recent and claims to outperform previous models, its implementation requires a Unix environment to work, which presented compatibility issues with our Windows-based development setup \footnote{\url{https://github.com/facebookresearch/LASER}}.
-Additionally, to the best of our knowledge, the models are not available on the \textit{HuggingFace} \footnote{\url{https://huggingface.co/}} platform, meaning their use would have necessitated various changes in our implementation due the different interface.
-For this reason, we use the models from the \texttt{sentence-transformers} package.
-While the models are available in their dedicated Python package \url{https://www.sbert.net/}, these do not allow for the output of attention values, which is why we load the Sentence Transformer model from HuggingFace directly.
-This necessitates an additional post-processing step, but the code is available on the model website.
-The model we use is \footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}.
-This model is a monolingual English model, however again, it is much more lightweight than the multilingual Sentence Transformer models.
-
-
+While the authors of the \textit{Sentence Transformers} paper claim to outperform the original \textit{LASER} embeddings in low-resource languages \cite{reimersMakingMonolingualSentence2020}, no direct comparison of results seems to have been performed for the most recent \textit{LASER3} models \cite{heffernanBitextMiningUsing2022}.
+The \textit{LASER3} model family is based on more recent research than \textit{Sentence Transformers} (2022 vs. 2020), which could suggest better performance.
+However, the use of these models via the \texttt{LASER} package \footnote{\url{https://github.com/facebookresearch/LASER}} requires a Unix environment to work, which presented compatibility issues with our Windows-based development setup.
+Additionally, to the best of our knowledge, the models are not available on the \textit{HuggingFace} \footnote{\url{https://huggingface.co/}} platform, meaning their use would have necessitated various changes in our implementation due the different interface, and possibly not allowed for transformer attention values to be read.
+Because of these technical issues with the \textit{LASER} embeddings, we use the \textit{Sentence Transformer} model \texttt{all-MiniLM-L6-v2} \footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}} instead.
+This model is a monolingual English model, however again, it is much more lightweight than the multilingual \textit{Sentence Transformer} models such as \texttt{paraphrase-multilingual-MiniLM-L12-v2} (the most lightweight multilingual model of the family).
+While the models are available in the dedicated Python package \texttt{sentence-transformers} \footnote{\url{https://www.sbert.net/}}, this use does not allow for the output of transformer attention values, which is why we load the \textit{Sentence Transformer} model from \textit{HuggingFace} instead.
+This necessitates an additional post-processing step, but the code for this is available on the model website.
 
 \subsection{Summary}
 We have put forth desiderata for the NLP tasks to make our approach to vocabulary list generation and evaluation accurate, as well as applicable to many languages and language contexts.
@@ -209,39 +209,18 @@ As a result of these desiderata, we have chosen the two tasks of next sentence p
 The next section discusses the choice of corpora which are used as input data for these tasks.
 
 
-% \subsection{Use of Selected Tasks in this Work}
-% \subsection{Next Sentence Prediction}
-%
-% \begin{description}
-% 	\item[LASER] \cite{artetxeMassivelyMultilingualSentence2019}
-% 	\item[BERT] \cite{reimersMakingMonolingualSentence2020}
-% \end{description}
-%
-% \subsubsection{Choice of Model}
-% \subsubsection{Data Required}
-%
-% Requires a corpus that contains consecutive sentences.
-% Furthermore, NSP typically predicts whether two sentences follow each other in a document, not a dialogue (see the data on BERT training \cite{kentonBertPretrainingDeep2019}).
-% This excludes movie subtitles from the possible corpora for this task.
-%
-%
-% \subsection{Sentence Embedding}
-% \subsubsection{Choice of Model}
-% \subsubsection{Data Required}
-
-
-
 \section{Corpora}
-In the previous section, we put forth criteria for which NLP tasks should be used in our word utility evaluation approach, and decided on the two tasks of next sentence prediction and sentence embedding.
+In the previous section, we put forth selection criteria for NLP tasks to be used in our word utility evaluation approach, and decided on the two tasks of next sentence prediction and sentence embedding.
 Having decided on these, we now require data, i.e., corpora, as inputs for the tasks.
 Which corpora we use is another important decision, as these serve the purpose of modeling the language contexts in which the language learner is striving to achieve proficiency.
-This section therefore first states our general selection criteria for corpora.
-We then introduce publicly available corpora which are suitable for our evaluation approach, and conclude by choosing Wikipedia and OPUS subtitle data as inputs for the NLP tasks.
-From these data sources, we model linguistic contexts with two methods:
-A single article or subtitle, as well as a composite of various articles and subtitles
+This section therefore first states our general selection criteria for corpora in Subsection \ref{sec:corpora-desiderata}.
+We then introduce publicly available corpora which are suitable for our evaluation approach, and conclude by choosing Wikipedia and OPUS subtitle data as inputs for the NLP tasks (Sections \ref{sec:wikipedia} and \ref{sec:opensubtitles}).
+From these data sources, we model linguistic contexts of two different scales:
+A \textbf{small context}, modeled by a single article or subtitle, and a \textbf{large context}, modeled by a larger corpus composed of multiple articles or subtitles.
 For the background corpus used to calculate the inverse document frequency in TD-IDF, we use a corpus from the \textit{Oscar} project (see Section \ref{sec:oscar}).
+The final dataset it summarized in Section \ref{sec:final-dataset}
 
-\subsection{Desiderata}
+\subsection{Desiderata} \label{sec:corpora-desiderata}
 This section puts forward our general criteria for corpus selection, following from our overarching goal of using the model to model linguistic contexts for the purpose of language learning.
 In short, we use corpora which are available in many languages, allow for the modeling of different linguistic contexts, and consist of continuous texts to provide data for the NLP tasks.
 
@@ -250,24 +229,24 @@ The first desideratum for our corpora stems from our choice to use next sentence
 As next sentence prediction predicts whether one sentence is likely the continuation of another, it requires contiguous sentences pairs to work.
 To generate these pairs, we must use (at least some) corpora featuring continuous tests, not only individual sentences.
 This presents a challenge, as many corpora which are compiled from Web Crawls, such as the corpora from \textit{Wortschatz Leipzig} \footnote{\url{https://wortschatz.uni-leipzig.de/}}, contain only scrambled, single lines to avoid copyright infringements (single sentences cannot be put under copyright in certain states \cite{goldhahnBuildingLargeMonolingual2012}).
-However, Wikipedia contains articles on many different topics which do not underlie strict copyright license (see Section \ref{sec:wikipedia}), which makes it appropriate for our purposes.
+However, some corpora (such as Wikipedia, as shown in Section \ref{sec:wikipedia}) contain articles on many different topics which do not underlie strict copyright license, making them suitable sources of input for the NSP task.
 
 \subsubsection{Free Availability in Many Languages}
-In Section \ref{sec:nlp-tasks-desiderata} we put forward reasons for why freely available AI models which can handle a diverse pool of languages are desirable for our undertaking.
-By the same token, we also prefer corpora which are publicly available in many languages over corpora which only include data in one language.
-While a monolingual corpus is not inferior to a multilingual one, its use necessitates that the user manually compile many corpora if a multilingual implementation is to be achieved.
+When describing our desiderata for NLP tasks (Section \ref{sec:nlp-tasks-desiderata}), we put forward reasons for why freely available AI models which can handle a diverse pool of languages are desirable for our undertaking.
+For the same reason, we also prefer corpora which are publicly available in many languages over corpora which only include data in one language.
+While a monolingual corpus is not inferior to a multilingual one, its use would mean that, for future extension of our implementation to more languages, we would have to manually select corpora for each language.
 
 \subsubsection{Closeness to Linguistic Contexts Desired by Language Learners}
 As mentioned before, the corpus in our word utility evaluation approach serves the purpose of modeling a linguistic context, and this linguistic context should reflect some set of situations that a language learner is likely to find themselves in.
 Typical situations would include reading the news, reading literature or watching movies in their target language.
 As such, corpora which are close to the materials which language learners are likely to engage with are desirable, since their use makes the AI model's performance on the task more reflective of skills that a language learner would like to acquire.
 
-\subsubsection{Divisibility of Corpus into more Specific Corpora}
+\subsubsection{Divisibility of Corpus into more Context-Specific Corpora}
 Not only the relevance of the entire corpus's linguistic context is important:
 Some corpora enable us to further split them up into smaller corpora with more specific language contexts.
-For instance, while we can use a corpus such as \textit{Wikipedia} as a whole, the structure of Wikipedia enables us to group articles by the category they belong to (politics/sports etc.), or even use single articles, to find more specific contexts.
-Such corpora are especially efficient for generating multiple contexts, hence we make use of such corpora.
-
+Corpora containing continuous documents, such as subtitles or articles, allow us to model small contexts. 
+In addition, the category tags of Wikipedia articles enables us to group them by an overarching topic, such as \textit{World War II political leaders}.
+Because such corpora help us to trivially make smaller corpora modeling smaller contexts, we make use of such corpora.
 
 \subsubsection{Rejected Corpora} \label{sec:rejected-corpora}
 This section briefly describes two corpora which may appear to be useful for our word utility evaluation approach, but which we do not believe are appropriate.
@@ -276,64 +255,52 @@ This section briefly describes two corpora which may appear to be useful for our
 A common choice for training large language models is the \textit{Common Crawl} dataset \footnote{\url{https://commoncrawl.org/}}.
 Its size and diversity could make it useful either as a corpus for modeling a "surfing the web" linguistic context, or as a background corpus to calculate TF-IDF on other corpora.
 However, we reject both uses of it:
-Firstly, in its raw form, it takes the form of HTML code and includes much boilerplate content such as cookie requests, necessitating much preprocessing.
-More importantly, speaking against its use as a context-modeling corpus, its data is not grouped by topic or language, which means we cannot trivially generate more topic-specific corpora from it, nor utilize it for different languages without a significant amount of pre-processing.
+Firstly, in its raw form, it takes the form of HTML code and includes much boilerplate content such as cookie requests, necessitating much pre-processing.
+A further and more pertinent argument against its use as a context-modeling corpus is that its data is not grouped by topic or language, which means we cannot trivially generate corpora of more specific contexts from it, nor utilize it for different languages without a significant amount of pre-processing.
 
 \paragraph{Wortschatz Leipzig:}
 \textit{Wortschatz Leipzig} \footnote{\url{https://wortschatz.uni-leipzig.de/}} provides corpora in more than 100 languages, and groups these by their source such as "News", "Wikipedia", and "Web".
-We also rejected the Wortschatz Leipzig Corpora because, while these corpora are stripped of any HTML code, they are composed of single lines collected from websites, rather than whole documents.
-Although we considered using one of the "Web" corpora for calculating inverse document frequency for the TF-IDF metric, the original paper for the Wortschatz corpus also states that political content was utilized in bootstrapping the web searches for data gathering, including the \textit{Universal Declaration of Human Rights} and the Jehova's Witnesses magazine \textit{Watchtower} \footnote{Previously available at \url{watchtower.org}}, which may lead to a respective bias in the final corpus \cite{goldhahnBuildingLargeMonolingual2012}.
-Thus, we did not use \textit{Wortschatz} corpora as a background corpus, either.
-
-\subsection{TF-IDF Background Corpus: Oscar} \label{sec:oscar}
-For the implementation of TF-IDF, we require a generic background corpus to normalize raw word frequencies found in context-specific corpora (that is, to calculate the IDF part of TF-IDF).
-For this purpose, corpora crawled from the internet offer themselves as an attractive option, as web content is diverse in that it encompassed both formal and informal content on many different topics.
-
-We reject the Common Crawl and Wortschatz Leipzig datasets for the reasons already stated in Section \ref{sec:rejected-corpora}.
-Instead, we use a corpus from the \textit{Oscar} project \cite{suarezAsynchronousPipelineProcessing2019} as a background corpus:
-Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which preprocessing steps such as HTML stripping and removal of boilerplate content have already been performed.
-It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
-The corpus used is available on the \textit{HuggingFace} platform under the path \texttt{oscar-corpus/oscar} with the name \texttt{unshuffled\_deduplicated\_en} \footnote{\url{https://huggingface.co/datasets/oscar-corpus/oscar}, last accessed May 2, 2025.}.
-
-
-% There exist many versions of the Oscar dataset, but for this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
-Due to its vast size, we did not use the entire corpus, but a random sample of 53,178 documents from this dataset to calculate inverse document frequency.
+We also rejected the Wortschatz Leipzig Corpora because, while these corpora are stripped of any HTML code, they are composed of single lines collected from websites, rather than whole documents, which means the corpora do no allow for division into more specific contexts.
+Although we considered using one of the "Web" corpora for calculating inverse document frequency for the TF-IDF metric, it is questionable whether these are neutral enough to serve as a background corpus.
+This is because the paper describing the compilation process for the Wortschatz corpora states that political content was utilized in bootstrapping the web searches for data gathering, including the \textit{Universal Declaration of Human Rights} and the Jehova's Witnesses magazine \textit{Watchtower} \footnote{Previously available at \url{watchtower.org}} \cite{goldhahnBuildingLargeMonolingual2012}, which could lead to a respective bias in the final corpus .
+Thus, we reject the \textit{Wortschatz} corpora both as context-specific corpora and as background corpora. 
 
 \subsection{Wikipedia} \label{sec:wikipedia}
 Our primary source for corpora are articles from Wikipedia \footnote{\url{https://www.wikipedia.org/}}.
 Wikipedia is a valuable resource for several reasons:
 It contains a vast number of articles, and about a diverse set of topics.
-Wikipedia articles are assigned article categories describing their topic, such as "20th century American male actors".
-This means we do not have to group articles into topics ourselves, enabling us to trivially create corpora that model linguistic contexts more general than a single article, but more specific than Wikipedia as a whole.
-The characteristics of the article category system on Wikipedia are discussed below.
+Wikipedia articles are assigned article categories describing their topic, such as \textit{20th century American male actors}.
+This means we do not have to group articles into topics ourselves, enabling us to trivially create corpora that model linguistic contexts which are more general than that of a single article, but more specific than Wikipedia as a whole.
 
 Wikipedia's articles are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (\textit{CC BY-SA}).
-Because of this, Wikipedia can provide dumps of its entire article database ready for download, with the articles in continuous form and with category metadata attached to them \footnote{Available for download at \url{https://dumps.wikimedia.org/}}.
+Because of this, Wikipedia can provide dumps of its entire article database for download, with the articles in continuous form and with category metadata attached to them \footnote{Available for download at \url{https://dumps.wikimedia.org/}}.
 This enables us to use the articles as a source for the next sentence prediction NLP task.
+The source of the articles used in our implementation is the \texttt{enwiki-20241201-pages-articles-multistream1} file from the \texttt{enwiki-20241201} dump \footnote{The latest dumps of English Wikipedia are available at \url{https://dumps.wikimedia.org/enwiki/}. However, the \texttt{enwiki-20241201} dump which we used as input data in our implementation and evaluation is no longer available online as of May 5, 2024.}, containing a part of English Wikipedia from December 1st, 2024.
 
-While Wikipedia offers a large diversity of articles and article topics, the tone of language of the articles is generally academic.
-Therefore, Wikipedia is less likely to contain informal language, such as nonstandard language (English: \textit{ain't}, \textit{y'all}), slang, or language of a conversational form.
-This is especially relevant for languages such as Japanese, where grammatical forms in conversation vary significantly depending on the relationship between the speaker and listener:
+Despite the large number of topics found in Wikipedia articles, the tone of language is not as diverse, as its articles are generally written in academic language.
+Wikipedia is less likely to contain informal language, such as nonstandard language (English: \textit{ain't}, \textit{y'all}) and slang, as well as  language used in conversations between two or more people:
+The latter point is especially relevant for languages such as Japanese, where grammatical forms in conversation vary significantly depending on the relationship between the speaker and listener:
 In Japanese, there exist various linguistic markers of politeness (\textit{Teineigo} and \textit{Keigo}) which play a crucial role in in-person interactions between Japanese speakers, as their presence or absence can signify respect, familiarity or humility with regard to one's interlocutor.
-However, such forms are rarely found on Wikipedia, as its articles do not take the form of a person addressing other people.
+However, such forms are rarely found on Wikipedia, as its articles are not mainly composed of conversations.
 Thus, we can see that texts on Wikipedia are of limited use to model linguistic contexts involving in-person conversion.
 To supplement for this lack of conversational language, we use another corpus composed of movie subtitles, which we present in Section \ref{sec:opensubtitles}.
 With these advantages and disadvantages in mind, the next section details our use of Wikipedia articles and their associated metadata to model linguistic contexts of various sizes.
 
 \paragraph{Modeling Linguistic Contexts:}
-
 One of the chief advantages of Wikipedia as a corpus is its diversity of covered topics.
-A language learner who is interested in a particular topic will likely find a matching article category on Wikipedia:
-For example, a person with an interest in American cinema who is learning English could likely take vocabulary from the articles of the category "20th-century American actresses" to boost their language learning in that linguistic context.
-For this reason, we use a number of manually selected categories as testing grounds for our list generation approach.
-For each category, we use a number of articles to make a list, then use different articles from the same category as testing data in the evaluation.
+As mentioned before, we model both small and large linguistic contexts with articles from Wikipedia, where a small context spans a single article and a large context spans an entire category.
+For our implementation, we chose articles from the following as inputs:
+
+\begin{itemize}
+	\item \textit{20th-century American actresses}
+	\item \textit{20th-century American male actors}
+	\item \textit{1980s English-language films}
+	\item \textit{World War II political leaders}
+\end{itemize}
+
+For each category, we make small context vocabulary lists from single articles, and later evaluate the efficiency of the list on the same article.
+For the large context modeling, we use 80\% of the articles in each category to generate its vocabulary list, then later use the remaining 20\% from the same category as testing data in the evaluation.
 We can thus check if learning vocabulary from a category genuinely prepares a learner in understanding texts from that context.
-
-At the same time, a learner could also wish to make a vocabulary list from concrete Wikipedia articles they would like to read.
-For that reason, also use single articles as corpora to be processed by our list generation approach.
-In that case, no split of training and test data is necessary, as the aim is not to model general knowledge about a domain, but equip the learner with vocabulary about the \textbf{closed} context of a Wikipedia article.
-Therefore, in the single-article approach, both the list generation and evaluation use all lines of the article.
-
 
 % \paragraph{Wikipedia's Category System for Articles}
 % There are x categoris on Wikipedia.
@@ -343,14 +310,14 @@ Therefore, in the single-article approach, both the list generation and evaluati
 
 
 \paragraph{Pre-Processing:} \label{sec:wikipedia-preprocessing}
-In order to use Wikipedia articles as inputs to our word utility evaluation approach, we perform pre-processing on the raw data to filter out source code, as well as chapters that we do not consider to be part of the article text.
+In order to use Wikipedia articles as inputs to our word utility evaluation approach, we perform pre-processing on the raw data to remove markup code, as well as chapters that we do not consider to be part of the article text.
 This section shortly describes this process.
 
 In their raw form, Wikipedia dumps are written in a markup language called \textit{WikiCode}.
-To filter this code and obtain only natural language, we employ the \textit{mwparserfromhell} package \footnote{\url{https://github.com/earwig/mwparserfromhell}} to first strip the text of hyperlinks and markup, and also manually remove metadata such as article categories from the article text.
+To trim this code and obtain only natural language, we employ the \textit{mwparserfromhell} package \footnote{\url{https://github.com/earwig/mwparserfromhell}} to first strip the text of hyperlinks and markup, then remove metadata such as article categories from the article text.
 Next, we filter out the text those sections under headings from a hard-coded list.
-This list was compiled by the author and can be seen in Table \ref{tbl:wikipedia-ignored-headings}.
-The reason for their exclusion is that these chapters are pure lists which do not contain full sentences, and thus unlikely to contribute to modeling a linguistic context.
+We manually created this list by examining various articles across the four categories used in this work.
+It can be seen in Table \ref{tbl:wikipedia-ignored-headings}.
 
 \begin{table}[H]
 	\centering
@@ -371,9 +338,12 @@ The reason for their exclusion is that these chapters are pure lists which do no
 		Citations               \\
 		\hline
 	\end{tabular}
-	\caption{Common non-article sections in Wikipedia articles}
+	\caption{Common headings of list-type sections in Wikipedia articles.}
 	\label{tbl:wikipedia-ignored-headings}
 \end{table}
+
+The reason for the exclusion of these article sections is that they are typically lists which do not contain full sentences, and thus unlikely to contribute to modeling the linguistic context.
+The list is not a complete one, as some articles contain variations of the above headings not filtered out, such as \textit{References and further reading} (as a single heading).
 
 Finally, we split the article into individual sentences with the \textit{NLTK} python library \footnote{\url{https://www.nltk.org/}}.
 Which these pre-processing steps, we attain a corpus which mostly contains full	sentences which describe the article's topic.
@@ -421,15 +391,21 @@ The OPUS Subtitles dataset contains not only the parallel sentences, but also mo
 While the dataset contains contiguous subtitles, these are not appropriate input data for the NSP task, as film subtitles consist of dialogue instead of continuous text.
 Our preliminary tests showed this, as our NSP model showed very low performance when given contiguous subtitle sentences pairs as inputs.
 
-\subsection{Construction of NSP Corpora}
-As mentioned in Section \ref{sec:document-level-corpus}, the next sentence prediction task requires consecutive sentences in order to be performed.
-Out of the two context-specific corpus types which we employ, only Wikipedia articles consist of such consecutive sentences.
-This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubtitles corpora was essentially equal to that of random guessing.
-Thus, the NSP task is only performed on Wikipedia articles.
-The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
-We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
+\subsection{TF-IDF Background Corpus: Oscar} \label{sec:oscar}
+For the implementation of TF-IDF, we require a generic background corpus to normalize raw word frequencies found in context-specific corpora (that is, to calculate the IDF part of TF-IDF).
+For this purpose, corpora crawled from the internet offer themselves as an attractive option, as web content is diverse in that it encompassed both formal and informal content on many different topics.
 
-\subsection{Final Data Set} \label{sec:corpus-characteristics}
+We reject the Common Crawl and Wortschatz Leipzig datasets for the reasons already stated in Section \ref{sec:rejected-corpora}.
+Instead, we use a corpus from the \textit{Oscar} project \cite{suarezAsynchronousPipelineProcessing2019} as a background corpus:
+Each \textit{Oscar} corpus is a cleaned-up version of a \textit{Common Crawl} dataset, on which pre-processing steps such as HTML stripping and removal of boilerplate content have already been performed.
+It consists of (whole) web pages, and most importantly, its content is language-tagged, covering more than 150 languages in total.
+The corpus used is available on the \textit{HuggingFace} platform under the path \texttt{oscar-corpus/oscar} with the name \texttt{unshuffled\_deduplicated\_en} \footnote{\url{https://huggingface.co/datasets/oscar-corpus/oscar}, last accessed May 2, 2025.}.
+
+
+% There exist many versions of the Oscar dataset, but for this work, the \textit{mOscar} \cite{futeralMOSCARLargescaleMultilingual2024} corpus from 2024 was chosen, both for its recency and coverage of many languages.
+Due to its vast size, we did not use the entire corpus, but a random sample of 53,178 documents from this dataset to calculate inverse document frequency.
+
+\subsection{Final Data Set} \label{sec:final-dataset}
 We have described the sources of the corpora used in the implementation of our approach, but from these sources, we test our approach on two scales:
 We call the first test scenario a \textbf{small context} approach, where we generate a vocabulary list from a single Wikipedia article or OPUS subtitle.
 We then evaluate the generated vocabulary list on the same corpus.
@@ -487,6 +463,14 @@ Another notable pattern is that the articles of male actors tend to be longer th
 	\caption{General statistics on corpora, per Wikipedia article category.}
 	\label{tbl:corpus-sizes-per-wiki-category}
 \end{table}
+
+\subsubsection{Construction of NSP Corpora}
+As mentioned in Section \ref{sec:document-level-corpus}, the next sentence prediction task requires consecutive sentences in order to be performed.
+Out of the two context-specific corpus types which we employ, only Wikipedia articles consist of such consecutive sentences.
+This is confirmed by the fact that preliminary investigations showed that the NSP model's performance on OpenSubtitles corpora was essentially equal to that of random guessing.
+Thus, the NSP task is only performed on Wikipedia articles.
+The NSP corpus of an article is constructed by simply taking each consecutive sentence pair from the article, constituting an input datum for the NSP model with an \texttt{is\_next} label of \texttt{True}.
+We do not construct negative examples, for the reason that the most words with the most impact on the performance of the model would be words that tell the model that two sentences are \textit{not} connected, which does not appear to us to be useful information.
 
 \section{XAI Methods} \label{sec:xai-methods}
 In order to appraise the influence of words in a corpus on the performance of an AI model performing NLP tasks on it, this work employs Explainable AI methods, as explained in Section \ref{sec:xai-as-tools-of-analysis}.
