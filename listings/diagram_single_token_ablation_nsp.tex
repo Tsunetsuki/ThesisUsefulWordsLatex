@@ -8,7 +8,7 @@
 			\tikzstyle{data} = [align=left, text width=8.5cm, anchor=west]
 
 			% Process Nodes
-			\node (n1) [process] {Input sentence};
+			\node (n1) [process] {Input sentence pair};
 			\node (n2) [process, below=of n1] {Tokenize the first sentence};
 			\node (n3) [process, below=of n2] {Merge tokens, filter named entities and special tokens};
 			\node (n4) [process, below=3cm of n3] {Make sentence pair variations by ablating merged tokens from the first line};

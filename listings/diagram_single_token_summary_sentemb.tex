@@ -30,11 +30,11 @@
 				\textbf{(Baseline):} \\
 				\quad \texttt{"abraham lincoln faced enmity in 1863."}\\
 				\textbf{faced:} \\
-				\quad \texttt{"abraham lincoln enmity in 1863."}\\
+				\quad \texttt{"abraham lincoln faced 1863."}\\
 				\textbf{enmity:} \\
-				\quad 	\texttt{"abraham lincoln faced in 1863."}\\
+				\quad 	\texttt{"abraham lincoln enmity 1863."}\\
 				\textbf{in:} \\
-				\quad \texttt{"abraham lincoln faced enmity 1863."}\\
+				\quad \texttt{"abraham lincoln in 1863."}\\
 			};
 			\node (d5) [data, right=of n5] {
 				\begin{tabular}{@{}ll@{}}
@@ -47,9 +47,9 @@
 			};
 			\node (d6) [data, right=of n6] {
 \begin{tabular}{@{}ll@{}}
-        \textbf{faced:}  & $\frac{\text{CosDist}(\vec{a}, \vec{r})}{\text{CosDist}(\vec{e}, \vec{r})} = \texttt{0.5}$ \\
-        \textbf{enmity:} & $\frac{\text{CosDist}(\vec{b}, \vec{r})}{\text{CosDist}(\vec{e}, \vec{r})} = \texttt{0.7}$ \\
-        \textbf{in:}     & $\frac{\text{CosDist}(\vec{c}, \vec{r})}{\text{CosDist}(\vec{e}, \vec{r})} = \texttt{0.3}$ \\
+        \textbf{faced:}  & $\text{CosDist}(\vec{e}, \vec{r}) - \text{CosDist}(\vec{a}, \vec{r})= \texttt{0.5}$ \\
+        \textbf{enmity:} & $\text{CosDist}(\vec{e}, \vec{r}) - \text{CosDist}(\vec{b}, \vec{r})= \texttt{0.7}$ \\
+        \textbf{in:}     & $\text{CosDist}(\vec{e}, \vec{r}) - \text{CosDist}(\vec{c}, \vec{r})= \texttt{0.3}$ \\
     \end{tabular}
 			};
 

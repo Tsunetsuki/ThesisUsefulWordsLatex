@@ -8,12 +8,13 @@
 			\tikzstyle{data} = [align=left, text width=8.5cm, anchor=west]
 
 			% Process Nodes
-			\node (n1) [process] {Input sentence};
+			\node (n1) [process] {Input sentence pair};
 			\node (n2) [process, below=of n1] {Tokenize the first sentence};
 			\node (n3) [process, below=of n2] {Merge tokens, filter named entities and special tokens};
 			\node (n4) [process, below=4cm of n3] {Run model on "empty" sentence, baseline, and variations };
 			\node (n5) [process, below=5cm of n4] {Run model for variations, predicting $p_{is\_next}$};
-			\node (n6) [process, below=of n5] {Calculate word utility by $|p_{baseline} - p_{w}|$};
+			\node (n6) [process, below=of n5] {Calculate word utility by \\
+			$||(p_{baseline} - p_{empty})| - |(p_{baseline} - p_{word})||$};
 
 			% Anchor point to align all data nodes horizontally
 			\node (anchor) [right=of n1] {};

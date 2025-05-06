@@ -88,11 +88,6 @@ To compare the results on a broader scale, we aggregate the results of the evalu
 
 \subsubsection{Utility Aggregation for Large Context Scenario}
 \todo{the following is supposed to describe aggregation both for gen and eval. Make it understandable.}
-As described above, the utility of a word for a given single corpus is calculated by taking the sum of the word's utility across all lines in the corpus.
-For the large context evaluation scenario, we must also aggregate the utilities across corpora.
-The simplest method would be to simply take the sum of each word's utility across all lines in the composite corpus.
-However, this approach is biased against small single corpora, which contain fewer lines and are thus assigned less total word utility.
-For this reason, we normalize the word utilities such that each corpus contributes the same total word utility.
 For the list evaluation too, we average over the performance scores of the list across corpora, instead of across lines.
 
 This section has described our approach to evaluating the efficiency of vocabulary lists.
@@ -535,7 +530,7 @@ We can also observe that the increase in performance is much slower than when a 
 
 
 
-\subsection{Speed}
+\subsection{Speed} \label{sec:eval-speed}
 When evaluating the broad applicability of a vocabulary list generation approach, the efficiency of generated vocabulary lists is not the only criterion:
 The runtime of the approach is also an important factor.
 Table \ref{tbl:runtime-results} shows the average runtime for the approaches per corpus type.

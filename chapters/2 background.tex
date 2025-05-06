@@ -158,7 +158,7 @@ Splitting continuous text into distinct words serves following purposes in this 
 \end{itemize}
 
 Speaking more precisely, tokenizers divide texts into \textit{tokens}, which do not necessarily correspond to words \cite{jurafskySpeechLanguageProcessing2025}:
-For instance, the \texttt{bert-base-uncased} tokenizer used in this work splits the word \textit{enmity} into the sub-word tokens \textit{en} and \textit{\#\#mity} (sub-word tokens which are not the start of a word begin with \textit{\#\#} in their text representation for BERT tokenizers).
+For instance, the \texttt{bert-base-uncased} tokenizer used in this work splits the word \texttt{enmity} into the sub-word tokens \texttt{en} and \texttt{\#\#mity} (sub-word tokens which are not the start of a word begin with \texttt{\#\#} in their text representation for BERT tokenizers).
 As we are interested in counting complete words, we must therefore merge sub-word tokens back into complete words when they occur in our data pipeline.
 The details of this are discussed when presenting our implementation in Chapter \ref{ch:implementation}.
 In order to provide utility evaluation for words in a wide range of languages, this work employs tokenizers which can handle language of different syntactic structures, and where the tokenizer outputs sub-word tokens, we usually merge the tokens into complete words.

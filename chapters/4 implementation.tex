@@ -146,7 +146,7 @@ This would lead a feature importance attribution method to evaluate \textit{is} 
 These complications make it difficult to use feature importance attribution methods on language modeling, which is why we decide against the use of this task for our implementation.
 
 
-\subsubsection{Next Sentence Prediction}
+\subsubsection{Next Sentence Prediction} \label{sec:nsp}
 In next sentence prediction (NSP for short), the AI model takes as input two sentences and predicts a probability for the second sentence being the successor of the first sentence in their source text \cite{kentonBertPretrainingDeep2019}.
 Input data for this task, including labels, is trivial to generate from document-level corpora, as it merely requires a corpus of contiguous sentences (sentences which follow each other similarly to those the model was trained on), which is easily obtained from Wikipedia articles and most other kinds of continuous text.
 As the output of next sentence prediction is one number expressing the predicted probability of the input sentences following each other, its outputs are also easily evaluated using cross-entropy or, for comparing two outputs, the simple difference between the two probabilities.
@@ -375,7 +375,7 @@ The most important pre-processing steps are:
 	      Spelling errors are checked and corrected to some extent in the OPUS OpenSubtitles dataset.
 	\item [Selection of high quality subtitles:]
 	      A movie may have different subtitles in one language associated with them on OpenSubtitles.
-	      In the OPUS OpenSubs dataset, available subtitles are compared in order to identify the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as the user ratings of subtitles.
+	      In the OPUS OpenSubtitles dataset, available subtitles are compared in order to identify the subtitle pair which is most likely to be accurate in its alignments and free from errors such spelling, taking into account metadata such as the user ratings of subtitles.
 	      Then, the subtitle pair which aligns the best is chosen to appear in the OPUS dataset.
 	      This ameliorates some quality issues, such as bad translations, in the dataset.
 \end{description}
@@ -395,7 +395,7 @@ While the dataset contains entire subtitles, these are not appropriate input dat
 Our preliminary tests showed this, with our NSP model showing very low accuracy when given contiguous subtitle sentence pairs as inputs.
 
 % creation of final data set
-While the newest version of the Opensubs dataset is \textit{v2024}, this version did not exist at the outset of this work
+While the newest version of the OpenSubtitles dataset is \textit{v2024}, this version did not exist at the outset of this work
 \footnote{\url{https://web.archive.org/web/20241110103141/https://opus.nlpl.eu/OpenSubtitles/corpus/version/OpenSubtitles}, last accessed on May 4, 2025.}.
 Hence, the version employed in this work is \textit{v2018}.
 Because of limitations both in processing time and processing power on our side, we chose the relatively small \textit{English-Vietnamese} corpus, containing subtitles from 3,864 subtitles in total.
@@ -403,7 +403,7 @@ While the corpus contains the lines for all of these subtitles in long, continuo
 Apart from this, no pre-processing was performed on the subtitles by us.
 
 \subsubsection{Modeling of Language Contexts}
-Unlike Wikipedia, the subtitles in the OPUS OpenSubs dataset are not tagged with categories comparable to Wikipedia articles.
+Unlike Wikipedia, the subtitles in the OPUS OpenSubtitles dataset are not tagged with categories comparable to Wikipedia articles.
 While the IMDB identifier would allow grouping subtitles by movie genre, the usefulness of such a grouping to model smaller contexts is questionable, as the genre of a movie is not the same as a topic, and thus in our estimation less likely to have an influence on useful words in the movie script.
 For this reason, we do not perform such a grouping.
 Instead, for large context vocabulary list compilation with the OpenSubtitles dataset, we only model the context of movies in general, using a random sample of 632 subtitles from the dataset for this grouping.
@@ -505,49 +505,53 @@ While we gained valuable insights with the methods presented in this chapter, we
 
 \subsection{Desiderata}
 Section \ref{sec:explainable-ai} has introduced essential distinctions between XAI methods which help us determine which methods are appropriate for our purpose:
-We employ local, feature attribution methods of both model-specific and model-agnostic type, as these allow use to gauge the importance of words in the input from multiple points of view.
+We employ local, feature attribution methods of both model-specific and model-agnostic type, as these allow use to gauge the importance of words in the input.
 Model-specific methods have an advantage in terms of computational efficiency, as they generally require fewer model calls to attribute importances to features, instead leveraging the internal structure of a model to arrive at explanations.
-On the other hand, model-agnostic methods are useful in that they can be used on any model and gauge the input-output relationship by performing actual experiments on the model, by observing the way changes to the model input change its output.
+On the other hand, model-agnostic methods are useful in that they can be used on any model, and in that they gauge the input-output relationship from empirical data, observing the way changes to the model input change its output.
 
 There is another desideratum which we impose on our XAI methods:
-The XAI method should allow for processing the input sentences in its original form and not only as a \textit{bag of words}:
+The XAI method should allow the model to \textbf{process input sentences in their original sequential form}, and not only as a \textit{bag of words}:
 Some methods, such as SHAP \cite{lundbergUnifiedApproachInterpreting2017} and LIME \cite{ribeiroWhyShouldTrust2016}, were originally developed for structured data with a fixed number of input features.
-When they are used on NLP tasks, they typically use as inputs not the textual data in its raw form, but rather vectors indicating whether a particular word is present in the sentence, with no regard to the word order and thus of syntactic relations between words.
-In our view, this is problematic, as simplification of the input could lead the methods to attribute low importance to words such as "not", which only affect the meaning of a sentence in combination with its other words.
+Therefore, they are restricted to analyzing models whose inputs are not sequential, but in the form of a vector indicating whether a particular word is present in the sentence, with no regard to the word order and thus of syntactic relations between words.
+In our view, this is problematic, as this simplification of the input could lead the methods to attribute low importance to words such as "not", which only affect the meaning of a sentence in combination with its other words.
 For this reason, we did not employ the popular XAI methods SHAP or LIME in this work.
 
-In the following sections, we present three model-agnostic XAI methods which we use in the implementation of our vocabulary list generation approach described in Section \ref{sec:list-generation}.
-These work by perturbing the inputs to the model and analyzing the changes in output.
-The difference between them is how the perturbation is done:
+In the following sections, we present three model-agnostic XAI methods, which we use in the implementation of our vocabulary list generation approach described in Section \ref{sec:list-generation}.
+These function by perturbing the inputs to the model and analyzing the changes in output.
+They differ in how the perturbation is performed:
 Single Token Ablation removes single tokens from the inputs, whereas Single Token Summary works by setting the input to a single token.
 The third method, Progressive Summary, attempts to find the most important words in sentences by iteratively building up the input sentence, one token at a time.
-While the sections make reference to changes in "performance" to calculate word utility, this is only strictly accurate for the next sentence prediction task.
-In the case of the sentence embedding task, we measure performance of the model on a permuted sentence by how close the output embedding vector is to the embedding of the unpermuted sentence, as explained in Section \ref{sec:sentence-embedding}.
-After the model-agnostic methods, we detail our use of the model-specific transformer attention approach mentioned in Section \ref{sec:transformer}, as it requires more post-processing than the model-agnostic methods.
+For each perturbed sentence, we then measure how close its model output is from to output for the unperturbed sentence.
 
+For the NSP task, only the first sentence of the pair is perturbed.
+Apart from reducing the number of model calls, this is because, for Single Token Summary, removing all words from both sentences except one would mean that one of the sentences would usually be empty, which does not seem to us to be an informative perturbation.
+This has the consequence that the word lists generated with the NSP task do not include the words form the last line of each corpus, as it does not have a corresponding next sentence.
+
+After the model-agnostic methods, we detail our use of the model-specific transformer attention approach mentioned in Section \ref{sec:transformer}, as it requires more post-processing than the model-agnostic methods.
 The relationship of the XAI methods to the NLP tasks is also discussed, as not every combination of XAI method and NLP task is feasible, either because it requires an unrealistic amount of computation or because the results of the combination are difficult to evaluate.
-The results of the experiments with these methods is presented in Chapter \ref{ch:evaluation}.
+The results of the experiments with these methods are presented in Chapter \ref{ch:evaluation}.
 
 
 \subsection{Single Token Ablation}
 Our aim in using XAI methods is to find out which words, if known, improve the model's performance the most, when compared to not knowing the word.
 Perhaps the simplest way of testing this is by going through every word in the AI model's input, and examining the impact on model performance when the word is removed from the input.
 Within this work, this approach is called \textbf{Single Token Ablation}.
-The processing steps performed in Single Token Ablation can be seen in Figure \ref{fig:single-token-ablation-sentemb}.
+We show an example of how we perform Single Token Ablation on an input datum can be seen in Figure \ref{fig:single-token-ablation-sentemb} for sentence embedding task, and Figure \ref{fig:single-token-ablation-nsp} for next sentence prediction.
 
 \paragraph{Approach:}
 For an input sentence, we run the model on the unmodified sentence to get a baseline performance.
 We then get the unique words in the input by using the tokenizer and merging sub-word tokens back into words.
+For BERT tokens, this merging is a simple process, as sub-tokens which are not at the beginning of a word start with \texttt{"\#\#"}(See Section \ref{sec:tokenization}).
 For each word in the input, we create a variation of the input where the word is removed.
 We then run the model on all variations and measure the performance.
-The estimated utility in this approach is then calculated by taking the difference in performance between the variation's performance and that of the baseline output.
+The estimated utility in this approach is given by the difference in performance between the variation's performance and that of the baseline output, as a high distance between the outputs implies that the word is important to the sentence's meaning.
 
 \paragraph{Critical Evaluation:}
 One advantage of Single Token Ablation is its conceptual simplicity, as it is easy to implement.
 Furthermore, its time complexity is fairly low for a feature method, as it requires only one model call for each unique token in the sentence ($\mathcal{O}(n)$).
 Before running experiments, we anticipated that due to this simplicity, Single Token Ablation would not work well on long sentences, where leaving out a single token would not seem to have a great impact on the meaning of the sentence.
 Furthermore, this method does not take into account the utility of a word in the context of word combinations.
-However, among the methods used in this paper, this method achieves the best results in the final evaluation.
+However, among the methods used in this paper, this method generates lists which achieve some of the highest efficiencies results in the final evaluation, especially for large vocabulary sizes.
 
 \begin{figure}[H]
 	\input{listings/diagram_single_token_ablation_sentemb.tex}
@@ -563,24 +567,25 @@ However, among the methods used in this paper, this method achieves the best res
 
 \subsection{Single Token Summary}
 The second feature model-agnostic method can be seen as the opposite of Single Token Ablation:
-Instead of taking out one word at a time, we use as input only a single word at a time.
+Instead of taking out one word at a time, we use as input only a single word at a time (apart from named entities and punctuation, which are always present).
 Because the intention behind this method is finding words which, on their own, carry much of the meaning of a sentence, we call it \textbf{Single Token Summary}.
+Examples of its use are shown in Figure \ref{fig:single-token-summary-sentemb} and \ref{fig:single-token-summary-nsp}.
 
 \paragraph{Approach:}
-We first run the model on a variation of the input sentence where only punctuation and named entities are included, using the output as the starting performance.
+We first run the model on an "empty" variation of the input sentence where only punctuation and named entities are included, using its output as the starting performance.
 We then decompose the input sentence into its word tokens.
-For each word, a variation of the sentence is put through the model where, in addition with punctuation and named entities, only that word appears.
-The utility in this approach is calculated by taking the performance improvement of a word's sentence variation compared to the starting performance.
+For each word, a variation of the sentence is put through the model where, in addition to punctuation and named entities, only that word appears.
+The utility in this approach is calculated by taking the performance improvement of a word's sentence variation compared to the performance of the "empty" sentence.
 
 \paragraph{Critical Evaluation:}
 Like Single Token Ablation, this method requires only one model call for each unique token in the sentence ($\mathcal{O}(n)$).
-This method may find tokens helpful to beginners more efficiently, however, as it simulates knowing only one word, whereas Single Token Ablation tests performance while taking into account the meaning of the other words in each sentence, as well.
-However, this could the method to assign low utility to words which mostly convey meaning when in combination with other words, such as "not".
+One of the motivations behind this method was to find tokens helpful to beginners more efficiently, as it attempts to reconstruct the meaning of each sentence with a minimal vocabulary.
+Our evaluation found that, in general, this method produces vocabulary lists with high efficiency at low vocabulary sizes, confirming the theory that it prioritizes words that would be useful to learn for beginners.
 
 \begin{figure}[H]
 	\input{listings/diagram_single_token_summary_sentemb.tex}
 	\caption{Example of Single Token Summary with sentence embedding, on one line.}
-	\label{fig:single-token-summary}
+	\label{fig:single-token-summary-sentemb}
 \end{figure}
 
 \begin{figure}[H]
@@ -598,13 +603,15 @@ To achieve a more accurate evaluation, we present another "summary" approach, wh
 The progressive building up of the sentence is meant to give the best order to learn words in for a single line, starting from the point of a simulated learner who does not know any words.
 For this reason, we only perform the "progressive" approach building up the sentence, but do not attempt the reverse, i.e., ablating one word after another from a sentence.
 We call this approach "Progressive Summary".
+Because this approach is much more computationally intensive and our next sentence prediction model takes more calculation time than our sentence embedding model (see Section \ref{sec:eval-speed}), we did not use Progressive Summary in combination with the NSP task.
+An example of this method (with sentence embedding) is shown in Figure \ref{fig:progressive-summary}.
 
 \paragraph{Approach:}
 For an input sentence, this approach starts the same as Single Token Summary, by checking the performance of the one-word sentence variations.
-We then rank the words by their performance improvements, and use the word with the highest improvement in the next iteration.
-From the remaining words in the sentence, we check which one improves the performance the most when used in addition to our already found word.
-By iterating this method, we progressively reconstruct the original sentence, which each step adding the word which improves the performance the most.
-Here, the estimated utility of a word is the boost in performance which is brought to the sentence when the word is added.
+We then use the word with the highest improvement in the next iteration:
+From the other words in the sentence, we check which one improves the performance the most when used in addition to our already found word.
+By iterating this method for the remaining words, we progressively reconstruct the original sentence, which each step adding the word which brings the output closest to the output of the unperturbed baseline.
+The estimated utility of a word is the boost in performance which is brought to the sentence when the word is added.
 
 \begin{figure}[H]
 	\input{listings/diagram_progressive_summary_sentemb.tex}
@@ -616,19 +623,13 @@ Here, the estimated utility of a word is the boost in performance which is broug
 For a single sentence, Progressive Summary would appear to be the most accurate in ordering its words by utility, as it considers the utility of each word in combination with the words which have already been found to be useful.
 However, Progressive Summary is much more computationally intensive than Single Token Summary, which requires only one model call per word in the sentence.
 Because of its iterative approach, for a sentence with 10 words, Progressive Summary calls the model $10+9+8+... = \sum_{i=1}^{n}i = \frac{n^2 + n}{2}$ times, which is a time complexity of $\mathcal{O}(n^2)$.
+The fact that the word utilities are calculated in the context of the already included words also makes it difficult to judge how the results of Progressive Summary should be aggregated across lines.
+Perhaps because of this difficulty, Progressive Summary did not outperform the simpler methods in our evaluation.
 
-\paragraph{Compatibility with NLP tasks:}
-As Progressive Summary starts from a set of one words and then progresses to larger sets, we do not consider it appropriate to employ in combination with next sentence prediction.
-One could circumvent the issue by leaving one of the sentences in its original form and only perturbing the other, but this can hardly be seen as a modeling of natural language ability.
-As such, our implementation does not use Progressive Summary with next sentence prediction.
-
-\paragraph{Summary:}
-Progressive Summary attempts to find the most important words in a sentence one by one, by first reducing the sentence to one word, then two etc., and using a distance metric to compare the "summaries" to the original sentence.
-The words which bring the model output for the summary closest to that of the original sentence are regarded as the most useful.
 
 \subsection{Attention as Explanation}
-The model-agnostic methods so far could be employed on any AI model.
-However, as many of the latest state-of-the-art AI models follow the Neural Network architecture, and more specifically the transformer architecture (see Section \ref{sec:transformer}), we also attempt word utility estimation with method specific to these models, namely attention.
+The model-agnostic methods so far can be employed on any AI model.
+However, as many of the latest state-of-the-art AI models follow the Neural Network architecture, and more specifically the transformer architecture (see Section \ref{sec:transformer}), we also attempt word utility estimation with a method specific to these models, namely attention.
 % These model-specific XAI methods have the advantage of being computationally efficient:
 % Model-agnostic methods extract information about the model by perturbing its inputs and analyzing the resulting changes in the output.
 % This requires many model calls for one input datum.
@@ -636,21 +637,17 @@ However, as many of the latest state-of-the-art AI models follow the Neural Netw
 % We therefore try two model-specific methods for analyzing word utility as well, as their more efficient calculations means they can process more input data in a given time, which should increase the accuracy of the resulting word list for large corpora.
 As stated before, transformer models use self-attention to assign importance to the connections between tokens in the input (if their input is in text format).
 This may be used as a kind of explanation, as words which have strong connections to many other words in the sentence presumably are more important to the AI model's understanding of it than those receiving less self-attention.
-
-An important difference to the model-agnostic methods explained before is that we do not control word masking with a tokenizer \textit{independent of the model}, thus the splitting of words is not under our direct control.
-The tokenizers used are \texttt{bert-base-uncased} and \texttt{sentence-transformers/paraphrase-MiniLM-L6-v2}.
-These produce tokens on a sub-word level, which means that we must perform post-processing on the attentions to acquire values on the word level and make vocabulary lists than contain full words.
-For BERT tokens, this is a simple process, as sub-tokens which are not at the beginning of a word start with \texttt{"\#\#"}(See Section \ref{sec:tokenization}).
-The estimated utility for the reconstructed token is calculated by taking the sum of the attention values of each sub-token.
+Preliminary tests showed both of our chosen models producing very similar lists with attention, and so we only use this method in combination with our more time-efficient sentence embedding model. 
+An example of an input line being processed with this approach is shown in Figure \ref{fig:attention}.
 
 \paragraph{Approach:}
 A transformer model is run with one line as input.
-The transformer outputs an attention tensor, which attributes a value to each pair of tokens in the input (this includes special tokens from the tokenizer, such as \texttt{[SEP]}, and punctuation).
-We then aggregate the attention of each token by summing over one axis of the attention tensor of all connections each token has, and over all the attention heads, resulting in one scalar value per token.
-The original tokens of the tokenizer are merged
-Next, special tokens and punctuation are filtered
-Finally, we normalize the attentions such that the attention for all words in the line sums up to one.
-The attributed attention to a word is its estimated utility.
+The transformer outputs a three-dimensional attention tensor, which attributes a value to each combination of attention head and pair of (sub-word) tokens in the input (this includes special tokens from the tokenizer, such as \texttt{[SEP]}, and punctuation).
+We then aggregate the attention value of each token by summing over the attention heads, as well as one of the remaining axes of the attention tensor, resulting in one scalar value per (non-unique) token in the input.
+Then, we again filter special tokens, punctuation and named entities, and merge sub-word tokens into words.
+Next, the attention over all occurrences of each unique token is summed over, yielding one scalar attention for each unique word.
+Finally, we normalize the attentions such that the total attention for all words in the line sums up to one.
+The attributed attention to a word thus determines its estimated utility.
 
 \begin{figure}[H]
 	\input{listings/diagram_attention.tex}
@@ -659,34 +656,40 @@ The attributed attention to a word is its estimated utility.
 \end{figure}
 
 \paragraph{Critical Evaluation:}
-As hinted at before, this method uses one model call for one input line, and thus has a time complexity of $\mathcal{O}(1)$.
-One disadvantage of attention as our explanation mechanism is that attentions are attributed not to words of our choosing, but to input tokens of the model:
-This is because, unlike the model-agnostic methods where word masking is controlled by a tokenizer \textit{independent of the model}, words are split by the tokenizer which was used to train the model in the first place and this tokenizer cannot be changed, lest we change the input format to the AI model itself.
-This is an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the tokenization method may differ.
+The main upshot of attention is that, as hinted at before, this method uses only one model call for one input line, and thus has a time complexity of $\mathcal{O}(1)$.
+An important difference to the model-agnostic methods is that we do not control word masking with a tokenizer \textit{independent of the model}, thus the splitting of words is not under our direct control.
+This can be an issue because it means that lists generated with the model-specific tokenizer are not necessarily comparable to lists from model-agnostic methods, as the word boundaries may differ between the lists.
+However, we use the attention approach to explanation in combination with our sentence embedding model \texttt{all-MiniLM-L6-v2}, which uses a BERT tokenizer available under the same name on the \textit{HuggingFace} platform \footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}.
+To the best of our knowledge, this tokenizer splits texts into the same tokens as the \texttt{bert-base-uncased} tokenizer which we use for token splitting in the model-agnostic methods, which should prevent such issues from arising.
+
 In addition to this technical downside, attention is controversial as a mechanism to explain model decisions:
 One point of critique is that, while attention influences the model's behavior, it is not a faithful explanation because alternative attention distributions can yield similar model outputs \cite{jainAttentionNotExplanation2019}.
 On the other hand, it has been argued that the mere fact that a model chooses a particular attention distribution, rather than another, means that the actually generated distribution is a more plausible explanation than artificial adversarial distributions \cite{wiegreffeAttentionNotNot2019}.
 As we will show in our list evaluation, when used with our list generation approach, attention produces vocabulary lists that are close in efficiency to those produced by the model-agnostic methods.
-
-\paragraph{Summary:}
-Among the XAI methods used in this work, Attention as Explanation requires the least resources, and it is not restricted to any one NLP task (although the model must be of transformer type).
-However, we do not control the tokenizer used directly.
-While the NSP model uses the same tokenizer that is also used for token masking in the model-agnostic XAI methods, the sentences embedding model uses a different tokenizer.
+\todo{check the previous claim about the performance}
 
 
-
-% \subsubsection{Layer-wise Relevance Propagation (not yet implemented $\rightarrow$ may be deleted)}
-% \paragraph{Approach:}
-% \paragraph{Advantages:}
-% \paragraph{Disadvantages:}
-% \paragraph{Summary:}
-%
-%
 \section{Summary of the Implementation} \label{sec:implementation-final}
 The previous chapters have argued for the choice of components in our theoretical approach to vocabulary list generation and evaluation.
-This final section about our implementation describes how the chosen components interact in our implementation.
+This final section summarizes our implementation, which will be evaluated in the next chapter.
+Section \ref{sec:impl-summary-description} describes the interaction of our selected components to the list generation approach, whereas Section \ref{sec:supported-languages} gives an overview of the supported languages of our implementation resulting from this setup.
 
-For Wikipedia articles, we use the following combinations of XAI method and NLP task to compile vocabulary lists:
+\subsection{Interaction of Components} \label{sec:impl-summary-description}
+We use two sources of corpora to model linguistic contexts, namely Wikipedia and the OPUS OpenSubtitles dataset.
+From these, we create vocabulary lists for small and large contexts:
+The small context lists are generated by running combinations of NLP tasks and XAI method on single corpora (single articles or single subtitles) from these sources.
+The utility of a word for a given single corpus is calculated by taking the sum of the word's utility across all lines in the corpus.
+For the large context scenario, we aggregate the utilities across the single corpora inside it:
+In order to make short and long single corpora contribute equally to the final list, we sum across the corpus utilities, but normalize the total utility each corpus contributes to 1.
+
+From Wikipedia, articles from four categories are used, both as the sources of single corpora and as large context corpora:
+\textit{20th-century American actresses},
+\textit{20th-century American male actors},
+\textit{1980s English-language films}, and
+\textit{World War II political leaders}.
+For the OpenSubtitles subtitles, no such categorical division is trivially possible, and thus our large context consists simply of a large sample of subtitles from this dataset.
+
+For \textbf{Wikipedia} articles, we use the following combinations of XAI method and NLP task to compile vocabulary lists:
 
 \begin{table}[H]
 	\centering
@@ -709,7 +712,7 @@ For Wikipedia articles, we use the following combinations of XAI method and NLP 
 	\end{tabularx}
 \end{table}
 
-For the subtitles from the OPUS dataset, we do not employ the NSP task, as the AI model is not suited to be used with these lines.
+For the subtitles from the \textbf{OPUS OpenSubtitles} dataset, we do not use the NSP task, as the AI model is not suited to be used with these lines.
 This leaves the following combinations:
 
 \begin{table}[H]
@@ -737,9 +740,10 @@ This leaves the following combinations:
 % 	\label{fig:list-evaluation-diagram}
 % \end{figure}
 
-\section{Supported Languages}
+\subsection{Supported Languages} \label{sec:supported-languages}
 Our data pipeline contains various language-specific components, all of which must support a language in order for our approach to support vocabulary list generation in the language.
-Table \ref{table:supported-languages} summarizes the language support of each component, including pre-processing.
+Table \ref{table:supported-languages} summarizes the theoretical language support of each component, including pre-processing.
+As mentioned before, we use monolingual AI models in our implementation, but chose such models for which multilingual variants exist also (see Sections \ref{sec:nsp} and \ref{sec:sentence-embedding}), which is why, in the table, we show these variants instead of the multilingual ones.
 
 {
 \renewcommand{\arraystretch}{1.5}  % Increase the vertical padding for this table only
@@ -749,21 +753,21 @@ Table \ref{table:supported-languages} summarizes the language support of each co
 		\hline
 		\textbf{Component}                          & \textbf{Supported Languages} & \textbf{Notes}                                                                                                                                                                                                                             \\
 		\hline
-		Tokenization                                & 104                          & Using the \texttt{bert-base-uncased} model\footnotemark[1]                                                                                                                                                                                 \\
+		Tokenization                                & 104                          & Using the \texttt{bert-base-uncased} model\footnotemark[1].                                                                                                                                                                                 \\
 		\hline
 		Named Entity Recognition                    & 9                            & Using the \textit{spacy} model \texttt{xx\_ent\_wiki\_sm}\footnotemark[2]. The number of supported languages is not stated for this model, but it was trained on the \texttt{WikiNER} dataset\footnotemark[3], which contains 9 languages. \\
 		\hline
 		Next sentence prediction                    & 104                          & Using the \texttt{bert-base-multilingual-cased} model\footnotemark[4]                                                                                                                                                                      \\
 		\hline
-		Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5]                                                                                                                                                             \\
+		Sentence Embedding                          & $>50$                        & Using the \texttt{paraphrase-multilingual-MiniLM-L12-v2} model\footnotemark[5].                                                                                                                                                             \\
 		\hline
 		Sentence splitting (for Wikipedia articles) & $>150$                       & Using the \texttt{xx\_sent\_ud\_sm} model\footnotemark[6], based on the \textit{Universal Dependencies} framework\footnotemark[7], which supports $>150$ languages.                                                                        \\
 		\hline
-		Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}                                                                                                                                                                                              \\
+		Filtering of Wikipedia sections             & (manual)                     & See Section \ref{sec:wikipedia-preprocessing}.                                                                                                                                                                                              \\
 		\hline
-		Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8]                                                                                                                                                                   \\
+		Wikipedia Corpus                            & $>300$                       & As of 2025, there exist Wikipedias in over 300 languages\footnotemark[8].                                                                                                                                                                   \\
 		\hline
-		OPUS OpenSubtitles Corpus                   & 94                           & See \footnotemark[9]                                                                                                                                                                                                                       \\
+		OPUS OpenSubtitles Corpus                   & 94                           & See the corpus' website \footnotemark[9].                                                                                                                                                                                                                       \\
 		\hline
 	\end{tabularx}
 
@@ -788,5 +792,8 @@ It can be seen that, apart from the manual selection of certain Wikipedia headin
 While we did not individually cross-correlate the supported languages of each component, we estimate that the pipeline supports 9 languages when taking into consideration the \textit{spacy} NER capabilities.
 With a NER model supporting more languages, the implementation is estimated to support at least 40 languages, as the next bottleneck would be the sentence embedding model with over $50$ languages, some of which may, however, not be supported by all other components.
 
-
+This chapter has described the implementation of our approach as laid forth in chapter \ref{ch:approach}.
+This implementation generates lists of vocabulary for our chosen single and composite corpora, with the described XAI methods and AI models (which determine the NLP task).
+In the next chapter, we analyze these vocabulary lists through comparisons to each other, as well as lists generated by frequency-based approaches.
+We also present the differences between the time each approach takes to generate vocabulary lists, to weigh the advantages and disadvantages of each method.
 
