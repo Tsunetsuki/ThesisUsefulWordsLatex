@@ -1,4 +1,4 @@
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{List Efficiency Evaluation.}
 \label{alg:efficiency-evaluation}
 \begin{algorithmic}[1]
@@ -18,13 +18,17 @@
     
     \For{each $line$ in $corpus$}
         \State $line\_with\_only\_known\_words \gets line $ without words not in $vocabulary$
+        \State $worst\_output \gets$ model("")
         \State $baseline\_output \gets$ model($line$)
-        \State $new\_output \gets$ model($line\_with\_only\_known\_words$)
-        \State $line\_score \gets$ similarity($baseline\_output $, $new\_output$)
+        \State $variation\_output \gets$ model($line\_with\_only\_known\_words$)
+
+        \State $worst\_distance \gets$ distance($baseline\_output $, $worst\_output$)
+        \State $variation\_distance \gets$ distance($baseline\_output $, $variation\_output$)
+        \State $line\_score \gets$ $ 1 - variation\_distance / worst\_distance$
         \State Append $line\_score$ to $line\_scores$
     \EndFor
 
-    \State $vocabulary\_score$ = sum ($line\_scores$)
+    \State $vocabulary\_score$ = avg ($line\_scores$)
     \State Append ($vocabulary\_size$, $avg\_score$) to $scores$
 \EndWhile
 
