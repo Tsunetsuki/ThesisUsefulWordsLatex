@@ -4,9 +4,9 @@ We have described in detail our method for vocabulary efficiency evaluation in S
 However, this approach is very similar to our approach for list generation, which involves analyzing AI interaction of AI models with corpora through the use of XAI methods.
 Therefore, it is natural to assume that our evaluation approach is biased towards the lists stemming from our list generation approach.
 This concern is especially pertinent as it has been shown that AI models do not reliably respond comparably to humans when the inputs to NLP tasks are perturbed \cite{tjuatjaLLMsExhibitHumanlike2024}.
+However, to the best of our knowledge, there has not yet been a proposed evaluation metric for vocabulary lists that can be done automatically and which outputs a simple numeric result.
 
-To the best of our knowledge, there has not yet been a proposed evaluation metric for vocabulary lists that can be done automatically and which outputs a simple numeric result.
-For this reason, in addition to our own evaluation approach utilizing AI models, we also present sample vocabulary lists, use our evaluation approach, and check whether the results align with human intuition.
+To address this concern, in addition to our own evaluation approach, we also present sample vocabulary lists, use our evaluation approach, and check whether the results align with human intuition.
 
 For this reason, our evaluation is not only concerned with analyzing statistics of measured efficiency, but also with whether the calculated efficiency values are reliable.
 The questions examined in this chapter can be summed up as:
@@ -115,7 +115,7 @@ Considerations of the choice of metric are:
 	      A word that is rank 1 in list A, but rank 101 in list B says more about the similarity than if a word is rank 2000 in list A, but rank 2100 in list B. Likewise, if a word is absent from list B, it implies a greater difference if that word is at rank 1 in list A than if it were at rank 1000.
 \end{description}
 
-While Kendall rank correlation \cite{kendallNEWMEASURERANK1938b} and Spearman's footrule  \cite{spearmanCorrelationCalculatedFaulty1910} are widely used metrics to compare ranked lists in general, we rejected their use because they make no distinction between differences at the top of lists and differences at their ends, in addition to being difficult to adapt to handle for missing elements.
+While Kendall rank correlation \cite{kendallNewMeasureRank1938c} and Spearman's footrule  \cite{spearmanCorrelationCalculatedFaulty1910} are widely used metrics to compare ranked lists in general, we rejected their use because they make no distinction between differences at the top of lists and differences at their ends, in addition to being difficult to adapt to handle for missing elements.
 
 %
 % \subsubsection{Sequential rank agreement (modified)}
@@ -240,7 +240,7 @@ These lessons take the form of phrases that should help a learner to quickly gai
 To make a list of vocabulary from \Rosetta 's lesson contents, we use the freely available lessons  of the \textit{American English} course (Units 1-20).
 We convert the PDF files to text format, filter lines which do not contain lessons contents (e.g., "Lesson 8" and similar ancillary notes).
 On the filtered text, we run the \texttt{bert-base-uncased} tokenizer and let the order of first appearance of a word in the lessons be its rank in the resulting vocabulary list.
-Thus, the generated list features the lessons' words in the order in which \Rosetta\ introduces them to its learners, which presumably is close to the word order that \Rosetta estimates to be most useful.
+Thus, the generated list features the lessons' words in the order in which \Rosetta\ introduces them to its learners, which presumably is close to the word order that \Rosetta\ estimates to be most useful.
 One qualification of the previous statement is that some words may be introduced in order for the learner to have something concrete to talk about, rather than because of their estimated utility.
 The final vocabulary list contains 2,545 words in total.
 
@@ -452,7 +452,7 @@ The list made from using attention as explanation follows a similar pattern.
 In contrast, the lists generated from both TF-IDF and feature importance explanations show words that are more useful for a beginner language learner in our view:
 All of them contain at least one verb (\textit{know}), as well as several words that can constitute a meaningful sentence by themselves, such as \textit{what}, \textit{okay}, \textit{right}, \textit{yeah}.
 Next, we present the results of the efficiency evaluation of the large lists produced on the (separate) test datasets.
-We include the vocabulary list produced from the \Rosetta lesson in this evaluation, since both it and our own lists were not specifically compiled for the evaluation data (though our lists were compiled on more similar data).
+We include the vocabulary list produced from the \Rosetta\ lesson in this evaluation, since both it and our own lists were not specifically compiled for the evaluation data (though our lists were compiled on more similar data).
 
 
 \begin{table}[H]
