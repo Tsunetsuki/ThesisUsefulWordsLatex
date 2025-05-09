@@ -565,7 +565,7 @@ However, among the methods used in this paper, this method generates lists which
 	\label{fig:single-token-ablation-nsp}
 \end{figure}
 
-\subsection{Single Token Summary}
+\subsection{Single Token Summary} \label{sec:single-token-summary}
 The second feature model-agnostic method can be seen as the opposite of Single Token Ablation:
 Instead of taking out one word at a time, we use as input only a single word at a time (apart from named entities and punctuation, which are always present).
 Because the intention behind this method is finding words which, on their own, carry much of the meaning of a sentence, we call it \textbf{Single Token Summary}.
@@ -597,7 +597,7 @@ Our evaluation found that, in general, this method produces vocabulary lists wit
 % \paragraph{Compatibility with NLP tasks:}
 % \todo{compat with NSP?}
 
-\subsection{Progressive Summary}
+\subsection{Progressive Summary} \label{sec:progressive-summary}
 While Single Token Summary is easy to implement and computationally inexpensive, it has the conceptual disadvantage of not taking into account the utility of word combinations.
 To achieve a more accurate evaluation, we present another "summary" approach, where the sentence is built up one word at a time.
 The progressive building up of the sentence is meant to give the best order to learn words in for a single line, starting from the point of a simulated learner who does not know any words.

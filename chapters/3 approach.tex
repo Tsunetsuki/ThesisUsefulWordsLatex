@@ -66,7 +66,7 @@ An efficient list means that with a small number of words, the learner should ac
 Therefore, we can define the k-word-efficiency of a list as the score that it allows the learner to achieve by learning its first $k$ words.
 
 \begin{equation}
-	e_{t, s, k}(l) =  t'(s,  V_{l, k})\\
+	e_{t', s, k}(l) =  t'(s,  V_{l, k})\\
 \end{equation}
 
 And with this definition of efficiency, we can define the condition for an optimal vocabulary list given a particular number of words:
@@ -146,7 +146,7 @@ If we run the model on a specific corpus and mask some of the words in the input
 However, presumably some words will have a larger impact on the performance than others.
 If we view removing words from the input as the equivalent of a human not knowing a word in a text, this performance differential can be a proxy metric for word utility and for human language ability.
 
-\subsection{Modified Experimental Setup with AI}
+\subsection{Modified Experimental Setup with AI} \label{sec:ai-experiment-setup}
 With this new proxy metric for word utility in mind, we can propose a new experiment.
 To test the efficiency of a vocabulary list, we modify the setup from \ref{sec:human-efficiency-testing} as follows:
 
@@ -250,7 +250,7 @@ This is because, theoretically, the utility of two words combined could be highe
 In other words, our approach ignores possible synergistic effects between words.
 
 By adding XAI as a tool for analyzing the interaction of the AI model with the corpus, we finally have an experimental setup for generating efficient vocabulary lists.
-This is not a replacement of the approach described in Section \ref{sec:ai-as-test-subject}.
+This is not a replacement of the approach described in Section \ref{sec:experimental-setup-with-ai}.
 Rather, this work uses the generation approach to make lists (Chapter \ref{ch:implementation}), and the evaluation approach for testing which of these lists are the most efficient (Chapter \ref{ch:evaluation}).
 In the next section, we discuss the implementation of this approach.
 We present various choices for these components, and argue for some to be used over others, with the aim of making the utility estimated by the framework align as much as possible with utility to human learners.

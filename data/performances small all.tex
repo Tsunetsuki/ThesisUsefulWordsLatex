@@ -1,0 +1,108 @@
+\begin{table}[H]
+        \centering
+        \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+\toprule
+ & Size=0 & Size=10 & Size=40 & Size=160 & Size=640 \\
+\midrule
+Raw Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{82,110,220}0.23 & \cellcolor[RGB]{142,177,253}0.37 & \cellcolor[RGB]{241,202,182}0.64 & \cellcolor[RGB]{202,61,56}0.90 \\
+Average Reduced Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{82,110,220}0.23 & \cellcolor[RGB]{141,175,253}0.36 & \cellcolor[RGB]{239,206,188}0.62 & \cellcolor[RGB]{202,61,56}0.90 \\
+TF-IDF & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{91,121,228}0.25 & \cellcolor[RGB]{151,184,254}0.38 & \cellcolor[RGB]{241,202,182}0.64 & \cellcolor[RGB]{198,53,52}0.91 \\
+Attention - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{91,121,228}0.25 & \cellcolor[RGB]{153,186,254}0.39 & \cellcolor[RGB]{244,194,170}0.66 & \cellcolor[RGB]{188,31,44}0.93 \\
+Single Token Ablation - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{96,128,232}0.26 & \cellcolor[RGB]{163,193,254}0.41 & \cellcolor[RGB]{246,186,159}\textbf{0.68} & \cellcolor[RGB]{179,3,38}\textbf{0.95} \\
+Single Token Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{97,130,234}\textbf{0.27} & \cellcolor[RGB]{163,193,254}\textbf{0.41} & \cellcolor[RGB]{246,189,164}0.67 & \cellcolor[RGB]{185,22,42}0.94 \\
+Progressive Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.17} & \cellcolor[RGB]{95,126,231}0.26 & \cellcolor[RGB]{159,190,254}0.40 & \cellcolor[RGB]{245,192,167}0.67 & \cellcolor[RGB]{184,17,41}0.94 \\
+\midrule 
+\textbf{[Mean]} & \textbf{0.17} & \textbf{0.25} & \textbf{0.39} & \textbf{0.65} & \textbf{0.92} \\
+\bottomrule
+\end{tabular}
+    }
+        \caption{Efficiencies of vocabulary lists on single OPUS subtitles.}\end{table}
+\begin{table}[H]
+        \centering
+        \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+\toprule
+ & Size=0 & Size=10 & Size=40 & Size=160 & Size=640 \\
+\midrule
+Raw Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{90,120,227}0.52 & \cellcolor[RGB]{153,186,254}0.61 & \cellcolor[RGB]{239,205,187}0.76 & \cellcolor[RGB]{215,84,68}0.92 \\
+Average Reduced Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{86,115,224}0.51 & \cellcolor[RGB]{145,179,254}0.60 & \cellcolor[RGB]{236,210,196}0.75 & \cellcolor[RGB]{215,84,68}0.92 \\
+TF-IDF & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{130,165,251}0.58 & \cellcolor[RGB]{188,209,246}0.66 & \cellcolor[RGB]{244,196,173}0.78 & \cellcolor[RGB]{205,66,58}0.94 \\
+Attention - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{97,130,234}0.53 & \cellcolor[RGB]{164,194,254}0.63 & \cellcolor[RGB]{245,192,167}0.79 & \cellcolor[RGB]{197,50,51}0.95 \\
+Single Token Ablation - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{88,118,226}0.51 & \cellcolor[RGB]{127,162,250}0.57 & \cellcolor[RGB]{220,220,221}0.72 & \cellcolor[RGB]{210,75,63}0.93 \\
+Single Token Ablation - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{134,169,252}0.58 & \cellcolor[RGB]{197,213,242}0.68 & \cellcolor[RGB]{246,164,134}\textbf{0.83} & \cellcolor[RGB]{179,3,38}\textbf{0.97} \\
+Single Token Summary - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{107,141,240}0.54 & \cellcolor[RGB]{157,189,254}0.61 & \cellcolor[RGB]{225,218,214}0.73 & \cellcolor[RGB]{229,112,87}0.89 \\
+Single Token Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{139,174,253}\textbf{0.59} & \cellcolor[RGB]{201,215,238}\textbf{0.68} & \cellcolor[RGB]{247,174,145}0.82 & \cellcolor[RGB]{194,45,49}0.95 \\
+Progressive Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.46} & \cellcolor[RGB]{124,160,249}0.57 & \cellcolor[RGB]{190,211,245}0.67 & \cellcolor[RGB]{247,176,146}0.82 & \cellcolor[RGB]{187,26,43}0.96 \\
+\midrule 
+\textbf{[Mean]} & \textbf{0.46} & \textbf{0.55} & \textbf{0.63} & \textbf{0.78} & \textbf{0.94} \\
+\bottomrule
+\end{tabular}
+    }
+        \caption{Efficiencies of vocabulary lists on single articles in Wikipedia category \textit{1980s English-language films}.}\end{table}
+\begin{table}[H]
+        \centering
+        \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+\toprule
+ & Size=0 & Size=10 & Size=40 & Size=160 & Size=640 \\
+\midrule
+Raw Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{117,152,246}0.61 & \cellcolor[RGB]{189,210,246}0.70 & \cellcolor[RGB]{245,192,167}0.81 & \cellcolor[RGB]{219,92,74}0.92 \\
+Average Reduced Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{116,151,245}0.61 & \cellcolor[RGB]{185,208,248}0.70 & \cellcolor[RGB]{244,195,171}0.81 & \cellcolor[RGB]{220,94,75}0.91 \\
+TF-IDF & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{148,181,254}0.65 & \cellcolor[RGB]{208,218,233}0.73 & \cellcolor[RGB]{247,181,152}0.83 & \cellcolor[RGB]{211,77,64}0.93 \\
+Attention - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{126,161,249}0.62 & \cellcolor[RGB]{201,215,238}0.72 & \cellcolor[RGB]{247,173,143}0.84 & \cellcolor[RGB]{201,59,55}0.94 \\
+Single Token Ablation - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{111,145,242}0.61 & \cellcolor[RGB]{164,194,254}0.67 & \cellcolor[RGB]{240,204,185}0.79 & \cellcolor[RGB]{216,86,70}0.92 \\
+Single Token Ablation - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{155,187,254}0.66 & \cellcolor[RGB]{222,219,218}0.75 & \cellcolor[RGB]{240,139,109}\textbf{0.87} & \cellcolor[RGB]{179,3,38}\textbf{0.97} \\
+Single Token Summary - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{138,173,253}0.64 & \cellcolor[RGB]{193,212,244}0.71 & \cellcolor[RGB]{241,202,182}0.79 & \cellcolor[RGB]{235,127,99}0.89 \\
+Single Token Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{164,194,254}\textbf{0.67} & \cellcolor[RGB]{225,218,214}\textbf{0.76} & \cellcolor[RGB]{243,150,120}0.86 & \cellcolor[RGB]{196,48,50}0.95 \\
+Progressive Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.54} & \cellcolor[RGB]{148,181,254}0.65 & \cellcolor[RGB]{215,219,226}0.74 & \cellcolor[RGB]{243,152,121}0.86 & \cellcolor[RGB]{190,35,45}0.95 \\
+\midrule 
+\textbf{[Mean]} & \textbf{0.54} & \textbf{0.64} & \textbf{0.72} & \textbf{0.83} & \textbf{0.93} \\
+\bottomrule
+\end{tabular}
+    }
+        \caption{Efficiencies of vocabulary lists on single articles in Wikipedia category \textit{20th-century American actresses}.}\end{table}
+\begin{table}[H]
+        \centering
+        \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+\toprule
+ & Size=0 & Size=10 & Size=40 & Size=160 & Size=640 \\
+\midrule
+Raw Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{99,131,234}0.59 & \cellcolor[RGB]{168,197,253}0.68 & \cellcolor[RGB]{242,199,178}0.80 & \cellcolor[RGB]{218,90,72}0.91 \\
+Average Reduced Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{97,130,234}0.59 & \cellcolor[RGB]{164,194,254}0.67 & \cellcolor[RGB]{240,204,185}0.79 & \cellcolor[RGB]{220,94,75}0.91 \\
+TF-IDF & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{133,168,251}0.63 & \cellcolor[RGB]{190,211,245}0.70 & \cellcolor[RGB]{246,188,162}0.81 & \cellcolor[RGB]{210,75,63}0.92 \\
+Attention - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{108,142,241}0.60 & \cellcolor[RGB]{180,205,250}0.69 & \cellcolor[RGB]{246,183,156}0.82 & \cellcolor[RGB]{200,56,53}0.94 \\
+Single Token Ablation - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{97,130,234}0.59 & \cellcolor[RGB]{142,177,253}0.64 & \cellcolor[RGB]{233,212,201}0.77 & \cellcolor[RGB]{218,90,72}0.91 \\
+Single Token Ablation - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{137,172,252}0.64 & \cellcolor[RGB]{206,217,235}0.72 & \cellcolor[RGB]{243,152,121}\textbf{0.85} & \cellcolor[RGB]{179,3,38}\textbf{0.96} \\
+Single Token Summary - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{117,152,246}0.61 & \cellcolor[RGB]{168,197,253}0.68 & \cellcolor[RGB]{231,214,204}0.77 & \cellcolor[RGB]{237,132,103}0.88 \\
+Single Token Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{144,178,254}\textbf{0.65} & \cellcolor[RGB]{210,218,231}\textbf{0.73} & \cellcolor[RGB]{245,161,130}0.84 & \cellcolor[RGB]{196,48,50}0.94 \\
+Progressive Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{133,168,251}0.63 & \cellcolor[RGB]{199,214,240}0.71 & \cellcolor[RGB]{246,167,137}0.84 & \cellcolor[RGB]{190,35,45}0.95 \\
+\midrule 
+\textbf{[Mean]} & \textbf{0.53} & \textbf{0.61} & \textbf{0.69} & \textbf{0.81} & \textbf{0.92} \\
+\bottomrule
+\end{tabular}
+    }
+        \caption{Efficiencies of vocabulary lists on single articles in Wikipedia category \textit{20th-century American male actors}.}\end{table}
+\begin{table}[H]
+        \centering
+        \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+\toprule
+ & Size=0 & Size=10 & Size=40 & Size=160 & Size=640 \\
+\midrule
+Raw Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{93,125,230}0.58 & \cellcolor[RGB]{157,189,254}0.65 & \cellcolor[RGB]{235,211,198}0.75 & \cellcolor[RGB]{216,86,70}0.88 \\
+Average Reduced Frequency & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{93,125,230}0.58 & \cellcolor[RGB]{153,186,254}0.64 & \cellcolor[RGB]{230,215,207}0.74 & \cellcolor[RGB]{222,98,78}0.87 \\
+TF-IDF & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{130,165,251}0.62 & \cellcolor[RGB]{182,206,249}0.68 & \cellcolor[RGB]{242,200,179}0.77 & \cellcolor[RGB]{210,75,63}0.89 \\
+Attention - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{104,137,238}0.59 & \cellcolor[RGB]{164,194,254}0.66 & \cellcolor[RGB]{239,205,187}0.76 & \cellcolor[RGB]{204,63,57}0.90 \\
+Single Token Ablation - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{99,131,234}0.58 & \cellcolor[RGB]{133,168,251}0.62 & \cellcolor[RGB]{205,217,236}0.70 & \cellcolor[RGB]{226,106,83}0.86 \\
+Single Token Ablation - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{126,161,249}0.61 & \cellcolor[RGB]{188,209,246}0.68 & \cellcolor[RGB]{246,182,154}\textbf{0.79} & \cellcolor[RGB]{179,3,38}\textbf{0.92} \\
+Single Token Summary - NSP & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{115,149,244}0.60 & \cellcolor[RGB]{159,190,254}0.65 & \cellcolor[RGB]{216,219,225}0.72 & \cellcolor[RGB]{242,147,117}0.83 \\
+Single Token Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{137,172,252}\textbf{0.62} & \cellcolor[RGB]{195,213,242}\textbf{0.69} & \cellcolor[RGB]{246,183,156}0.79 & \cellcolor[RGB]{194,45,49}0.91 \\
+Progressive Summary - Sent. Emb. & \cellcolor[RGB]{58,76,192}\textbf{0.53} & \cellcolor[RGB]{123,158,248}0.61 & \cellcolor[RGB]{182,206,249}0.68 & \cellcolor[RGB]{244,195,171}0.78 & \cellcolor[RGB]{190,35,45}0.91 \\
+\midrule 
+\textbf{[Mean]} & \textbf{0.53} & \textbf{0.60} & \textbf{0.66} & \textbf{0.76} & \textbf{0.89} \\
+\bottomrule
+\end{tabular}
+    }
+        \caption{Efficiencies of vocabulary lists on single articles in Wikipedia category \textit{World War II political leaders}.}\end{table}
