@@ -14,23 +14,30 @@ Hiermit erkläre ich, dass ich die vorliegende Arbeit selbstständig und ohne fr
 Insbesondere versichere ich, dass ich alle wörtlichen und sinngemäßen Übernahmen aus anderen Werken als solche kenntlich gemacht habe.
 \\
 
-Aizuwakamatsu, 10. Mai 2025 
+Aizuwakamatsu, 10. Mai 2025
 
+\selectlanguage{ngerman}
+\begin{abstract}
+	The Erstellung von Vokabellisten ist ein essenzieller Bestandteil des Sprachenlernens.
+	Aktuelle Methoden zur Auswahl von Vokabular basieren entweder auf dem reinen Zählen von Wörtern, oder werden durch Experten erstellt, was einen arbeitsintensiven Prozess darstellt.
+	Diese Arbeit präsentiert ein Framework, um möglichst nützliche Vokabellisten automatisch mithilfe von AI- und XAI-Methoden zur erstellen, sowie Vokabellisten automatisch auszuwerten, und benutzt hierfür frei zugängliche, nichtkommerzielle Korpora.
+	Die vorgestellte Implementierung des Ansatzes unterstützt geschätzt die automatische Erstellung und Auswertung von Vokabellisten in neun Sprachen mit dem Filtern von Namen, und ca. vierzig Sprachen ohne Filtern von Namen.
+	Unsere Experimente legen nahe, dass die von unseren Methoden generierten Vokabelliste Sprachlernenden schneller zu sprachlicher Kompetenz in den angestrebten Kontexten verhelfen als Ansätze, die auf reiner Wortfrequenz basieren.
+\end{abstract}
+
+\selectlanguage{english}
 \begin{abstract}
 	Compiling lists of vocabulary is an essential part in language teaching.
-	However, current methods used to select vocabulary rely either on pure word counting, or on the manual selection of vocabulary by experts, which is a labor-intensive process.
-	This work suggests a framework for automatically compiling and evaluating lists of vocabulary that are more useful than those produced by frequency-based approaches, using public and freely accessible corpora and AI models.
+	Current methods used to select vocabulary rely either on pure word counting, or on the manual selection of vocabulary by experts, which is a labor-intensive process.
+	This work suggests a framework for automatically compiling lists of vocabulary that are more useful than those produced by frequency-based approaches, using public and freely accessible corpora and AI models, as well as evaluating said lists.
 	We describe the implementation of the framework in detail.
 	Our implementation supports approximately 9 languages with name filtering, and 40 languages without name filtering, though evaluation was only performed on English data.
 	The evaluation suggests that our compiled lists are more useful for understanding the context they were compiled for than those produced by word counting, especially for narrow contexts such as single subtitles and articles.
 \end{abstract}
 
-\todo{Declaration of honest writing}
-\todo{German abstract}
+
 \clearpage
 \tableofcontents
-% \listoffigures
-% \listoftables
 \clearpage
 
 \chapter{Introduction} \label{ch:intro}

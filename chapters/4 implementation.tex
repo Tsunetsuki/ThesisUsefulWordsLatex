@@ -594,8 +594,6 @@ Our evaluation found that, in general, this method produces vocabulary lists wit
 	\label{fig:single-token-summary-nsp}
 \end{figure}
 
-% \paragraph{Compatibility with NLP tasks:}
-% \todo{compat with NSP?}
 
 \subsection{Progressive Summary} \label{sec:progressive-summary}
 While Single Token Summary is easy to implement and computationally inexpensive, it has the conceptual disadvantage of not taking into account the utility of word combinations.
@@ -665,8 +663,7 @@ To the best of our knowledge, this tokenizer splits texts into the same tokens a
 In addition to this technical downside, attention is controversial as a mechanism to explain model decisions:
 One point of critique is that, while attention influences the model's behavior, it is not a faithful explanation because alternative attention distributions can yield similar model outputs \cite{jainAttentionNotExplanation2019}.
 On the other hand, it has been argued that the mere fact that a model chooses a particular attention distribution, rather than another, means that the actually generated distribution is a more plausible explanation than artificial adversarial distributions \cite{wiegreffeAttentionNotNot2019}.
-As we will show in our list evaluation, when used with our list generation approach, attention produces vocabulary lists that are close in efficiency to those produced by the model-agnostic methods.
-\todo{check the previous claim about the performance}
+As we will show in our list evaluation, when used with our list generation approach, attention produces vocabulary lists with lower efficiency than those produced by the model-agnostic methods, but still mostly outperforms raw frequency lists.
 
 
 \section{Summary of the Implementation} \label{sec:implementation-final}

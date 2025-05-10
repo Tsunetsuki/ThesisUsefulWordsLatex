@@ -72,7 +72,7 @@ Some examples for contexts that could be interesting to language learners includ
 	\item Finding friends from other countries
 \end{itemize}
 
-The different contexts for which learners might be motivated to learn a language differ in how easily corpora can be obtained about to mine patterns from. Movie subtitles and Wikipedia articles are easily obtained from sites such as opensubtitles.org and wikipedia.org. The words that might be relevant for travel are not as easily obtained: One might imagine an ideal scenario to collect data, in which a statistically relevant group of people travelling to the destination to be examined are randomly selected and equipped with microphones and cameras before the travel. During travel, one could record their conversations, conversations with people around them, and materials they attempt to read to navigate their journey such as train schedules, descriptions of tours, restaurant menus, street signs, etc. Lacking the funds to conduct an experiment for every possible language, this work is interested in finding a methodology to obtain data from readily available corpora and websites online that extracts relevant vocabulary from the source texts.
+The different contexts for which learners might be motivated to learn a language differ in how easily corpora can be obtained about to mine patterns from. Movie subtitles and articles are easily obtained from websites such as \textit{Wikipedia} \footnote{\url{www.opensubtitles.org}} and \textit{OpenSubtitles} \footnote{\url{www.wikipedia.org}}. The words that might be relevant for travel are not as easily obtained: One might imagine an ideal scenario to collect data, in which a statistically relevant group of people traveling to the destination to be examined are randomly selected and equipped with microphones and cameras before the travel. During travel, one could record their conversations, conversations with people around them, and materials they attempt to read to navigate their journey such as train schedules, descriptions of tours, restaurant menus, street signs, etc. Lacking the funds to conduct an experiment for every possible language, this work is interested in finding a methodology to obtain data from readily available corpora and websites online that extracts relevant vocabulary from the source texts.
 Depending on the context, we can think about which of the following English words might be likely to appear frequently in the texts:
 
 \begin{itemize}
@@ -94,7 +94,7 @@ In this work, we make the following contributions:
 \begin{itemize}
 	\item A workable definition of word utility (Section \ref{sec:utility}).
 	\item The development of a framework for evaluating and generating vocabulary lists, by evaluating the utility of words to understand the meaning of a given text (Chapter \ref{ch:approach}).
-	\item The analysis and selection of appropriate proxy tasks, corpora, and XAI methods, leading up to the implementation of the framework (Chapter \ref{ch:implementation}) supporting an estimated 9 languages with and 40 languages without filtering of names from the lists.
+	\item The analysis and selection of appropriate technical components for the implementation of the framework --- AI models, corpora, and XAI methods --- leading up to an implementation (Chapter \ref{ch:implementation}) supporting an estimated 9 languages with and 40 languages without filtering of names from the lists.
 	\item Analysis of the resulting vocabulary lists in comparison with each other, as well as with frequency-based baseline methods (Chapter \ref{ch:evaluation}).
 \end{itemize}
 
@@ -105,8 +105,8 @@ However, we must also assess whether our evaluation approach itself is reliable,
 A general theme of this work is multilinguality --- we attempt to make our implementation applicable to the largest number of languages possible.
 For instance, we seek out sources of text to use as input to our data pipeline where many languages are available and labeled.
 This criterion limits the resources available.
-Another challenge in our particular word utility evaluation approach was finding a mechanism to automatically measure an AI model's understanding of texts, as this understanding is used to calculate a word's utility.
-For this, we let the AI model perform a task on the text, similar to a language exam in a school.
+Another challenge in our particular word utility evaluation approach was finding a mechanism to automatically measure an AI model's understanding of texts, as this understanding is used in our implementation to calculate a word's utility in a given context.
+To address this, we let the AI model perform a task on the text, similar to a language exam in a school.
 However, finding tasks that require a broad language understanding to be performed but which can also be reliably evaluated automatically was a major difficulty.
 
 % Inherent challenges of text-based language analysis include:
@@ -125,24 +125,24 @@ However, finding tasks that require a broad language understanding to be perform
 
 The following gives an overview of this work from a top-level perspective.
 
-We begin by placing the work in context in Chapter \ref{ch:background}, by first establishing how to the concept of "utility" is used in existing linguistic research about vocabulary list compilation, and explaining further basic concepts such as a \textit{linguistic context}.
+We begin by placing the work in context in Chapter \ref{ch:background}, by first establishing how the concept of "utility" is used in existing linguistic research about vocabulary list compilation, and explaining further basic concepts such as a \textit{linguistic context}.
 With the use of these basic terms and concepts, the aim of this thesis is stated more precisely, followed by an introduction of the main fields of research involved in our solution to achieve this aim.
 Finally, we include a survey about concrete methods which are currently used to compile vocabulary lists, and how this work aims at improving them with the use of AI models.
 
 Chapter \ref{ch:approach} describes in detail our theoretical approach to both evaluating and generating vocabulary lists.
 To this end, we first transform our problem into a mathematical one.
-We then describe an empirical approach for evaluating how well a vocabulary list helps a learner to understand a given context, and how we automate the approach by using \AI\ models to simulate a learner and corpora to simulate linguistic concexts.
+We then describe an empirical approach for evaluating how well a vocabulary list helps a learner to understand a given context, and how we automate the approach by using \AI\ models to simulate a learner, as well as using corpora to simulate linguistic contexts.
 With the evaluation approach as a basis, we develop a second approach for generating vocabulary lists, using methods from the field of Explainable AI.
 
 The technical implementation for both approaches is detailed in Chapter \ref{ch:implementation}:
-After having established the principal components to the approaches in Chapter \ref{ch:approach}, we discuss the choice of these components, namely corpora, AI models, and Explainable AI methods:
-For each component, we first describe desiderata, and then make a number of concrete choices which were used in our experiments.
+After establishing the principal components to the approaches in Chapter \ref{ch:approach}, we discuss the choice of these components, namely corpora, AI models, and Explainable AI methods:
+For each component, we first describe desiderata, and then select concrete components which we use in our experiments.
 
 
 Chapter \ref{ch:evaluation} discusses the evaluation of the vocabulary lists generated by our list generation approach.
 For this, we mainly utilize our own evaluation approach described in Chapter \ref{ch:approach}, but also make several subjective observations on the perceived utility of the lists from a human intuitive perspective.
-We evaluate how well the approaches perform on two different types of datasets, and how much time they require, using frequency-based approaches, which predominate the literature on vocabulary list compilation, as baselines.
-Additionally, we analyze how similar the lists are to one another, independent of their performance.
+We evaluate how well the approaches perform on two different types of datasets --- Wikipedia articles and subtitles --- and how much time they require, using as baselines frequency-based approaches, which predominate the literature on vocabulary list compilation.
+Based on this data, we give recommendations about which use case stands to benefit from which list generation approach.
 
 Finally, Chapter \ref{ch:outlook} outlines potential improvements to our approach to word utility evaluation, which could not be implemented within the scope of this work due to time constraints.
 
