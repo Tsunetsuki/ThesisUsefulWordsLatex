@@ -470,7 +470,7 @@ To first gain an overview of the resulting lists, we present the first 20 words 
 
 We can see some similarities across all lists:
 Every list is headed by the two pronouns \textit{i} and \textit{you}, which seems reasonable for movie dialog.
-After these, we can see the characteristics of the various approaches:
+After these, we can see where the approaches differ:
 Raw Frequency and Average Reduced Frequency produce very similar lists, consisting mostly of stop words at the top.
 The list made from using attention as explanation follows a similar pattern.
 In contrast, the lists generated from both TF-IDF and feature importance explanations show words that are more useful for a beginner language learner in our view:
@@ -504,10 +504,11 @@ We include the vocabulary list produced from the \Rosetta\ lesson in this evalua
 
 We can see that the results for most approaches achieve \textbf{very similar} evaluation scores, with difference of at most 0.03 per tested vocabulary size.
 The exceptions are the \Rosetta\ list and the lists generated with the NSP model, which perform significantly worse than either the frequency or the other XAI lists.
-This is a surprising result, as the subjective evaluation seen above would seem to imply that the lists compiled with feature attribution methods should outperform the frequency-based metrics.
-It can be seen that the Single Token Summary approach still outperforms the other approaches for small vocabulary sizes, which may be due to it selecting words which, by themselves, are closest to the meaning of an entire sentence.
 
-However, we take the small differences in these result as an indication that, \textbf{for large contexts, frequency-based approaches are a viable way to collect vocabulary}, with more complicated methods only bringing marginal improvements to vocabulary list efficiency.
+The (mostly) small gap in the list efficiencies is slightly surprising, as the subjective evaluation seen above would seem to imply that the lists compiled with feature attribution methods should outperform the frequency-based metrics.
+It can be seen that the \textbf{Single Token Summary approach still outperforms the other approaches for small vocabulary sizes.}
+For larger vocabulary sizes, raw frequency and Single Token Summary produce the highest scores.
+We this, as well as the generally small differences in these result as an indication that, \textbf{for large contexts, frequency-based approaches are a viable way to collect vocabulary}, with more complicated methods only bringing marginal improvements to vocabulary list efficiency.
 The fact that the datasets for generating the lists and evaluating them is a likely cause for why these results are similar, as finding words that are very specifically useful to the "train" dataset becomes less productive in such a scenario.
 Still, the TF-IDF metric can be seen to achieve better results than raw frequency, and comparable results to the XAI approaches, which makes it a worthwhile method for compiling context-specific word lists in our view, especially since it requires much less time to be run on a large corpus.
 The following tables show the similarities of the generated lists.
